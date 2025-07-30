@@ -20,7 +20,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out/public
+          path: ./out
   # Deployment job
   deploy:
     # Add a dependency to the build job
