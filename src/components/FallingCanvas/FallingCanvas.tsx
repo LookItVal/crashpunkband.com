@@ -69,7 +69,7 @@ const FallingCanvas: React.FC<FallingCanvasProps> = ({
 
   const splitTextToSpans = useCallback((text: string, textStyle?: React.CSSProperties): ReactNode => {
     return text.split(/\s+/).map((word, i) => (
-      <span key={i} className='world-item pointer-events-none' style={textStyle}>
+      <span key={i} className='world-item pointer-events-none select-none' style={textStyle}>
         {word}
         {i < text.split(/\s+/).length - 1 ? " " : ""}
       </span>

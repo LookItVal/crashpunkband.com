@@ -18,7 +18,7 @@ export default function Home() {
               alt="CRASH"
               width={384}
               height={128}
-              className="w-64 md:w-96 world-item pointer-events-none"
+              className="w-64 md:w-96 world-item pointer-events-none select-none"
             />
           </div>
           <h1 className="text-white text-4xl font-extrabold tracking-wider uppercase">Coming Soon.</h1>
