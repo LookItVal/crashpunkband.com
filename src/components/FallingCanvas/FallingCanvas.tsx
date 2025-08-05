@@ -162,10 +162,40 @@ const FallingCanvas: React.FC<FallingCanvasProps> = ({
       isStatic: true,
       render: { fillStyle: "transparent" },
     };
-    const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
-    const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
-    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
-    const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
+    // Increase wall thickness and add slight overlap to reduce tunneling
+    const wallThickness = 200; // much thicker walls
+    const overlap = 100; // overlap into the visible area
+
+    // Walls are placed just outside the visible area, extending outward to cover corners
+    const floor = Bodies.rectangle(
+      width / 2,
+      height + wallThickness / 2,
+      width + 2 * wallThickness,
+      wallThickness,
+      boundaryOptions
+    );
+    const ceiling = Bodies.rectangle(
+      width / 2,
+      -wallThickness / 2,
+      width + 2 * wallThickness,
+      wallThickness,
+      boundaryOptions
+    );
+    const leftWall = Bodies.rectangle(
+      -wallThickness / 2,
+      height / 2,
+      wallThickness,
+      height + 2 * wallThickness,
+      boundaryOptions
+    );
+    const rightWall = Bodies.rectangle(
+      width + wallThickness / 2,
+      height / 2,
+      wallThickness,
+      height + 2 * wallThickness,
+      boundaryOptions
+    );
+
 
     const worldSpans = worldRef.current!.querySelectorAll(".world-item");
     const worldBodies: { elem: HTMLElement; body: Matter.Body }[] = [...worldSpans].map((elem) => {
@@ -176,7 +206,7 @@ const FallingCanvas: React.FC<FallingCanvasProps> = ({
 
       const body = Bodies.rectangle(x, y, rect.width, rect.height, {
         render: { fillStyle: "transparent" },
-        restitution: 0.8,
+        restitution: 1,
         frictionAir: 0.01,
         friction: 0.2,
       });
@@ -258,17 +288,17 @@ const FallingCanvas: React.FC<FallingCanvasProps> = ({
     <div
       ref={containerRef}
       className={`falling-text-container ${className}`}
-      onClick={handleTrigger}
+      onMouseDown={handleTrigger}
       style={{
-        position: "relative",
-        overflow: "hidden",
+      position: "relative",
+      overflow: "hidden",
       }}
     >
       <div
-        ref={worldRef}
-        className={`falling-text-target ${className}`}
+      ref={worldRef}
+      className={`falling-text-target ${className}`}
       >
-        {processedContent}
+      {processedContent}
       </div>
       <div ref={canvasContainerRef} className="falling-text-canvas" />
     </div>
