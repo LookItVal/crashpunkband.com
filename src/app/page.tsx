@@ -12,13 +12,41 @@ export default function Home() {
         className="h-full w-full"  
       >
         <div className="relative z-10 flex flex-col h-full w-full justify-center items-center">
-          <div>
+          <div className="flex flex-row">
             <Image
-              src="/crash_banner.png"
-              alt="CRASH"
-              width={384}
+              src="/C.png"
+              alt="C"
+              width={43}
               height={128}
-              className="w-64 md:w-96 world-item pointer-events-none select-none"
+              className="world-item pointer-events-none select-none"
+            />
+            <Image
+              src="/R.png"
+              alt="R"
+              width={52}
+              height={128}
+              className="world-item pointer-events-none select-none"
+            />
+            <Image
+              src="/A.png"
+              alt="A"
+              width={145}
+              height={128}
+              className="world-item pointer-events-none select-none"
+            />
+            <Image
+              src="/S.png"
+              alt="S"
+              width={32}
+              height={128}
+              className="world-item pointer-events-none select-none"
+            />
+            <Image
+              src="/H.png"
+              alt="H"
+              width={56}
+              height={128}
+              className="world-item pointer-events-none select-none"
             />
           </div>
           <h1 className="text-white text-4xl font-extrabold tracking-wider uppercase">Coming Soon.</h1>
