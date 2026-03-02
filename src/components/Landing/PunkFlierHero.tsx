@@ -10,7 +10,7 @@ export default function PunkFlierHero() {
     >
       <section className="relative z-10 flex flex-col gap-8">
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4">
+          <div className="flex flex-col items-center gap-4 pb-4 sm:flex-row sm:justify-between">
             <HandDrawnFrame
               className="-rotate-2 inline-block"
               contentClassName="px-3 pb-1"
@@ -54,19 +54,19 @@ export default function PunkFlierHero() {
               priority
             />
           </div>
-          <p className="mx-auto max-w-2xl text-sm font-bold uppercase tracking-[0.2em] text-zinc-200 md:text-base">
+          <p className="mx-auto max-w-2xl text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-200 sm:text-xs md:text-sm">
             Book us now: bookcrashpunk@example.com
           </p>
         </div>
 
         <div className="grid gap-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300 sm:grid-cols-3">
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
             <div>Lorem Ipsum</div>
           </HandDrawnFrame>
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
             <div>Dolor Sit Amet</div>
           </HandDrawnFrame>
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
             <div>Consectetur Adipiscing</div>
           </HandDrawnFrame>
         </div>

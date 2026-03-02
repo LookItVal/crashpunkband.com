@@ -34,9 +34,9 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
   const padded = value.toString().padStart(2, "0");
 
   return (
-    <HandDrawnFrame className="min-w-20 bg-black/60 shadow-lg" contentClassName="px-3 py-2 text-center">
-      <div className="text-3xl font-black tracking-widest">{padded}</div>
-      <div className="text-xs font-bold uppercase tracking-[0.25em] text-white/80">{label}</div>
+    <HandDrawnFrame className="min-w-16 bg-black/60 shadow-lg md:min-w-20" contentClassName="px-2 py-2 text-center md:px-3">
+      <div className="text-2xl font-black tracking-widest md:text-3xl">{padded}</div>
+      <div className="text-[8px] font-bold uppercase tracking-[0.14em] text-white/80 md:text-xs md:tracking-[0.25em]">{label}</div>
     </HandDrawnFrame>
   );
 }
@@ -60,11 +60,13 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
         {!isReleased ? (
           <div className="flex flex-col gap-5">
             <h2 className="text-center text-3xl font-black uppercase tracking-[0.35em] md:text-4xl">NEW MUSIC COMING SOON</h2>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <NumberUnit label="Days" value={time.days} />
-              <NumberUnit label="Hours" value={time.hours} />
-              <NumberUnit label="Minutes" value={time.minutes} />
-              <NumberUnit label="Seconds" value={time.seconds} />
+            <div className="w-full overflow-x-auto pb-1">
+              <div className="mx-auto flex w-max flex-nowrap items-center justify-center gap-2 md:gap-3">
+                <NumberUnit label="Days" value={time.days} />
+                <NumberUnit label="Hours" value={time.hours} />
+                <NumberUnit label="Minutes" value={time.minutes} />
+                <NumberUnit label="Seconds" value={time.seconds} />
+              </div>
             </div>
           </div>
         ) : (
