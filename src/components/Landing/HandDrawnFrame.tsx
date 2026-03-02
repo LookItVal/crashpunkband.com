@@ -123,7 +123,7 @@ export default function HandDrawnFrame({
   children,
   className = "",
   contentClassName = "",
-  strokeClassName = "text-white/70",
+  strokeClassName = "text-white",
   randomnessSeed,
   overhang = 3,
   overhangRandomness = 0.5,
