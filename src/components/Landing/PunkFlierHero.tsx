@@ -12,7 +12,7 @@ export default function PunkFlierHero() {
         <div className="space-y-4">
           <div className="flex flex-col items-center gap-4 pb-4 sm:flex-row sm:justify-between">
             <HandDrawnFrame
-              className="-rotate-2 inline-block"
+              className="inline-block sm:-rotate-3"
               contentClassName="px-3 pb-1"
               showTop={false}
               showRight={false}
@@ -22,7 +22,7 @@ export default function PunkFlierHero() {
               <span className="text-sm font-black uppercase tracking-[0.2em]">Kansas City Based</span>
             </HandDrawnFrame>
             <HandDrawnFrame
-              className="rotate-2 inline-block"
+              className="sm:rotate-3 inline-block"
               contentClassName="px-3 pb-1"
               showTop={false}
               showRight={false}
