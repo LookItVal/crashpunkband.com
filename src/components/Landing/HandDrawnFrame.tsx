@@ -761,7 +761,7 @@ export default function HandDrawnFrame({
           );
         })()}
       </svg>
-      <div className={["relative z-10", contentClassName].join(" ")}>{children}</div>
+      <div className={["relative", contentClassName].join(" ")}>{children}</div>
     </div>
   );
 }

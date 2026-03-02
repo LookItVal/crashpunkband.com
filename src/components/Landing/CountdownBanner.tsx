@@ -42,9 +42,17 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
 }
 
 export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
-  const [time, setTime] = useState<TimeRemaining>(() => getTimeRemaining(targetDate));
+  const [time, setTime] = useState<TimeRemaining>({
+    totalMs: 1,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
+    setTime(getTimeRemaining(targetDate));
+
     const timer = window.setInterval(() => {
       setTime(getTimeRemaining(targetDate));
     }, 1000);

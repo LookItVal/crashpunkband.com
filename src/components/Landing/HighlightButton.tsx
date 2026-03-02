@@ -8,6 +8,7 @@ type HighlightButtonProps = {
   href?: string;
   target?: string;
   rel?: string;
+  onClick?: () => void;
   className?: string;
   textClassName?: string;
   angleRandomness?: number;
@@ -18,6 +19,7 @@ export default function HighlightButton({
   href,
   target,
   rel,
+  onClick,
   className = "",
   textClassName = "",
   angleRandomness = 2,
@@ -87,6 +89,7 @@ export default function HighlightButton({
     onMouseLeave: animateOut,
     onFocus: animateIn,
     onBlur: animateOut,
+    onClick,
     className: ["relative inline-flex", className].join(" "),
   };
 

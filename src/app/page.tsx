@@ -1,5 +1,5 @@
-import CalendarPlaceholder from "../components/Landing/CalendarPlaceholder";
 import CountdownBanner from "../components/Landing/CountdownBanner";
+import EventCalendar from "../components/Landing/EventCalendar";
 import LandingFooter from "../components/Landing/LandingFooter";
 import MediaGallery from "../components/Landing/MediaGallery";
 import PunkFlierHero from "../components/Landing/PunkFlierHero";
@@ -13,9 +13,9 @@ export default function Home() {
         <CountdownBanner targetDate={releaseDate} />
         <PunkFlierHero />
         <MediaGallery />
-        <CalendarPlaceholder />
+        <EventCalendar />
+        <LandingFooter />
       </div>
-      <LandingFooter />
     </main>
   );
 }
