@@ -163,9 +163,17 @@ export default function HandDrawnFrame({
   const animationTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const [hasEnteredView, setHasEnteredView] = useState(!animateOnInView);
   const [size, setSize] = useState<{ width: number; height: number } | null>(null);
+  const [runtimeSeedSalt, setRuntimeSeedSalt] = useState(0);
+
+  useEffect(() => {
+    const unixTimestamp = Math.floor(Date.now() / 1000);
+    const sessionEntropy = Math.floor(Math.random() * 1_000_000);
+    setRuntimeSeedSalt(unixTimestamp + sessionEntropy);
+  }, []);
+
   const randomSeedValue = useMemo(
-    () => stringToSeed(String(randomnessSeed ?? instanceId)),
-    [instanceId, randomnessSeed],
+    () => stringToSeed(`${String(randomnessSeed ?? instanceId)}-${runtimeSeedSalt}`),
+    [instanceId, randomnessSeed, runtimeSeedSalt],
   );
 
   useEffect(() => {
