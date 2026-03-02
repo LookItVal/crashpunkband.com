@@ -5,7 +5,7 @@ import SocialMediaLinks from "./SocialMediaLinks";
 export default function PunkFlierHero() {
   return (
     <HandDrawnFrame
-      className="relative overflow-hidden"
+      className="relative"
       contentClassName="p-8 md:p-12"
     >
       <section className="relative z-10 flex flex-col gap-8">
@@ -35,7 +35,6 @@ export default function PunkFlierHero() {
           <HandDrawnFrame
             className="w-full"
             contentClassName="h-2"
-            strokeClassName="text-white/70"
             showTop={false}
             showRight={false}
             showBottom={true}
@@ -44,7 +43,7 @@ export default function PunkFlierHero() {
         </div>
 
         <div className="space-y-4 text-center">
-          <div className="mx-auto w-full max-w-xl bg-black/50 p-3">
+          <div className="mx-auto w-full max-w-xl p-3">
             <Image
               src="/crash_banner.png"
               alt="CRASH logo"
@@ -60,13 +59,13 @@ export default function PunkFlierHero() {
         </div>
 
         <div className="grid gap-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300 sm:grid-cols-3">
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
+          <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <div>Lorem Ipsum</div>
           </HandDrawnFrame>
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
+          <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <div>Dolor Sit Amet</div>
           </HandDrawnFrame>
-          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3 text-center">
+          <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <div>Consectetur Adipiscing</div>
           </HandDrawnFrame>
         </div>
@@ -75,7 +74,6 @@ export default function PunkFlierHero() {
           <HandDrawnFrame
             className="w-full"
             contentClassName="h-2"
-            strokeClassName="text-white/70"
             showTop={false}
             showRight={false}
             showBottom={true}

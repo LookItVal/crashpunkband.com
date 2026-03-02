@@ -12,6 +12,7 @@ type HandDrawnFrameProps = {
   overhang?: number;
   overhangRandomness?: number;
   overhangRandomnessGain?: number;
+  angleRandomness?: number;
   roughness?: number;
   roughnessScale?: number;
   thickness?: number;
@@ -83,9 +84,13 @@ function createRoughLinePath(
   const unitY = dy / length;
   const perpX = -unitY;
   const perpY = unitX;
-  const segments = Math.max(12, Math.round(14 + roughnessScale * 12));
-  const amplitude = 2.8 * roughness;
-  const frequency = Math.max(0.05, roughnessScale) * 9;
+  const normalizedScale = Math.max(0.05, roughnessScale);
+  const density = 0.5 + normalizedScale * 1.35;
+  const wavelengthPx = Math.max(10, 28 / density);
+  const segments = Math.max(6, Math.round(length / Math.max(4, wavelengthPx * 0.7)));
+  const lengthFactor = clamp(length / 100, 0.2, 1.8);
+  const amplitude = 2.8 * roughness * (0.5 + lengthFactor * 0.5);
+  const frequency = Math.max(0.4, length / wavelengthPx);
 
   const points: Point[] = [];
 
@@ -118,13 +123,14 @@ export default function HandDrawnFrame({
   children,
   className = "",
   contentClassName = "",
-  strokeClassName = "text-white/70",
+  strokeClassName = "text-white/50",
   randomnessSeed,
   overhang = 3,
   overhangRandomness = 0.5,
   overhangRandomnessGain = 2.4,
-  roughness = 0.15,
-  roughnessScale = 1,
+  angleRandomness = 0.3,
+  roughness = 0.5,
+  roughnessScale = 0.1,
   thickness = 2,
   showTop = true,
   showRight = true,
@@ -137,16 +143,20 @@ export default function HandDrawnFrame({
   drawDuration = 0.15,
   drawStagger = 0.2,
   drawDelay = 0,
-  drawEase = "power3.in",
+  drawEase = "power2.in",
   drawRandomDelay = 1,
   drawRandomDuration = 0.4,
 }: HandDrawnFrameProps) {
   const instanceId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const topPathRef = useRef<SVGPathElement | null>(null);
+  const topPathRefSecondary = useRef<SVGPathElement | null>(null);
   const rightPathRef = useRef<SVGPathElement | null>(null);
+  const rightPathRefSecondary = useRef<SVGPathElement | null>(null);
   const bottomPathRef = useRef<SVGPathElement | null>(null);
+  const bottomPathRefSecondary = useRef<SVGPathElement | null>(null);
   const leftPathRef = useRef<SVGPathElement | null>(null);
+  const leftPathRefSecondary = useRef<SVGPathElement | null>(null);
   const hasStartedAnimationRef = useRef(false);
   const hasFinishedAnimationRef = useRef(false);
   const animateTimeoutRef = useRef<number | null>(null);
@@ -196,6 +206,11 @@ export default function HandDrawnFrame({
   const resolvedThickness = Math.max(0.5, thickness);
   const resolvedOverhang = Math.max(0, overhang);
   const resolvedOverhangRandomness = clamp(overhangRandomness, 0, 1);
+  const resolvedAngleRandomness = Math.max(0, angleRandomness);
+  const frameMinDimension = Math.max(1, Math.min(size?.width ?? 100, size?.height ?? 100));
+  const resolvedAngleRandomnessPx = resolvedAngleRandomness * (frameMinDimension * 0.1);
+  const secondaryOverhangJitterPx = Math.max(0, resolvedOverhang * resolvedOverhangRandomness);
+  const secondaryAngleJitterPx = Math.max(0.1, (resolvedAngleRandomnessPx * 0.4) );
 
   const seededUnitRandom = useCallback(
     (offset: number) => {
@@ -221,6 +236,19 @@ export default function HandDrawnFrame({
     return Math.max(0, varied);
   };
 
+  const varyAngleShift = (seed: number, endpoint: number) => {
+    if (resolvedAngleRandomnessPx === 0) {
+      return 0;
+    }
+
+    const noise = hashNoise(
+      seed * 6.41 + endpoint * 8.73 + randomSeedValue * 0.021,
+      57.31 + randomSeedValue * 0.017,
+    );
+
+    return noise * resolvedAngleRandomnessPx;
+  };
+
   const topStartOverhang = varyOverhang(1, 1);
   const topEndOverhang = varyOverhang(1, 2);
   const rightStartOverhang = varyOverhang(2, 1);
@@ -229,12 +257,24 @@ export default function HandDrawnFrame({
   const bottomEndOverhang = varyOverhang(3, 2);
   const leftStartOverhang = varyOverhang(4, 1);
   const leftEndOverhang = varyOverhang(4, 2);
+  const rightStartAngleShift = varyAngleShift(2, 1);
+  const rightEndAngleShift = varyAngleShift(2, 2);
+  const leftStartAngleShift = varyAngleShift(4, 1);
+  const leftEndAngleShift = varyAngleShift(4, 2);
+  const topStartAngleShift = varyAngleShift(1, 1);
+  const topEndAngleShift = varyAngleShift(1, 2);
+  const bottomStartAngleShift = varyAngleShift(3, 1);
+  const bottomEndAngleShift = varyAngleShift(3, 2);
 
   const {
     topPath,
+    topPathSecondary,
     rightPath,
+    rightPathSecondary,
     bottomPath,
+    bottomPathSecondary,
     leftPath,
+    leftPathSecondary,
     viewBox,
   } = useMemo(() => {
     const frameWidth = size?.width ?? 100;
@@ -246,14 +286,54 @@ export default function HandDrawnFrame({
     const minY = inset;
     const maxY = Math.max(inset, frameHeight - inset);
 
-    const topStart = { x: minX - topStartOverhang, y: minY };
-    const topEnd = { x: maxX + topEndOverhang, y: minY };
-    const rightStart = { x: maxX, y: minY - rightStartOverhang };
-    const rightEnd = { x: maxX, y: maxY + rightEndOverhang };
-    const bottomStart = { x: minX - bottomStartOverhang, y: maxY };
-    const bottomEnd = { x: maxX + bottomEndOverhang, y: maxY };
-    const leftStart = { x: minX, y: minY - leftStartOverhang };
-    const leftEnd = { x: minX, y: maxY + leftEndOverhang };
+    const topStart = { x: minX - topStartOverhang, y: minY + topStartAngleShift };
+    const topEnd = { x: maxX + topEndOverhang, y: minY + topEndAngleShift };
+    const rightStart = { x: maxX + rightStartAngleShift, y: minY - rightStartOverhang };
+    const rightEnd = { x: maxX + rightEndAngleShift, y: maxY + rightEndOverhang };
+    const bottomStart = { x: minX - bottomStartOverhang, y: maxY + bottomStartAngleShift };
+    const bottomEnd = { x: maxX + bottomEndOverhang, y: maxY + bottomEndAngleShift };
+    const leftStart = { x: minX + leftStartAngleShift, y: minY - leftStartOverhang };
+    const leftEnd = { x: minX + leftEndAngleShift, y: maxY + leftEndOverhang };
+
+    const secondaryJitter = (seed: number, endpoint: number, amplitude: number) => {
+      return hashNoise(
+        seed * 5.61 + endpoint * 9.17 + randomSeedValue * 0.023,
+        74.13 + randomSeedValue * 0.015,
+      ) * amplitude;
+    };
+
+    const topStartSecondary = {
+      x: topStart.x - secondaryJitter(101, 1, secondaryOverhangJitterPx),
+      y: topStart.y + secondaryJitter(111, 1, secondaryAngleJitterPx),
+    };
+    const topEndSecondary = {
+      x: topEnd.x + secondaryJitter(101, 2, secondaryOverhangJitterPx),
+      y: topEnd.y + secondaryJitter(111, 2, secondaryAngleJitterPx),
+    };
+    const rightStartSecondary = {
+      x: rightStart.x + secondaryJitter(121, 1, secondaryAngleJitterPx),
+      y: rightStart.y - secondaryJitter(131, 1, secondaryOverhangJitterPx),
+    };
+    const rightEndSecondary = {
+      x: rightEnd.x + secondaryJitter(121, 2, secondaryAngleJitterPx),
+      y: rightEnd.y + secondaryJitter(131, 2, secondaryOverhangJitterPx),
+    };
+    const bottomStartSecondary = {
+      x: bottomStart.x - secondaryJitter(141, 1, secondaryOverhangJitterPx),
+      y: bottomStart.y + secondaryJitter(151, 1, secondaryAngleJitterPx),
+    };
+    const bottomEndSecondary = {
+      x: bottomEnd.x + secondaryJitter(141, 2, secondaryOverhangJitterPx),
+      y: bottomEnd.y + secondaryJitter(151, 2, secondaryAngleJitterPx),
+    };
+    const leftStartSecondary = {
+      x: leftStart.x + secondaryJitter(161, 1, secondaryAngleJitterPx),
+      y: leftStart.y - secondaryJitter(171, 1, secondaryOverhangJitterPx),
+    };
+    const leftEndSecondary = {
+      x: leftEnd.x + secondaryJitter(161, 2, secondaryAngleJitterPx),
+      y: leftEnd.y + secondaryJitter(171, 2, secondaryOverhangJitterPx),
+    };
 
     return {
       topPath: createRoughLinePath(
@@ -263,12 +343,26 @@ export default function HandDrawnFrame({
         resolvedScale,
         1 + randomSeedValue * 0.1,
       ),
+      topPathSecondary: createRoughLinePath(
+        topStartSecondary,
+        topEndSecondary,
+        resolvedRoughness,
+        resolvedScale,
+        11 + randomSeedValue * 0.17,
+      ),
       rightPath: createRoughLinePath(
         rightStart,
         rightEnd,
         resolvedRoughness,
         resolvedScale,
         2 + randomSeedValue * 0.1,
+      ),
+      rightPathSecondary: createRoughLinePath(
+        rightStartSecondary,
+        rightEndSecondary,
+        resolvedRoughness,
+        resolvedScale,
+        12 + randomSeedValue * 0.17,
       ),
       bottomPath: createRoughLinePath(
         bottomStart,
@@ -277,6 +371,13 @@ export default function HandDrawnFrame({
         resolvedScale,
         3 + randomSeedValue * 0.1,
       ),
+      bottomPathSecondary: createRoughLinePath(
+        bottomStartSecondary,
+        bottomEndSecondary,
+        resolvedRoughness,
+        resolvedScale,
+        13 + randomSeedValue * 0.17,
+      ),
       leftPath: createRoughLinePath(
         leftStart,
         leftEnd,
@@ -284,22 +385,39 @@ export default function HandDrawnFrame({
         resolvedScale,
         4 + randomSeedValue * 0.1,
       ),
+      leftPathSecondary: createRoughLinePath(
+        leftStartSecondary,
+        leftEndSecondary,
+        resolvedRoughness,
+        resolvedScale,
+        14 + randomSeedValue * 0.17,
+      ),
       viewBox: `0 0 ${frameWidth} ${frameHeight}`,
     };
   }, [
     bottomEndOverhang,
+    bottomEndAngleShift,
     bottomStartOverhang,
+    bottomStartAngleShift,
+    leftEndAngleShift,
     leftEndOverhang,
+    leftStartAngleShift,
     leftStartOverhang,
     randomSeedValue,
     resolvedRoughness,
     resolvedScale,
     resolvedThickness,
+    secondaryAngleJitterPx,
+    secondaryOverhangJitterPx,
+    rightEndAngleShift,
     rightEndOverhang,
+    rightStartAngleShift,
     rightStartOverhang,
     size,
     topEndOverhang,
+    topEndAngleShift,
     topStartOverhang,
+    topStartAngleShift,
   ]);
 
   useEffect(() => {
@@ -359,26 +477,47 @@ export default function HandDrawnFrame({
         if (showTop && topPathRef.current) {
           pathElements.push(topPathRef.current);
         }
+        if (showTop && topPathRefSecondary.current) {
+          pathElements.push(topPathRefSecondary.current);
+        }
         if (showRight && rightPathRef.current) {
           pathElements.push(rightPathRef.current);
+        }
+        if (showRight && rightPathRefSecondary.current) {
+          pathElements.push(rightPathRefSecondary.current);
         }
         if (showBottom && bottomPathRef.current) {
           pathElements.push(bottomPathRef.current);
         }
+        if (showBottom && bottomPathRefSecondary.current) {
+          pathElements.push(bottomPathRefSecondary.current);
+        }
         if (showLeft && leftPathRef.current) {
           pathElements.push(leftPathRef.current);
+        }
+        if (showLeft && leftPathRefSecondary.current) {
+          pathElements.push(leftPathRefSecondary.current);
         }
 
         if (pathElements.length === 0) {
           return;
         }
 
-        const lengths = pathElements.map((path) => path.getTotalLength());
+        const orderedPathElements = [...pathElements];
+        for (let index = orderedPathElements.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(Math.random() * (index + 1));
+          [orderedPathElements[index], orderedPathElements[swapIndex]] = [
+            orderedPathElements[swapIndex],
+            orderedPathElements[index],
+          ];
+        }
+
+        const lengths = orderedPathElements.map((path) => path.getTotalLength());
         const longestLength = Math.max(...lengths, 1);
         const startDelayRandom = drawRandomDelay > 0 ? drawRandomDelay * seededUnitRandom(0.5) : 0;
         const durationRandomFactor = drawRandomDuration > 0 ? seededUnitRandom(1.5) * 2 - 1 : 0;
 
-        pathElements.forEach((path, index) => {
+        orderedPathElements.forEach((path, index) => {
           const length = lengths[index];
           gsap.set(path, {
             strokeDasharray: `${length}`,
@@ -393,7 +532,7 @@ export default function HandDrawnFrame({
 
         const timeline = gsap.timeline({
           onComplete: () => {
-            pathElements.forEach((path) => {
+            orderedPathElements.forEach((path) => {
               gsap.set(path, {
                 strokeDasharray: "none",
                 strokeDashoffset: 0,
@@ -406,7 +545,7 @@ export default function HandDrawnFrame({
 
         animationTimelineRef.current = timeline;
 
-        pathElements.forEach((path, index) => {
+        orderedPathElements.forEach((path, index) => {
           const length = lengths[index];
           const normalizedDuration = Math.max(
             0.06,
@@ -439,9 +578,13 @@ export default function HandDrawnFrame({
 
       const pathElements = [
         topPathRef.current,
+        topPathRefSecondary.current,
         rightPathRef.current,
+        rightPathRefSecondary.current,
         bottomPathRef.current,
+        bottomPathRefSecondary.current,
         leftPathRef.current,
+        leftPathRefSecondary.current,
       ].filter((path): path is SVGPathElement => path !== null);
 
       pathElements.forEach((path) => {
@@ -460,9 +603,13 @@ export default function HandDrawnFrame({
 
       gsap.killTweensOf([
         topPathRef.current,
+        topPathRefSecondary.current,
         rightPathRef.current,
+        rightPathRefSecondary.current,
         bottomPathRef.current,
+        bottomPathRefSecondary.current,
         leftPathRef.current,
+        leftPathRefSecondary.current,
       ]);
     };
   }, [
@@ -488,7 +635,7 @@ export default function HandDrawnFrame({
         aria-hidden="true"
         viewBox={viewBox}
         preserveAspectRatio="none"
-        className={["pointer-events-none absolute inset-0 h-full w-full", strokeClassName].join(" ")}
+        className={["pointer-events-none absolute inset-0 h-full w-full overflow-visible", strokeClassName].join(" ")}
       >
         {(() => {
           const hiddenBeforeDraw = animateOnLoad && !hasFinishedAnimationRef.current;
@@ -511,6 +658,17 @@ export default function HandDrawnFrame({
               vectorEffect="non-scaling-stroke"
               style={preDrawStyle}
             />
+            <path
+              ref={topPathRefSecondary}
+              d={topPathSecondary}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={resolvedThickness * 0.9}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={preDrawStyle}
+            />
           </>
         ) : null}
         {showRight ? (
@@ -521,6 +679,17 @@ export default function HandDrawnFrame({
               fill="none"
               stroke="currentColor"
               strokeWidth={resolvedThickness}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={preDrawStyle}
+            />
+            <path
+              ref={rightPathRefSecondary}
+              d={rightPathSecondary}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={resolvedThickness * 0.9}
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -541,6 +710,17 @@ export default function HandDrawnFrame({
               vectorEffect="non-scaling-stroke"
               style={preDrawStyle}
             />
+            <path
+              ref={bottomPathRefSecondary}
+              d={bottomPathSecondary}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={resolvedThickness * 0.9}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={preDrawStyle}
+            />
           </>
         ) : null}
         {showLeft ? (
@@ -551,6 +731,17 @@ export default function HandDrawnFrame({
               fill="none"
               stroke="currentColor"
               strokeWidth={resolvedThickness}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              style={preDrawStyle}
+            />
+            <path
+              ref={leftPathRefSecondary}
+              d={leftPathSecondary}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={resolvedThickness * 0.9}
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"

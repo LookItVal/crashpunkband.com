@@ -33,21 +33,21 @@ export default function MediaGallery() {
 
   return (
     <>
-      <HandDrawnFrame className="bg-zinc-950/80" contentClassName="p-6 md:p-8">
+      <HandDrawnFrame contentClassName="p-6 md:p-8">
         <section>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-2xl font-black uppercase tracking-[0.2em]">Gallery</h2>
-            <HandDrawnFrame className="inline-block bg-black/50" contentClassName="px-3 py-1">
+            <HandDrawnFrame className="inline-block" contentClassName="px-3 py-1">
               <span className="text-xs font-bold uppercase tracking-[0.2em]">Lorem Ipsum</span>
             </HandDrawnFrame>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {galleryItems.map((item, index) => (
-              <HandDrawnFrame key={`${item.label}-${index}`} className="group bg-black/60" contentClassName="p-2">
+              <HandDrawnFrame key={`${item.label}-${index}`} className="group" contentClassName="p-2">
                 <article>
                   <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
-                    <HandDrawnFrame className="bg-black/30" contentClassName="p-1">
+                    <HandDrawnFrame contentClassName="p-1">
                       <div className="relative h-48 w-full overflow-hidden md:h-56">
                         <Image
                           src={item.src}

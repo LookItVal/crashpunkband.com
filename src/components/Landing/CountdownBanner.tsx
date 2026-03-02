@@ -34,7 +34,7 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
   const padded = value.toString().padStart(2, "0");
 
   return (
-    <HandDrawnFrame className="min-w-16 bg-black/60 shadow-lg md:min-w-20" contentClassName="px-2 py-2 text-center md:px-3">
+    <HandDrawnFrame className="min-w-16 md:min-w-20" contentClassName="px-2 py-2 text-center md:px-3">
       <div className="text-2xl font-black tracking-widest md:text-3xl">{padded}</div>
       <div className="text-[8px] font-bold uppercase tracking-[0.14em] text-white/80 md:text-xs md:tracking-[0.25em]">{label}</div>
     </HandDrawnFrame>
@@ -55,7 +55,7 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
   const isReleased = useMemo(() => time.totalMs <= 0, [time.totalMs]);
 
   return (
-    <HandDrawnFrame className="relative bg-zinc-950/80" contentClassName="p-6 md:p-8">
+    <HandDrawnFrame className="relative" contentClassName="p-6 md:p-8">
       <section className="relative">
         {!isReleased ? (
           <div className="flex flex-col gap-5">
@@ -71,7 +71,7 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-4 text-center">
-            <HandDrawnFrame className="bg-black/30" contentClassName="px-6 py-3">
+            <HandDrawnFrame contentClassName="px-6 py-3">
               <HighlightButton href="#listen" textClassName="text-2xl font-black uppercase tracking-[0.25em]">
                 Listen now
               </HighlightButton>

@@ -18,7 +18,7 @@ export default function StreamingLinks() {
     <GsapIntro>
       <div id="listen" className="flex flex-wrap items-center justify-center gap-2">
         {services.map((service) => (
-          <HandDrawnFrame key={service.name} className="inline-block bg-black/50" contentClassName="px-3 py-2">
+          <HandDrawnFrame key={service.name} className="inline-block" contentClassName="px-3 py-2">
             <HighlightButton
               href={service.href}
               target="_blank"

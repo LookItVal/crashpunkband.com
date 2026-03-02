@@ -76,7 +76,7 @@ export default function SocialMediaLinks({ compact = false }: SocialMediaLinksPr
         {socialLinks.map((link) => (
           <HandDrawnFrame
             key={link.name}
-            className="inline-block bg-black/50"
+            className="inline-block"
             contentClassName={compact ? "px-3 py-2 text-[10px]" : "px-4 py-2 text-xs"}
           >
             <HighlightButton
