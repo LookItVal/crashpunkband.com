@@ -1,61 +1,21 @@
-import Image from "next/image";
-import FallingCanvas from "@/components/FallingCanvas/FallingCanvas";
-
+import CalendarPlaceholder from "../components/Landing/CalendarPlaceholder";
+import CountdownBanner from "../components/Landing/CountdownBanner";
+import LandingFooter from "../components/Landing/LandingFooter";
+import MediaGallery from "../components/Landing/MediaGallery";
+import PunkFlierHero from "../components/Landing/PunkFlierHero";
 
 export default function Home() {
+  const releaseDate = "2026-06-01T00:00:00Z";
+
   return (
-    <main 
-      className="h-svh w-svw flex flex-col items-center justify-center bg-cover bg-center relative"
-      style={{ backgroundImage: "url('/crash_replay.jpg')" }}
-    >
-      <FallingCanvas
-        className="h-full w-full"  
-      >
-        <div className="relative z-10 flex flex-col h-full w-full justify-center items-center">
-          <div className="flex flex-row">
-            <Image
-              src="/C.png"
-              alt="C"
-              width={43}
-              height={128}
-              className="world-item pointer-events-none select-none"
-            />
-            <Image
-              src="/R.png"
-              alt="R"
-              width={52}
-              height={128}
-              className="world-item pointer-events-none select-none"
-            />
-            <Image
-              src="/A.png"
-              alt="A"
-              width={145}
-              height={128}
-              className="world-item pointer-events-none select-none"
-            />
-            <Image
-              src="/S.png"
-              alt="S"
-              width={32}
-              height={128}
-              className="world-item pointer-events-none select-none"
-            />
-            <Image
-              src="/H.png"
-              alt="H"
-              width={56}
-              height={128}
-              className="world-item pointer-events-none select-none"
-            />
-          </div>
-          <h1 className="text-white text-4xl font-extrabold tracking-wider uppercase">Coming Soon.</h1>
-          <p className="text-white text-lg mt-4 max-w-xl text-center px-4">
-            * Everything is still very much in development, so be careful not to break anything, and whatever you do: DON&apos;T CLICK ANYWHERE.
-          </p>
-        </div>
-      </FallingCanvas>
-      <div className="absolute top-0 left-0 w-screen h-screen opacity-60 bg-black z-0"></div>
+    <main className="min-h-screen bg-black text-white">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-8 md:px-10 md:py-10">
+        <CountdownBanner targetDate={releaseDate} />
+        <PunkFlierHero />
+        <MediaGallery />
+        <CalendarPlaceholder />
+      </div>
+      <LandingFooter />
     </main>
   );
 }

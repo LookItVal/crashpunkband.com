@@ -1,0 +1,92 @@
+import Image from "next/image";
+import HandDrawnFrame from "./HandDrawnFrame";
+import SocialMediaLinks from "./SocialMediaLinks";
+
+export default function PunkFlierHero() {
+  return (
+    <HandDrawnFrame
+      className="relative overflow-hidden"
+      contentClassName="p-8 md:p-12"
+    >
+      <section className="relative z-10 flex flex-col gap-8">
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-4">
+            <HandDrawnFrame
+              className="-rotate-2 inline-block"
+              contentClassName="px-3 pb-1"
+              showTop={false}
+              showRight={false}
+              showBottom={true}
+              showLeft={false}
+            >
+              <span className="text-sm font-black uppercase tracking-[0.2em]">Kansas City Based</span>
+            </HandDrawnFrame>
+            <HandDrawnFrame
+              className="rotate-2 inline-block"
+              contentClassName="px-3 pb-1"
+              showTop={false}
+              showRight={false}
+              showBottom={true}
+              showLeft={false}
+            >
+              <span className="text-sm font-black uppercase tracking-[0.2em]">Punk Rock</span>
+            </HandDrawnFrame>
+          </div>
+          <HandDrawnFrame
+            className="w-full"
+            contentClassName="h-2"
+            strokeClassName="text-white/70"
+            showTop={false}
+            showRight={false}
+            showBottom={true}
+            showLeft={false}
+          />
+        </div>
+
+        <div className="space-y-4 text-center">
+          <div className="mx-auto w-full max-w-xl bg-black/50 p-3">
+            <Image
+              src="/crash_banner.png"
+              alt="CRASH logo"
+              width={1200}
+              height={420}
+              className="h-auto w-full object-contain"
+              priority
+            />
+          </div>
+          <p className="mx-auto max-w-2xl text-sm font-bold uppercase tracking-[0.2em] text-zinc-200 md:text-base">
+            Book us now: bookcrashpunk@example.com
+          </p>
+        </div>
+
+        <div className="grid gap-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300 sm:grid-cols-3">
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+            <div>Lorem Ipsum</div>
+          </HandDrawnFrame>
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+            <div>Dolor Sit Amet</div>
+          </HandDrawnFrame>
+          <HandDrawnFrame className="bg-black/40" contentClassName="px-4 py-3">
+            <div>Consectetur Adipiscing</div>
+          </HandDrawnFrame>
+        </div>
+
+        <div className="space-y-5 pt-1">
+          <HandDrawnFrame
+            className="w-full"
+            contentClassName="h-2"
+            strokeClassName="text-white/70"
+            showTop={false}
+            showRight={false}
+            showBottom={true}
+            showLeft={false}
+          />
+          <p className="mb-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">
+            Stay connected
+          </p>
+          <SocialMediaLinks compact />
+        </div>
+      </section>
+    </HandDrawnFrame>
+  );
+}
