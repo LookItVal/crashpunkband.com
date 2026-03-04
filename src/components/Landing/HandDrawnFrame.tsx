@@ -140,12 +140,12 @@ export default function HandDrawnFrame({
   animateOnInView = true,
   viewTriggerMargin = "0px 0px -10% 0px",
   viewTriggerThreshold = 0.05,
-  drawDuration = 0.15,
-  drawStagger = 0.2,
+  drawDuration = 0.1,
+  drawStagger = 0.1,
   drawDelay = 0,
   drawEase = "power2.in",
-  drawRandomDelay = 1,
-  drawRandomDuration = 0.4,
+  drawRandomDelay = 0.8,
+  drawRandomDuration = 0.3,
 }: HandDrawnFrameProps) {
   const instanceId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);

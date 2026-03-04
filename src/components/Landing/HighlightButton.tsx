@@ -1,7 +1,7 @@
 "use client";
 
 import gsap from "gsap";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, useEffect } from "react";
 
 type HighlightButtonProps = {
   children: ReactNode;
@@ -9,6 +9,7 @@ type HighlightButtonProps = {
   target?: string;
   rel?: string;
   onClick?: () => void;
+  disabled?: boolean;
   className?: string;
   textClassName?: string;
   angleRandomness?: number;
@@ -20,6 +21,7 @@ export default function HighlightButton({
   target,
   rel,
   onClick,
+  disabled = false,
   className = "",
   textClassName = "",
   angleRandomness = 2,
@@ -28,6 +30,10 @@ export default function HighlightButton({
   const textRef = useRef<HTMLSpanElement | null>(null);
 
   const animateIn = () => {
+    if (disabled) {
+      return;
+    }
+
     if (!highlightRef.current || !textRef.current) {
       return;
     }
@@ -50,6 +56,10 @@ export default function HighlightButton({
   };
 
   const animateOut = () => {
+    if (disabled) {
+      return;
+    }
+
     if (!highlightRef.current || !textRef.current) {
       return;
     }
@@ -90,8 +100,18 @@ export default function HighlightButton({
     onFocus: animateIn,
     onBlur: animateOut,
     onClick,
-    className: ["relative inline-flex", className].join(" "),
+    className: ["relative inline-flex", disabled ? "opacity-40 pointer-events-none" : "", className].join(" "),
   };
+
+  useEffect(() => {
+    if (!disabled) return;
+    if (!highlightRef.current || !textRef.current) return;
+
+    // Immediately clear any highlight and text color when disabled
+    gsap.killTweensOf([highlightRef.current, textRef.current]);
+    gsap.set(highlightRef.current, { scaleX: 0, rotate: 0, transformOrigin: "right center" });
+    gsap.set(textRef.current, { color: "#f5f5f5" });
+  }, [disabled]);
 
   if (href) {
     return (
@@ -102,7 +122,7 @@ export default function HighlightButton({
   }
 
   return (
-    <button type="button" {...sharedProps}>
+    <button type="button" disabled={disabled} {...sharedProps}>
       {content}
     </button>
   );
