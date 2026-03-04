@@ -471,8 +471,8 @@ export default function EventCalendar({
             <div ref={eventListRef} className="space-y-3">
               {paginatedEvents.map((event) => (
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
-                  <article data-calendar-row className="flex items-center justify-between gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-300">
-                    <p className="min-w-40 text-zinc-100">{event.showName || "Show name"}</p>
+                  <article data-calendar-row className="flex items-center justify-between gap-x-6 gap-y-2 md:text-[11px] text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-300">
+                    <p className="text-zinc-100">{event.showName || "Show name"}</p>
 
                     <p>
                       <span className="text-zinc-500">When: </span>
