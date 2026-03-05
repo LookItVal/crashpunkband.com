@@ -643,7 +643,7 @@ export default function HandDrawnFrame({
         aria-hidden="true"
         viewBox={viewBox}
         preserveAspectRatio="none"
-        className={["pointer-events-none absolute inset-0 h-full w-full overflow-visible", strokeClassName].join(" ")}
+        className={["z-1 pointer-events-none absolute inset-0 h-full w-full overflow-visible", strokeClassName].join(" ")}
       >
         {(() => {
           const hiddenBeforeDraw = animateOnLoad && !hasFinishedAnimationRef.current;

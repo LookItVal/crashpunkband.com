@@ -471,11 +471,11 @@ export default function EventCalendar({
             <div ref={eventListRef} className="space-y-3">
               {paginatedEvents.map((event) => (
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
-                  <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-2 gap-y-2 md:text-[14px] text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300 text-center">
-                    <p className="text-zinc-100 flex-1 text-[14px]">{event.showName || "Show name"}</p>
+                  <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-10 gap-y-2 md:text-[14px] text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300 text-center">
+                    <p className="text-zinc-100 text-[14px] min-w-[15em]">{event.showName || "Show name"}</p>
                     
-                    <div className="flex items-center justify-between md:gap-x-6 gap-x-3 gap-y-2 flex-wrap">
-                      <div className="flex flex-col items-center align-center justify-center">
+                    <div className="flex items-center justify-between md:gap-x-6 gap-x-3 gap-y-2 flex-wrap grow">
+                      <div className="flex flex-col items-center align-center justify-center grow">
                         <p className="text-zinc-500 text-[8px]">When: </p>
                         <p className="text-center">{getWhenDisplayLabel(event.startDateTime) || "TBD"}</p>
                       </div>
@@ -484,7 +484,7 @@ export default function EventCalendar({
                         const locationLink = getLocationLinkParts(event.location);
 
                         return (
-                          <div className="flex flex-col items-center align-center justify-center">
+                          <div className="flex flex-col items-center align-center justify-center grow">
                             <p className="text-zinc-500 text-[8px]">Where: </p>
                             {locationLink.href ? (
                               <HighlightButton
@@ -502,21 +502,21 @@ export default function EventCalendar({
                         );
                       })()}
 
-                      <div className="flex flex-col items-center align-center justify-center">
+                      <div className="flex flex-col items-center align-center justify-center grow">
                         <p className="text-zinc-500 text-[8px]">Doors: </p>
                         <p>{formatDoorsTimeLabel(event.doorsDateTime)}</p>
                       </div>
 
                       {event.flyerImageUrl ? (
                         <HighlightButton
-                          className="w-full"
+                          className="grow"
                           textClassName="w-full text-center block! font-bold uppercase tracking-[0.15em] md:text-[14px] text-[11px]"
                           onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
                         >
                           View Flyer
                         </HighlightButton>
                       ) : (
-                        <span className="text-zinc-500 w-full text-center block! md:text-[14px] text-[11px]">No Flyer</span>
+                        <span className="text-zinc-500 grow text-center block! md:text-[14px] text-[11px]">No Flyer</span>
                       )}
                     </div>
                   </article>

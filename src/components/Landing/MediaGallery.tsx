@@ -59,7 +59,7 @@ export default function MediaGallery() {
                       </div>
                     </HandDrawnFrame>
                   </button>
-                  <p className="pt-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">{item.label}</p>
+                  <p className="p-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">{item.label}</p>
                 </article>
               </HandDrawnFrame>
             ))}
