@@ -24,8 +24,8 @@ declare const caches: Caches;
 
 
 function isAllowedOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin");
-  if (origin?.includes("crashpunkband.com") || origin?.includes("localhost")) {
+  const source = request.headers.get("origin") || request.headers.get("referer");
+  if (source?.includes("crashpunkband.com") || source?.includes("localhost:3000")) {
     return true;
   }
   return false;
@@ -158,6 +158,10 @@ export default {
   async fetch(request: Request, env: Env, ctx: unknown): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method.toUpperCase();
+    if (!isAllowedOrigin(request)) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
 
     // Open Cache API
     const cache = caches.default as Cache;
