@@ -231,10 +231,16 @@ export default {
         const { response, fromCache } = await getOrFetchImage(id, cache, env as Env);
         response.headers.set("x-from-cache", fromCache ? "true" : "false");
         // Add CORS headers to the image response
+        const headers = new Headers(response.headers);
+        headers.set("x-from-cache", fromCache ? "true" : "false");
         for (const [key, value] of Object.entries(corsHeaders)) {
-          response.headers.set(key, value);
+          headers.set(key, value);
         }
-        return response;
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers,
+        });
       } catch (err: unknown) {
         return new Response(
           JSON.stringify({
