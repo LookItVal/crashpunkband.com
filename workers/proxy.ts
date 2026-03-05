@@ -47,30 +47,38 @@ async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fr
   }
 
   // Fetch fresh
-  const upstream = await fetch(ICS_URL, {
-    method: "GET",
-    redirect: "follow",
-    headers: {
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      Accept: "text/calendar,application/octet-stream,*/*;q=0.1",
-      Referer: "https://calendar.google.com/",
-    },
-    cf: { cacheEverything: false, cacheTtl: 0 },
-  } as RequestInit);
+  let upstreamSuccess = false;
+  let upstreamError: unknown = null;
+  let upstream: Response | null = null;
+  try {
+    upstream = await fetch(ICS_URL, {
+      method: "GET",
+      redirect: "follow",
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "text/calendar,application/octet-stream,*/*;q=0.1",
+        Referer: "https://calendar.google.com/",
+      },
+      cf: { cacheEverything: false, cacheTtl: 0 },
+    } as RequestInit);
+    upstreamSuccess = true;
+  } catch (err) {
+    upstreamError = err;
+  }
 
 
   // On Failed Upstream, try to serve stale cache if available
-  if (!upstream.ok) {
+  if (!upstreamSuccess || !upstream?.ok) {
     const staleBody = await env.STALE_CALENDAR_ICS.get('calendar.ics');
     if (staleBody) {
       return { body: staleBody, fromCache: true };
     }
 
     // If no stale cache, return error
-    const bodyText = await upstream.text().catch(() => "<no body>");
+    const bodyText = await upstream?.text().catch(() => "<no body>");
     throw new Error(
-      `Upstream ${upstream.status}: ${bodyText.slice(0, 200)}`
+      `Upstream ${upstream?.status}: ${bodyText?.slice(0, 200)}`
     );
   }
 
@@ -101,20 +109,28 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
   }
   
   // Fetch fresh
-  const upstream = await fetch(driveViewUrlFromId(id), {
-    method: "GET", // always GET so we can cache the body
-    redirect: "follow",
-    headers: {
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      Accept: "image/*,*/*;q=0.1",
-      Referer: "https://drive.google.com/",
-    },
-    cf: { cacheEverything: false, cacheTtl: 0 },
-  } as RequestInit);
+  let upstreamSuccess = false;
+  let upstreamError: unknown = null;
+  let upstream: Response | null = null;
+  try {
+    upstream = await fetch(driveViewUrlFromId(id), {
+      method: "GET", // always GET so we can cache the body
+      redirect: "follow",
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "image/*,*/*;q=0.1",
+        Referer: "https://drive.google.com/",
+      },
+      cf: { cacheEverything: false, cacheTtl: 0 },
+    } as RequestInit);
+    upstreamSuccess = true;
+  } catch (err) {
+    upstreamError = err;
+  }
 
   // On Failed Upstream, try and serve stale cache if available
-  if (!upstream.ok) {
+  if (!upstreamSuccess || !upstream?.ok) {
     const staleData = await env.STALE_CALENDAR_ICS.get(`image-${id}`, { type: "arrayBuffer" });
     if (staleData) {
       const contentType = "image/jpeg"; // default to jpeg, since we don't store content type in stale cache
@@ -131,9 +147,9 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
     }
 
     // If no stale cache, return error
-    const bodyText = await upstream.text().catch(() => "<no body>");
+    const bodyText = await upstream?.text().catch(() => "<no body>");
     throw new Error(
-      `Upstream ${upstream.status}: ${bodyText.slice(0, 200)}`
+      `Upstream ${upstream?.status}: ${bodyText?.slice(0, 200)}`
     );
   }
 
