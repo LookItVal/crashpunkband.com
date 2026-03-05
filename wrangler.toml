@@ -2,3 +2,7 @@
 name = "crashcalproxy"
 main = "workers/proxy.ts"
 compatibility_date = "2026-03-04"
+
+[[kv_namespace]]
+binding = "STALE_CALENDAR_ICS"
+id = "crashcache"

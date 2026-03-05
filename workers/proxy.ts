@@ -3,20 +3,41 @@ const ICS_URL =
 
 const CACHE_KEY_ICS_URL = "https://cache.crashpunkband.com/calendar/basic.ics";
 const CACHE_KEY_IMAGE_BASE_URL = "https://cache.crashpunkband.com/image/";
-const CACHE_DURATION_SECONDS = 30 * 60; // 30 minutes
+const CACHE_DURATION_SECONDS = 60 * 60 * 12; // 12 hours
+const STALE_CACHE_DURATION_SECONDS = 60 * 60 * 24 * 30 * 6; // 6 months
 
 const corsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,HEAD,OPTIONS",
-  "access-control-allow-headers": "content-type,x-cache-clear-token",
+  "access-control-allow-headers": "content-type",
   "access-control-max-age": "86400",
 };
+
+type Env = {
+  STALE_CALENDAR_ICS: KVNamespace;
+};
+
+type Caches = {
+  default: Cache;
+};
+declare const caches: Caches;
+
+
+function isAllowedOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (origin?.includes("crashpunkband.com") || origin?.includes("localhost")) {
+    return true;
+  }
+  return false;
+}
+
 
 function driveViewUrlFromId(id: string): string {
   return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(id)}`;
 }
 
-async function getOrFetchICS(cache: Cache): Promise<{ body: string; fromCache: boolean }> {
+
+async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fromCache: boolean }> {
   // Try cache first
   const cacheKey = new Request(CACHE_KEY_ICS_URL, { method: "GET" });
 
@@ -38,14 +59,15 @@ async function getOrFetchICS(cache: Cache): Promise<{ body: string; fromCache: b
     cf: { cacheEverything: false, cacheTtl: 0 },
   } as RequestInit);
 
+
+  // On Failed Upstream, try to serve stale cache if available
   if (!upstream.ok) {
-    // if 429 or other transient, serve stale if available
-    // Note: this code path is unreachable because cached is already checked above
-    if (upstream.status === 429 && cached) {
-      const staleText = await (cached as Response).text();
-      // This should return the object format, not Response
-      return { body: staleText, fromCache: true };
+    const staleBody = await env.STALE_CALENDAR_ICS.get('calendar.ics');
+    if (staleBody) {
+      return { body: staleBody, fromCache: true };
     }
+
+    // If no stale cache, return error
     const bodyText = await upstream.text().catch(() => "<no body>");
     throw new Error(
       `Upstream ${upstream.status}: ${bodyText.slice(0, 200)}`
@@ -63,17 +85,82 @@ async function getOrFetchICS(cache: Cache): Promise<{ body: string; fromCache: b
     },
   });
   await cache.put(cacheKey, cacheResponse);
+  await env.STALE_CALENDAR_ICS.put('calendar.ics', body, { expirationTtl: STALE_CACHE_DURATION_SECONDS });
 
   return { body, fromCache: false };
 }
 
+async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ response: Response; fromCache: boolean }> {
+  // try cache first
+  const imageUrl = `${CACHE_KEY_IMAGE_BASE_URL}${encodeURIComponent(id)}`;
+  const cacheKey = new Request(imageUrl, { method: "GET" });
+
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    return { response: cached, fromCache: true };
+  }
+  
+  // Fetch fresh
+  const upstream = await fetch(driveViewUrlFromId(id), {
+    method: "GET", // always GET so we can cache the body
+    redirect: "follow",
+    headers: {
+      "user-agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      Accept: "image/*,*/*;q=0.1",
+      Referer: "https://drive.google.com/",
+    },
+    cf: { cacheEverything: false, cacheTtl: 0 },
+  } as RequestInit);
+
+  // On Failed Upstream, try and serve stale cache if available
+  if (!upstream.ok) {
+    const staleData = await env.STALE_CALENDAR_ICS.get(`image-${id}`, { type: "arrayBuffer" });
+    if (staleData) {
+      const contentType = "image/jpeg"; // default to jpeg, since we don't store content type in stale cache
+      return {
+        response: new Response(staleData, {
+          status: 200,
+          headers: {
+            "content-type": contentType,
+            "cache-control": "no-store, max-age=0",
+          },
+        }),
+        fromCache: true,
+      };
+    }
+
+    // If no stale cache, return error
+    const bodyText = await upstream.text().catch(() => "<no body>");
+    throw new Error(
+      `Upstream ${upstream.status}: ${bodyText.slice(0, 200)}`
+    );
+  }
+
+  const contentType = upstream.headers.get("content-type") || "image/jpeg";
+
+  const cacheResponse = new Response(upstream.body, {
+    status: 200,
+    headers: {
+      "content-type": contentType,
+      "cache-control": `public, max-age=${CACHE_DURATION_SECONDS}`,
+    },
+  });
+  await cache.put(cacheKey, cacheResponse.clone());
+  await env.STALE_CALENDAR_ICS.put(`image-${id}`, await cacheResponse.clone().arrayBuffer(), { expirationTtl: STALE_CACHE_DURATION_SECONDS });
+
+  return { response: cacheResponse, fromCache: false };
+}
+
+
+
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: unknown): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method.toUpperCase();
 
     // Open Cache API
-    const cache = (caches as any).default as Cache;
+    const cache = caches.default as Cache;
 
     if (method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders });
@@ -87,9 +174,9 @@ export default {
     }
 
     // Route 1: calendar ics proxy (with cache)
-    if (url.pathname === "/" || url.pathname === "/ical") {
+    if (url.pathname === "/ical") {
       try {
-        const { body, fromCache } = await getOrFetchICS(cache);
+        const { body, fromCache } = await getOrFetchICS(cache, env as Env);
 
         return new Response(body, {
           status: 200,
@@ -119,91 +206,25 @@ export default {
         return new Response("Missing image id", { status: 400, headers: corsHeaders });
       }
 
-      // unique cache key per image id
-      const imageCacheKey = new Request(
-        `${CACHE_KEY_IMAGE_BASE_URL}${encodeURIComponent(id)}`,
-        { method: "GET" }
-      );
-
-      // try image cache first
-      const cachedImage = await cache.match(imageCacheKey);
-      if (cachedImage) {
-        if (method === "HEAD") {
-          return new Response(null, {
-            status: 200,
-            headers: {
-              ...corsHeaders,
-              "content-type": cachedImage.headers.get("content-type") || "image/jpeg",
-              "cache-control": "no-store, max-age=0",
-              "x-from-cache": "true",
-            },
-          });
-        }
-
-        return new Response(cachedImage.body, {
-          status: 200,
-          headers: {
-            ...corsHeaders,
-            "content-type": cachedImage.headers.get("content-type") || "image/jpeg",
-            "cache-control": "no-store, max-age=0",
-            "x-from-cache": "true",
-          },
-        });
-      }
-
       try {
-        const upstream = await fetch(driveViewUrlFromId(id), {
-          method: "GET", // always GET so we can cache the body
-          redirect: "follow",
-          cf: { cacheEverything: false, cacheTtl: 0 },
-        } as RequestInit);
-
-        if (!upstream.ok) {
-          return new Response("Image upstream error", { status: 502, headers: corsHeaders });
+        const { response, fromCache } = await getOrFetchImage(id, cache, env as Env);
+        response.headers.set("x-from-cache", fromCache ? "true" : "false");
+        // Add CORS headers to the image response
+        for (const [key, value] of Object.entries(corsHeaders)) {
+          response.headers.set(key, value);
         }
-
-        const contentType = upstream.headers.get("content-type") || "image/jpeg";
-
-        // cache image response
-        const cacheResponse = new Response(upstream.body, {
-          status: 200,
-          headers: {
-            "content-type": contentType,
-            "cache-control": `public, max-age=${CACHE_DURATION_SECONDS}`,
-          },
-        });
-
-        await cache.put(imageCacheKey, cacheResponse.clone());
-
-        if (method === "HEAD") {
-          return new Response(null, {
-            status: 200,
-            headers: {
-              ...corsHeaders,
-              "content-type": contentType,
-              "cache-control": "no-store, max-age=0",
-              "x-from-cache": "false",
-            },
-          });
-        }
-
-        return new Response(cacheResponse.body, {
-          status: 200,
-          headers: {
-            ...corsHeaders,
-            "content-type": contentType,
-            "cache-control": "no-store, max-age=0",
-            "x-from-cache": "false",
-          },
-        });
+        return response;
       } catch (err: unknown) {
         return new Response(
-          JSON.stringify({ error: String(err) }, null, 2),
+          JSON.stringify({
+            error: String(err),
+            errorType: (err as Error).constructor.name,
+            timestamp: new Date().toISOString(),
+          }, null, 2),
           { status: 502, headers: { "content-type": "application/json", ...corsHeaders } }
         );
       }
     }
-
     return new Response("Not Found", { status: 404, headers: corsHeaders });
   },
 };
