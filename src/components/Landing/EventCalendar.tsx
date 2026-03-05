@@ -223,7 +223,7 @@ function getLocationLinkParts(location: string) {
 export default function EventCalendar({
   icalUrl = "https://crashcalproxy.qnncecil.workers.dev/ical",
   joinUrl = "https://calendar.google.com/calendar/u/0?cid=Nzk4YzFkNmNhNzc0YzI3ZWM2N2NmNzc4MjkwNzY4YmZkYTQ5ZjRjYjdmOTM0MDQ0NmExOGNiNzk1ZDc5NWU2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t",
-  eventsPerPage = 2
+  eventsPerPage = 6
 }: EventCalendarProps) {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -471,51 +471,54 @@ export default function EventCalendar({
             <div ref={eventListRef} className="space-y-3">
               {paginatedEvents.map((event) => (
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
-                  <article data-calendar-row className="flex items-center justify-between gap-x-6 gap-y-2 md:text-[11px] text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-300">
-                    <p className="text-zinc-100">{event.showName || "Show name"}</p>
+                  <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-2 gap-y-2 md:text-[14px] text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300 text-center">
+                    <p className="text-zinc-100 flex-1 text-[14px]">{event.showName || "Show name"}</p>
+                    
+                    <div className="flex items-center justify-between md:gap-x-6 gap-x-3 gap-y-2 flex-wrap">
+                      <div className="flex flex-col items-center align-center justify-center">
+                        <p className="text-zinc-500 text-[8px]">When: </p>
+                        <p className="text-center">{getWhenDisplayLabel(event.startDateTime) || "TBD"}</p>
+                      </div>
 
-                    <p>
-                      <span className="text-zinc-500">When: </span>
-                      {getWhenDisplayLabel(event.startDateTime) || "TBD"}
-                    </p>
+                      {(() => {
+                        const locationLink = getLocationLinkParts(event.location);
 
-                    {(() => {
-                      const locationLink = getLocationLinkParts(event.location);
+                        return (
+                          <div className="flex flex-col items-center align-center justify-center">
+                            <p className="text-zinc-500 text-[8px]">Where: </p>
+                            {locationLink.href ? (
+                              <HighlightButton
+                                href={locationLink.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                textClassName="font-bold uppercase tracking-[0.14em] text-zinc-200"
+                              >
+                                {locationLink.label}
+                              </HighlightButton>
+                            ) : (
+                              <p>{locationLink.label}</p>
+                            )}
+                          </div>
+                        );
+                      })()}
 
-                      return (
-                        <p>
-                          <span className="text-zinc-500">Where: </span>
-                          {locationLink.href ? (
-                            <HighlightButton
-                              href={locationLink.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              textClassName="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-200"
-                            >
-                              {locationLink.label}
-                            </HighlightButton>
-                          ) : (
-                            <span>{locationLink.label}</span>
-                          )}
-                        </p>
-                      );
-                    })()}
+                      <div className="flex flex-col items-center align-center justify-center">
+                        <p className="text-zinc-500 text-[8px]">Doors: </p>
+                        <p>{formatDoorsTimeLabel(event.doorsDateTime)}</p>
+                      </div>
 
-                    <p>
-                      <span className="text-zinc-500">Doors: </span>
-                      {formatDoorsTimeLabel(event.doorsDateTime)}
-                    </p>
-
-                    {event.flyerImageUrl ? (
-                      <HighlightButton
-                        textClassName="text-[10px] font-bold uppercase tracking-[0.15em]"
-                        onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
-                      >
-                        View Flyer
-                      </HighlightButton>
-                    ) : (
-                      <span className="text-zinc-500">No Flyer</span>
-                    )}
+                      {event.flyerImageUrl ? (
+                        <HighlightButton
+                          className="w-full"
+                          textClassName="w-full text-center block! font-bold uppercase tracking-[0.15em] md:text-[14px] text-[11px]"
+                          onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
+                        >
+                          View Flyer
+                        </HighlightButton>
+                      ) : (
+                        <span className="text-zinc-500 w-full text-center block! md:text-[14px] text-[11px]">No Flyer</span>
+                      )}
+                    </div>
                   </article>
                 </HandDrawnFrame>
               ))}
