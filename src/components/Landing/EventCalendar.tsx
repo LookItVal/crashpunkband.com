@@ -221,7 +221,7 @@ function getLocationLinkParts(location: string) {
 }
 
 export default function EventCalendar({
-  icalUrl = "https://crashcalproxy.qnncecil.workers.dev",
+  icalUrl = "https://crashcalproxy.qnncecil.workers.dev/ical",
   joinUrl = "https://calendar.google.com/calendar/u/0?cid=Nzk4YzFkNmNhNzc0YzI3ZWM2N2NmNzc4MjkwNzY4YmZkYTQ5ZjRjYjdmOTM0MDQ0NmExOGNiNzk1ZDc5NWU2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t",
   eventsPerPage = 2
 }: EventCalendarProps) {
