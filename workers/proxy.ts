@@ -154,8 +154,9 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
   }
 
   const contentType = upstream.headers.get("content-type") || "image/jpeg";
+  const imageBuffer = await upstream.arrayBuffer(); // Read stream once into memory
 
-  const cacheResponse = new Response(upstream.body, {
+  const cacheResponse = new Response(imageBuffer, {
     status: 200,
     headers: {
       "content-type": contentType,
@@ -163,7 +164,7 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
     },
   });
   await cache.put(cacheKey, cacheResponse.clone());
-  await env.STALE_CALENDAR_ICS.put(`image-${id}`, await cacheResponse.clone().arrayBuffer(), { expirationTtl: STALE_CACHE_DURATION_SECONDS });
+  await env.STALE_CALENDAR_ICS.put(`image-${id}`, imageBuffer, { expirationTtl: STALE_CACHE_DURATION_SECONDS });
 
   return { response: cacheResponse, fromCache: false };
 }
