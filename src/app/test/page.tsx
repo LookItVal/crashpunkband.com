@@ -6,7 +6,7 @@ export default function TestPage() {
   return (
     <main className="min-h-screen flex items-center justify-center">
       <svg viewBox="0 0 100 100" className="w-100 h-100 overflow-visible">
-        <Brushstroke start={{ x: 10, y: 10 }} end={{ x: 90, y: 90 }} />
+        <C />
       </svg>
     </main>
   );

@@ -7,7 +7,7 @@ type BrushstrokeProps = {
   start: PointLike;
   end: PointLike;
   count?: number;
-  options?: {
+  brushstrokeOptions?: {
     noiseMagnitude: number;
     brussleCount: number;
   };
@@ -24,7 +24,7 @@ export default function Brushstroke({
   start,
   end,
   count = 2,
-  options = {
+  brushstrokeOptions = {
     noiseMagnitude: 7.5,
     brussleCount: 100
   },
@@ -45,7 +45,14 @@ export default function Brushstroke({
   return (
     <g>
       {Array.from({ length: count }, (_, i) => (
-        <LineGroup key={i} start={new Point(start).applyNoise(options.noiseMagnitude)} end={new Point(end).applyNoise(options.noiseMagnitude)} count={options.brussleCount} options={lineOptions} strokeOptions={strokeOptions} />
+        <LineGroup
+          key={i}
+          start={new Point(start).applyNoise(brushstrokeOptions.noiseMagnitude)}
+          end={new Point(end).applyNoise(brushstrokeOptions.noiseMagnitude)}
+          count={brushstrokeOptions.brussleCount}
+          options={lineOptions}
+          strokeOptions={strokeOptions}
+        />
       ))}
     </g>
   );

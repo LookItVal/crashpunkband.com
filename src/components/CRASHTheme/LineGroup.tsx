@@ -35,7 +35,11 @@ export default function LineGroup({
   return (
     <g>
       {Array.from({ length: count }, (_, i) => (
-        <path key={i} d={new Line(start, end, options).pathData} {...strokeOptions} />
+        <path
+          key={i}
+          d={new Line(start, end, options).pathData}
+          {...strokeOptions}
+        />
       ))}
     </g>
   );

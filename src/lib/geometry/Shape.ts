@@ -12,7 +12,12 @@ export type ShapeSegment = {
   start: PointLike;
   end: PointLike;
   count?: number;
-  options?: LineOptions;
+  brush?: boolean;
+  brushstrokeOptions?: {
+    noiseMagnitude: number;
+    brussleCount: number;
+  };
+  lineOptions?: LineOptions;
   strokeOptions?: StrokeOptions;
 };
 
@@ -33,6 +38,20 @@ export class ShapeBuilder {
     config: Omit<ShapeSegment, "start" | "end"> = {}
   ): this {
     this.lines.push({ start, end, ...config });
+    return this;
+  }
+
+  public makeAllBrushstrokes(): this {
+    for (let i = 0; i < this.lines.length; i++) {
+      this.lines[i].brush = true;
+    }
+    return this;
+  }
+
+  public makeAllLines(): this {
+    for (let i = 0; i < this.lines.length; i++) {
+      this.lines[i].brush = false;
+    }
     return this;
   }
 
