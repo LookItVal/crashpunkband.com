@@ -58,8 +58,8 @@ export class Line {
       postSegmentNoiseMagnitudes: 0
     }
   ) {
-    this.start = start instanceof Point ? start : new Point(start.x, start.y);
-    this.end = end instanceof Point ? end : new Point(end.x, end.y);
+    this.start = start instanceof Point ? start : new Point(start);
+    this.end = end instanceof Point ? end : new Point(end);
     const { smoothness, segments, segmentLength, preSegmentNoiseMagnitudes, postSegmentNoiseMagnitudes } = options;
     if (smoothness! < 0) {
       this.smoothness = 0;

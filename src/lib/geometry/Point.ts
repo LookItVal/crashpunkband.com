@@ -16,7 +16,7 @@ export class Point {
   public readonly x: number;
   public readonly y: number;
 
-  constructor(x: number, y: number) {
+  constructor({x, y}: PointLike) {
     this.x = x;
     this.y = y;
     Object.freeze(this);
@@ -31,7 +31,7 @@ export class Point {
    */
   public applyVector(angle: number, magnitude: number): Point {
     const radians = (angle * Math.PI) / 180;
-    return new Point(this.x + Math.cos(radians) * magnitude, this.y + Math.sin(radians) * magnitude);
+    return new Point({ x: this.x + Math.cos(radians) * magnitude, y: this.y + Math.sin(radians) * magnitude });
   }
 
   /**

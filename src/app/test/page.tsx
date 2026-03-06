@@ -1,10 +1,12 @@
 import LineGroup from "@/components/CRASHTheme/LineGroup";
+import C from "@/components/CRASHTheme/Logo/C";
+import Brushstroke from "@/components/CRASHTheme/Brushstroke";
 
 export default function TestPage() {
   return (
     <main className="min-h-screen flex items-center justify-center">
       <svg viewBox="0 0 100 100" className="w-100 h-100 overflow-visible">
-        <LineGroup start={{ x: 0, y: 50 }} end={{ x: 100, y: 50 }} />
+        <Brushstroke start={{ x: 10, y: 10 }} end={{ x: 90, y: 90 }} />
       </svg>
     </main>
   );
