@@ -176,10 +176,14 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     <div className="flex ">
       <svg viewBox="0 0 100 100" className="w-14 h-14 overflow-visible">
         <path d={createRoughCirclePath(50, 50, 45, seed)} fill="none" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
-        <g id="playbutton">
+        <g id="playbutton" className="hidden">
           <path d={createRoughLinePath({ x: 40, y: 35 }, { x: 40, y: 65 }, seed + 1)} stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
           <path d={createRoughLinePath({ x: 40, y: 35 }, { x: 65, y: 50 }, seed + 2)} stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
           <path d={createRoughLinePath({ x: 40, y: 65 }, { x: 65, y: 50 }, seed + 3)} stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
+        </g>
+        <g id="pausebutton" className="">
+          <path d={createRoughLinePath({ x: 40, y: 35 }, { x: 40, y: 65 }, seed + 4)} stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
+          <path d={createRoughLinePath({ x: 60, y: 35 }, { x: 60, y: 65 }, seed + 5)} stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
         </g>
       </svg>
       <p>long play track</p>
