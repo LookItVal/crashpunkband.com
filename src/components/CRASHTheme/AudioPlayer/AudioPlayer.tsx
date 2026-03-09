@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import PlayIcon, { PlayIconHandle } from "@/components/CRASHTheme/Glyphs/Icons/PlayIcon";
 import PauseIcon, { PauseIconHandle } from "@/components/CRASHTheme/Glyphs/Icons/PauseIcon";
-import VolumeIcon, { VolumeIconHandle } from "@/components/CRASHTheme/Glyphs/Icons/VolumeIcon";
+import VolumeControl from "@/components/CRASHTheme/AudioPlayer/VolumeControl";
 import CircleGroup from "@/components/CRASHTheme/Utilities/CircleGroup";
 
 type AudioPlayerProps = {
@@ -11,9 +11,9 @@ type AudioPlayerProps = {
 
 export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.75);
   const playIconRef = useRef<PlayIconHandle>(null);
   const pauseIconRef = useRef<PauseIconHandle>(null);
-  const volumeIconRef = useRef<VolumeIconHandle>(null);
 
   const circleCenter = useMemo(() => ({ x: 50, y: 50 }), []);
   const circleStrokeOptions = useMemo(() => ({ stroke: "white", strokeWidth: 5 }), []);
@@ -29,8 +29,8 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     }
   };
 
-  const cycleVolume = () => {
-    volumeIconRef.current?.changeLevel(-1);
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
   };
 
   return (
@@ -46,8 +46,8 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
         <PauseIcon ref={pauseIconRef} size={100} position={{ x: 50, y: 50 }} fill="#FFFFFF" visible={false}/>
       </svg>
       <p>long play track</p>
-      <svg viewBox="0 0 100 100" className="w-14 h-14 overflow-visible" onClick={cycleVolume}>
-        <VolumeIcon ref={volumeIconRef} size={100} position={{ x: 50, y: 50 }} />
+      <svg viewBox="0 -50 100 200" className="w-14 h-32 overflow-visible">
+        <VolumeControl size={100} position={{ x: 50, y: 50 }} onVolumeChange={handleVolumeChange} />
       </svg>
     </div>
   );

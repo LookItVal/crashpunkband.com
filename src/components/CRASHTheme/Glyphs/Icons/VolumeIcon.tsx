@@ -42,6 +42,8 @@ export default function VolumeIcon({
   const [currentLevel, setCurrentLevel] = useState(() => clampLevel(level));
   const localRef = useRef<SVGGElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const isAnimatingRef = useRef(false);
+  const queuedLevelRef = useRef<number | null>(null);
   const previousVisibilityRef = useRef<{
     wave1: boolean;
     wave2: boolean;
@@ -52,16 +54,33 @@ export default function VolumeIcon({
   const clampedLevel = clampLevel(currentLevel);
 
   useEffect(() => setMounted(true), []);
-  useEffect(() => setCurrentLevel(clampLevel(level)), [level]);
+  useEffect(() => {
+    const nextLevel = clampLevel(level);
+    if (isAnimatingRef.current) {
+      queuedLevelRef.current = nextLevel;
+      return;
+    }
+    setCurrentLevel(nextLevel);
+  }, [level]);
 
   useImperativeHandle(ref, () => ({
     setLevel: (nextLevel: number) => {
-      setCurrentLevel(clampLevel(nextLevel));
+      const clampedNextLevel = clampLevel(nextLevel);
+      if (isAnimatingRef.current) {
+        queuedLevelRef.current = clampedNextLevel;
+        return;
+      }
+      setCurrentLevel(clampedNextLevel);
     },
     changeLevel: (delta: number) => {
-      setCurrentLevel((prev) => clampLevel(prev + Math.trunc(delta)));
+      const nextLevel = clampLevel(currentLevel + Math.trunc(delta));
+      if (isAnimatingRef.current) {
+        queuedLevelRef.current = nextLevel;
+        return;
+      }
+      setCurrentLevel(nextLevel);
     }
-  }), []);
+  }), [currentLevel]);
 
   const shapes = useMemo(() => {
     if (!mounted) return null;
@@ -216,17 +235,21 @@ export default function VolumeIcon({
       mute: mutePaths,
     };
 
-    if (timelineRef.current) {
-      timelineRef.current.kill();
-      timelineRef.current = null;
-    }
-
     const changedPathElements = changedParts.flatMap((part) => Array.from(partPaths[part]));
     gsap.killTweensOf(changedPathElements);
 
     const tl = gsap.timeline({
+      onStart: () => {
+        isAnimatingRef.current = true;
+      },
       onComplete: () => {
+        isAnimatingRef.current = false;
         timelineRef.current = null;
+        const queuedLevel = queuedLevelRef.current;
+        if (queuedLevel !== null && queuedLevel !== clampedLevel) {
+          queuedLevelRef.current = null;
+          setCurrentLevel(queuedLevel);
+        }
       }
     });
     timelineRef.current = tl;
