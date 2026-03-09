@@ -42,6 +42,7 @@ export default function PlayIcon({
   const [isAnimating, setIsAnimating] = useState(false);
   const localRef = useRef<SVGGElement>(null);
   const hasAnimatedRef = useRef(false);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => setMounted(true), []);
   useEffect(() => setIsVisible(visible), [visible]);
@@ -76,6 +77,13 @@ export default function PlayIcon({
     const paths = localRef.current.querySelectorAll("path");
     if (!paths.length) return;
 
+    // Kill any existing animations immediately
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+      timelineRef.current = null;
+    }
+    gsap.killTweensOf(paths);
+
     // Skip animation on initial render if not visible
     if (!hasAnimatedRef.current && !isVisible) {
       hasAnimatedRef.current = true;
@@ -93,8 +101,13 @@ export default function PlayIcon({
 
     const tl = gsap.timeline({
       onStart: () => setIsAnimating(true),
-      onComplete: () => setIsAnimating(false),
+      onComplete: () => {
+        setIsAnimating(false);
+        timelineRef.current = null;
+      },
     });
+
+    timelineRef.current = tl;
 
     if (isVisible) {
       // Animate in: draw stroke from hidden to visible
@@ -128,7 +141,11 @@ export default function PlayIcon({
     }
 
     return () => {
-      tl.kill();
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+        timelineRef.current = null;
+      }
+      gsap.killTweensOf(paths);
     };
   }, { scope: localRef, dependencies: [isVisible, shape] });
 
