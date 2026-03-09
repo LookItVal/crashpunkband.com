@@ -1,5 +1,5 @@
 import { ShapeBuilder } from "@/lib/geometry/Shape";
-import Shape from "@/components/CRASHTheme/Shape";
+import Shape from "@/components/CRASHTheme/Utilities/Shape";
 
 export default function C({
   lineHeight = 100

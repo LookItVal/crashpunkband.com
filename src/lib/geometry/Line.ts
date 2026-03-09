@@ -50,21 +50,22 @@ export class Line {
   constructor(
     start: Point | PointLike,
     end: Point | PointLike,
-    options: LineOptions = {
-      smoothness: 0,
-      segments: 0,
-      segmentLength: null,
-      preSegmentNoiseMagnitudes: 0,
-      postSegmentNoiseMagnitudes: 0
-    }
+    options: LineOptions = {}
   ) {
     this.start = start instanceof Point ? start : new Point(start);
     this.end = end instanceof Point ? end : new Point(end);
-    const { smoothness, segments, segmentLength, preSegmentNoiseMagnitudes, postSegmentNoiseMagnitudes } = options;
-    if (smoothness! < 0) {
+    const {
+      smoothness = 0,
+      segments = 0,
+      segmentLength = null,
+      preSegmentNoiseMagnitudes = 0,
+      postSegmentNoiseMagnitudes = 0,
+    } = options;
+
+    if (smoothness < 0) {
       this.smoothness = 0;
     } else {
-      this.smoothness = smoothness!;
+      this.smoothness = smoothness;
     }
     if (!!segments && !!segmentLength) {
       throw new Error("Cannot specify both segments and segmentLength");
@@ -77,15 +78,15 @@ export class Line {
     } else {
       this.segments = 0;
     }
-    if (preSegmentNoiseMagnitudes! < 0) {
+    if (preSegmentNoiseMagnitudes < 0) {
       this.preSegmentNoiseMagnitudes = 0;
     } else {
-      this.preSegmentNoiseMagnitudes = preSegmentNoiseMagnitudes!;
+      this.preSegmentNoiseMagnitudes = preSegmentNoiseMagnitudes;
     }
-    if (postSegmentNoiseMagnitudes! < 0) {
+    if (postSegmentNoiseMagnitudes < 0) {
       this.postSegmentNoiseMagnitudes = 0;
     } else {
-      this.postSegmentNoiseMagnitudes = postSegmentNoiseMagnitudes!;
+      this.postSegmentNoiseMagnitudes = postSegmentNoiseMagnitudes;
     }
     this.preSegmentPoints = this.applyPreSegmentNoise();
     this.points = this.generateNoisySegments();

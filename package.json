@@ -10,6 +10,7 @@
     "export": "next build && next export"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@types/matter-js": "^0.19.8",
     "gsap": "^3.14.2",
     "matter-js": "^0.20.0",

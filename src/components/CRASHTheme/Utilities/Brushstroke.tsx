@@ -1,7 +1,7 @@
 import { PointLike } from "@/lib/geometry/Point";
 import { Line, LineOptions } from "@/lib/geometry/Line";
 import { Point } from "@/lib/geometry/Point";
-import LineGroup from "@/components/CRASHTheme/LineGroup";
+import LineGroup from "@/components/CRASHTheme/Utilities/LineGroup";
 
 type BrushstrokeProps = {
   start: PointLike;

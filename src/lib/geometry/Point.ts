@@ -45,4 +45,25 @@ export class Point {
     const magnitude = Math.random() * maxMagnitude;
     return this.applyVector(angle, magnitude);
   }
+
+  /**
+   * Returns a new Point that is the result of translating this point by the given x and y offsets.
+   * 
+   * @param x - The amount to translate in the x direction.
+   * @param y - The amount to translate in the y direction.
+   * @returns A new Point after applying the translation.
+   */
+  public translate({x=0, y=0}: {x?: number; y?: number}): Point {
+    return new Point({ x: this.x + x, y: this.y + y });
+  }
+
+  /**
+   * Returns a new Point that is the result of scaling this point by the given factor.
+   * 
+   * @param factor - The factor to scale the point by.
+   * @returns A new Point after applying the scaling.
+   */
+  public scale(factor: number): Point {
+    return new Point({ x: this.x * factor, y: this.y * factor });
+  }
 }

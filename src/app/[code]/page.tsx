@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getSongByCode, getAllSongCodes } from "@/config/songs";
-import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
 
 type PageProps = {
   params: Promise<{
