@@ -5,6 +5,7 @@ import Brushstroke from "@/components/CRASHTheme/Utilities/Brushstroke";
 import CircleGroup from "@/components/CRASHTheme/Utilities/CircleGroup";
 
 type ShapeProps = {
+  ref?: React.Ref<SVGElement>;
 	shape: ShapeDefinition;
 	defaultCount?: number;
   defaultBrushstrokeOptions?: {
@@ -16,6 +17,7 @@ type ShapeProps = {
 };
 
 export default function Shape({
+  ref,
 	shape,
 	defaultCount,
   defaultBrushstrokeOptions,
@@ -28,7 +30,7 @@ export default function Shape({
   }
 }: ShapeProps) {
 	return (
-		<g data-shape-name={shape.name}>
+		<g>
 			{shape.shapeSegments.map((segment, i) => (
         (segment.type === "line") ? (
           (segment.brush) ? (

@@ -36,7 +36,6 @@ export type ShapeSegmentCircle = {
 };
 
 export type ShapeDefinition = {
-  name?: string;
   shapeSegments: ShapeSegment[];
 };
 
