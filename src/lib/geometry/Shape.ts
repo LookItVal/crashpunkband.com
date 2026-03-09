@@ -7,6 +7,8 @@ export type StrokeOptions = {
   strokeWidth?: number;
   strokeLinecap?: "butt" | "round" | "square";
   strokeLinejoin?: "round" | "bevel" | "miter" | "inherit";
+  strokeDasharray?: number | string;
+  strokeDashoffset?: number | string;
 };
 
 export type ShapeSegment = ShapeSegmentLine | ShapeSegmentCircle;

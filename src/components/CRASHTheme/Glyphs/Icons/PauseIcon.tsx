@@ -17,12 +17,12 @@ const DEFAULT_STROKE_OPTIONS: StrokeOptions = {
 
 const MemoizedShape = memo(Shape);
 
-export type PlayIconHandle = {
+export type PauseIconHandle = {
   toggleVisibility: () => void;
 };
 
-type PlayIconProps = {
-  ref: React.Ref<PlayIconHandle>;
+type PauseIconProps = {
+  ref: React.Ref<PauseIconHandle>;
   size?: number;
   position?: { x: number; y: number };
   fill?: string;
@@ -30,13 +30,13 @@ type PlayIconProps = {
   visible?: boolean;
 };
 
-export default function PlayIcon({
+export default function PauseIcon({
   ref,
   size = 100,
   position = { x: 0, y: 0 },
   strokeOptions = DEFAULT_STROKE_OPTIONS,
   visible = true
-}: PlayIconProps) {
+}: PauseIconProps) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(visible);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -49,9 +49,8 @@ export default function PlayIcon({
   const shape = useMemo(() => {
     if (!mounted) return null;
     return new ShapeBuilder()
-      .addLine({ x: -0.25, y: -0.3 }, { x: -0.25, y: 0.3 })
-      .addLine({ x: -0.25, y: -0.3 }, { x: 0.3, y: 0 })
-      .addLine({ x: -0.25, y: 0.3 }, { x: 0.3, y: 0 })
+      .addLine({ x: -0.15, y: -0.25 }, { x: -0.15, y: 0.25 })
+      .addLine({ x: 0.15, y: -0.25 }, { x: 0.15, y: 0.25 })
       .makeAllLines()
       .scale(size)
       .translate(position)
@@ -59,9 +58,9 @@ export default function PlayIcon({
         type: "line",
         count: 1,
         lineOptions: {
-          segmentLength: 20,
-          preSegmentNoiseMagnitudes: 5,
-          postSegmentNoiseMagnitudes: 2,
+          segmentLength: 2,
+          preSegmentNoiseMagnitudes: 1,
+          postSegmentNoiseMagnitudes: 0.2,
         }
       }).build();
   }, [mounted, size, position.x, position.y]);
@@ -93,7 +92,7 @@ export default function PlayIcon({
 
     const tl = gsap.timeline({
       onStart: () => setIsAnimating(true),
-      onComplete: () => setIsAnimating(false),
+      onComplete: () => setIsAnimating(false)
     });
 
     if (isVisible) {
@@ -104,7 +103,7 @@ export default function PlayIcon({
         strokeDashoffset: 100,
         opacity: 1,
         filter: "blur(0px)",
-        delay,
+        delay,        
       });
       tl.to(paths, {
         strokeDashoffset: 0,
