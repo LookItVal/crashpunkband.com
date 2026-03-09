@@ -1,13 +1,26 @@
 "use client";
 
-import { useEffect, useImperativeHandle, useState, useRef } from "react";
+import { useEffect, useImperativeHandle, useState, useRef, useMemo, memo } from "react";
 import gsap from "gsap";
 import Shape from "@/components/CRASHTheme/Utilities/Shape";
 import { ShapeBuilder, StrokeOptions, ShapeDefinition } from "@/lib/geometry/Shape";
 import { useGSAP } from "@gsap/react";
 
+const DEFAULT_STROKE_OPTIONS: StrokeOptions = {
+  stroke: "white",
+  strokeWidth: 0.5,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+};
+
+const MemoizedShape = memo(Shape);
+
+export type PlayIconHandle = {
+  toggleVisibility: () => void;
+};
+
 type PlayIconProps = {
-  ref: React.Ref<SVGElement>;
+  ref: React.Ref<PlayIconHandle>;
   size?: number;
   position?: { x: number; y: number };
   fill?: string;
@@ -19,52 +32,19 @@ export default function PlayIcon({
   ref,
   size = 100,
   position = { x: 0, y: 0 },
-  strokeOptions: strokeOptions = {
-    stroke: "white",
-    strokeWidth: 0.5,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  },
+  strokeOptions = DEFAULT_STROKE_OPTIONS,
   visible = true
 }: PlayIconProps) {
-  const [shape, setShape] = useState<ShapeDefinition | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(visible);
   const localRef = useRef<SVGGElement>(null);
 
-  useGSAP(() => {
-    if (!shape || !localRef.current) return;
+  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsVisible(visible), [visible]);
 
-    const paths = localRef.current.querySelectorAll("path");
-    if (!paths.length) return;
-
-    const tl = gsap.timeline();
-
-    if (visible) {
-      // Animate in: draw stroke from hidden to visible
-      gsap.set(paths, { strokeDasharray: 50, strokeDashoffset: 50, opacity: 1, filter: "blur(0px)" });
-      tl.to(paths, {
-        strokeDashoffset: 0,
-        duration: "random(0.1, 0.5)",
-        ease: "power2.in",
-        delay: "random(0, 0.5)",
-      });
-    } else {
-      // Animate out: blur and fade
-      tl.to(paths, {
-        opacity: 0,
-        filter: "blur(4px)",
-        duration: 0.6,
-        ease: "power2.in",
-        stagger: 0.03
-      });
-    }
-
-    return () => {
-      tl.kill();
-    };
-  }, { scope: localRef, dependencies: [visible, shape] });
-
-  useEffect(() => {
-    const shape = new ShapeBuilder()
+  const shape = useMemo(() => {
+    if (!mounted) return null;
+    return new ShapeBuilder()
       .addLine({ x: 0.5, y: 0.5 }, { x: 0.5, y: -0.5 })
       .addLine({ x: 0.5, y: -0.5 }, { x: -0.5, y: -0.5 })
       .addLine({ x: -0.5, y: -0.5 }, { x: -0.5, y: 0.5 })
@@ -83,17 +63,59 @@ export default function PlayIcon({
           preSegmentNoiseMagnitudes: 1,
           postSegmentNoiseMagnitudes: 0.2,
         }
-      });
+      }).build();
+  }, [mounted, size, position.x, position.y]);
+  
+  useImperativeHandle(ref, () => ({
+    toggleVisibility: () => setIsVisible((p) => !p),
+  }), []);
 
-    setShape(shape.build());
-  }, [size, position]);
+  useGSAP(() => {
+    if (!shape || !localRef.current) return;
+
+    const paths = localRef.current.querySelectorAll("path");
+    if (!paths.length) return;
+
+    const tl = gsap.timeline();
+
+    if (isVisible) {
+      // Animate in: draw stroke from hidden to visible
+      gsap.set(paths, {
+        strokeDasharray: 50,
+        strokeDashoffset: 50,
+        opacity: 1,
+        scaleX: 1,
+        scaleY: 1,
+        filter: "blur(0px)" });
+      tl.to(paths, {
+        strokeDashoffset: 0,
+        duration: "random(0.1, 0.5)",
+        ease: "power2.in",
+        delay: "random(0, 0.5)",
+      });
+    } else {
+      // Animate out: blur and fade
+      tl.to(paths, {
+        opacity: 0,
+        filter: "blur(4px)",
+        scaleX: "random(1.5, 2.5)",
+        scaleY: "random(1.2, 1.5)",
+        duration: 0.6,
+        ease: "power2.in",
+      });
+    }
+
+    return () => {
+      tl.kill();
+    };
+  }, { scope: localRef, dependencies: [isVisible, shape] });
 
   if (!shape) {
-    return <g/>;
+    return <g ref={localRef} />;
   }
   return (
-  <g ref={localRef}>
-      <Shape shape={shape} defaultStrokeOptions={{ ...strokeOptions }} />
+    <g ref={localRef}>
+      <MemoizedShape shape={shape} defaultStrokeOptions={strokeOptions} />
     </g>
   );
 }
