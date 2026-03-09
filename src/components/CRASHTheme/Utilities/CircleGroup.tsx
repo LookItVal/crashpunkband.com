@@ -1,3 +1,4 @@
+import { useMemo, memo, useState, useEffect } from "react";
 import { PointLike } from "@/lib/geometry/Point";
 import { Circle, CircleOptions } from "@/lib/geometry/Circle";
 import { StrokeOptions } from "@/lib/geometry/Shape";
@@ -11,7 +12,7 @@ type CircleGroupProps = {
   strokeOptions?: StrokeOptions;
 }
 
-export default function CircleGroup({
+function CircleGroup({
   center,
   radius,
   count = 5,
@@ -30,11 +31,23 @@ export default function CircleGroup({
     strokeLinejoin: "round"
   }
 }: CircleGroupProps) {
-  const baseCircle = new Circle(center, radius, options);
-  const circles: Circle[] = [];
-  for (let i = 0; i < count; i++) {
-    circles.push(baseCircle.duplicateWithNoise(postNoiseMagnitude));
-  }
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const circles = useMemo(() => {
+    if (!mounted) return [];
+    const baseCircle = new Circle(center, radius, options);
+    const result: Circle[] = [];
+    for (let i = 0; i < count; i++) {
+      result.push(baseCircle.duplicateWithNoise(postNoiseMagnitude));
+    }
+    return result;
+  }, [center, radius, count, postNoiseMagnitude, options, mounted]);
+
+  if (!mounted) return null;
   return (
     <g>
       {Array.from({ length: count }, (_, i) => (
@@ -48,3 +61,5 @@ export default function CircleGroup({
     </g>
   );
 }
+
+export default memo(CircleGroup);
