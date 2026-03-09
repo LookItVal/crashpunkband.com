@@ -1,8 +1,5 @@
-/**
- * An object with x and y properties representing a point in 2D space.
- * @property {number} x - The x-coordinate of the point.
- * @property {number} y - The y-coordinate of the point.
- */
+import { Vector, VectorLike } from "./Vector";
+
 export interface PointLike {
   x: number;
   y: number;
@@ -32,6 +29,19 @@ export class Point {
   public applyVector(angle: number, magnitude: number): Point {
     const radians = (angle * Math.PI) / 180;
     return new Point({ x: this.x + Math.cos(radians) * magnitude, y: this.y + Math.sin(radians) * magnitude });
+  }
+
+  /**
+   * Returns a Vector representing the direction and distance from this point to another point.
+   * @param other - The other point to calculate the vector to.
+   * @returns A Vector representing the direction and distance from this point to the other point.
+   */
+  public getVectorTo(other: Point): Vector {
+    const dx = other.x - this.x;
+    const dy = other.y - this.y;
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+    const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+    return new Vector({ magnitude, angle });
   }
 
   /**

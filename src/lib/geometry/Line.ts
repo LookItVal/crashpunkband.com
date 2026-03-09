@@ -10,23 +10,6 @@ export type LineOptions = {
 
 /**
  * Represents a line segment in 2D space defined by a start and end point, with optional noise applied to create a hand-drawn effect.
- * 
- * @property {Point} start - The starting point of the line.
- * @property {Point} end - The ending point of the line.
- * @property {number} length - The length of the line segment.
- * @property {number} angle - The angle of the line segment in degrees, after the pre-segment noise has been applied.
- * @property {string} pathData - The SVG path data representing the line, including any applied noise.
- * 
- * @param {Point | PointLike} start - The starting point of the line, either as a Point instance or an object with x and y properties.
- * @param {Point | PointLike} end - The ending point of the line, either as a Point instance or an object with x and y properties.
- * @param {number} smoothness - A number from 0 to 1 representing how smooth the line should be.
- * @param {number | null} segments - The number of segments to divide the line into for applying noise. Must be a non-negative integer. 
- * @param {number | null} segmentLength - The average length of each segment to divide the line into for applying noise. Must be a positive number.
- * @param {number} preSegmentNoiseMagnitudes - The maximum magnitude of noise to apply to the start and end points of the line, before the segments are generated. this creates a slight angle and slight overhang at the endpoints.
- * @param {number} postSegmentNoiseMagnitudes - The maximum magnitude of noise to apply to the points after the segments are generated. This creates a more jittery, less straight line. A value of 0 creates a perfectly straight line.
- * 
- * @throws Will throw an error if both segments and segmentLength are specified, or if neither are specified, or if segments is negative, or if segmentLength is not positive.
- * 
  * @immutable
  */
 export class Line {

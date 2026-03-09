@@ -59,9 +59,9 @@ export default function PauseIcon({
         type: "line",
         count: 1,
         lineOptions: {
-          segmentLength: 2,
-          preSegmentNoiseMagnitudes: 1,
-          postSegmentNoiseMagnitudes: 0.2,
+          segmentLength: 20,
+          preSegmentNoiseMagnitudes: 5,
+          postSegmentNoiseMagnitudes: 2,
         }
       }).build();
   }, [mounted, size, position.x, position.y]);
@@ -109,7 +109,6 @@ export default function PauseIcon({
     timelineRef.current = tl;
 
     if (isVisible) {
-      // Animate in: draw stroke from hidden to visible
       const delay = isAnimating ? 0 : 0.3;
       tl.set(paths, {
         strokeDasharray: 100,
@@ -125,7 +124,6 @@ export default function PauseIcon({
         delay: "random(0, 0.5)",
       });
     } else {
-      // Animate out: blur and fade
       tl.set(paths, {
         strokeDashoffset: 0,
         opacity: 1,

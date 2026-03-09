@@ -1,6 +1,8 @@
 import { LineOptions } from "./Line";
 import { CircleOptions } from "./Circle";
 import { PointLike, Point } from "./Point";
+import { CurveOptions } from "./Curve";
+import { Vector, VectorLike } from "./Vector";
 
 export type StrokeOptions = {
   stroke?: string;
@@ -11,7 +13,7 @@ export type StrokeOptions = {
   strokeDashoffset?: number | string;
 };
 
-export type ShapeSegment = ShapeSegmentLine | ShapeSegmentCircle;
+export type ShapeSegment = ShapeSegmentLine | ShapeSegmentCircle | ShapeSegmentCurve;
 
 export type ShapeSegmentLine = {
   type: "line";
@@ -36,6 +38,18 @@ export type ShapeSegmentCircle = {
   circleOptions?: CircleOptions;
   strokeOptions?: StrokeOptions;
 };
+
+export type ShapeSegmentCurve = {
+  type: "curve";
+  startPoint: Point;
+  startVector: Vector;
+  endPoint: Point;
+  endVector: Vector;
+  count?: number;
+  curveOptions?: CurveOptions;
+  strokeOptions?: StrokeOptions;
+};
+  
 
 export type ShapeDefinition = {
   shapeSegments: ShapeSegment[];
@@ -65,6 +79,24 @@ export class ShapeBuilder {
     return this;
   }
 
+  public addCurve(
+    startPoint: PointLike,
+    startVector: VectorLike,
+    endPoint: PointLike,
+    endVector: VectorLike,
+    config: Omit<ShapeSegmentCurve, "startPoint" | "startVector" | "endPoint" | "endVector" | "type"> = {}
+  ): this {
+    this.shapeSegments.push({
+      type: "curve",
+      startPoint: new Point(startPoint),
+      startVector: new Vector(startVector),
+      endPoint: new Point(endPoint),
+      endVector: new Vector(endVector),
+      ...config
+    });
+    return this;
+  }
+
   public makeAllBrushstrokes(): this {
     for (let i = 0; i < this.shapeSegments.length; i++) {
       if (this.shapeSegments[i].type === "line") {
@@ -84,9 +116,9 @@ export class ShapeBuilder {
   }
 
   public applyOptions(
-    options: Partial<ShapeSegmentLine> | Partial<ShapeSegmentCircle>,
+    options: Partial<ShapeSegmentLine> | Partial<ShapeSegmentCircle> | Partial<ShapeSegmentCurve>,
     filter: {
-      segmentType?: "line" | "circle",
+      segmentType?: "line" | "circle" | "curve",
       index?: number,
       startIndex?: number,
       endIndex?: number
@@ -131,6 +163,21 @@ export class ShapeBuilder {
           circleOptions: Object.keys(circleOptions).length ? circleOptions : undefined,
           strokeOptions: Object.keys(strokeOptions).length ? strokeOptions : undefined,
         } as ShapeSegmentCircle;
+      } else if (segment.type === "curve" && options.type === "curve") {
+        const curveOptions = {
+          ...segment.curveOptions,
+          ...options.curveOptions,
+        };
+        const strokeOptions = {
+          ...segment.strokeOptions,
+          ...options.strokeOptions,
+        };
+        return {
+          ...segment,
+          ...options,
+          curveOptions: Object.keys(curveOptions).length ? curveOptions : undefined,
+          strokeOptions: Object.keys(strokeOptions).length ? strokeOptions : undefined,
+        } as ShapeSegmentCurve;
       }
       throw new Error("Segment type mismatch or options missing type");
     });
@@ -151,7 +198,16 @@ export class ShapeBuilder {
           center: segment.center.scale(factor),
           radius: segment.radius * factor,
         };
+      } else if (segment.type === "curve") {
+        return {
+          ...(segment as ShapeSegmentCurve),
+          startPoint: segment.startPoint.scale(factor),
+          startVector: segment.startVector.scale(factor),
+          endPoint: segment.endPoint.scale(factor),
+          endVector: segment.endVector.scale(factor),
+        };
       }
+
       return segment;
     });
     return this;
@@ -169,6 +225,12 @@ export class ShapeBuilder {
         return {
           ...(segment as ShapeSegmentCircle),
           center: segment.center.translate({x, y}),
+        };
+      } else if (segment.type === "curve") {
+        return {
+          ...(segment as ShapeSegmentCurve),
+          startPoint: segment.startPoint.translate({x, y}),
+          endPoint: segment.endPoint.translate({x, y}),
         };
       }
       return segment;
