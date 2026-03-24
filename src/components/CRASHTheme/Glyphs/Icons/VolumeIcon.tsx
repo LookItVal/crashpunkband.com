@@ -179,6 +179,7 @@ export default function VolumeIcon({
   useGSAP(() => {
     if (!shapes || !localRef.current) return;
 
+    const basePaths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="base"] path');
     const wave1Paths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="wave1"] path');
     const wave2Paths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="wave2"] path');
     const wave3Paths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="wave3"] path');
@@ -190,18 +191,13 @@ export default function VolumeIcon({
       mute: clampedLevel === 0,
     };
 
-    const allPaths = [wave1Paths, wave2Paths, wave3Paths, mutePaths].flatMap((group) => Array.from(group));
+    const allPaths = [basePaths, wave1Paths, wave2Paths, wave3Paths, mutePaths].flatMap((group) => Array.from(group));
 
-    // First paint: set to the correct state with no animation.
+    // First paint: draw in icon using the same line animation system.
     if (!previousVisibilityRef.current) {
-      const setPartState = (paths: NodeListOf<SVGPathElement>, shouldShow: boolean) => {
+      const setHiddenState = (paths: NodeListOf<SVGPathElement>) => {
         if (!paths.length) return;
-        gsap.set(paths, shouldShow ? {
-          strokeDasharray: 100,
-          strokeDashoffset: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-        } : {
+        gsap.set(paths, {
           strokeDasharray: 100,
           strokeDashoffset: 0,
           opacity: 0,
@@ -209,10 +205,53 @@ export default function VolumeIcon({
         });
       };
 
-      setPartState(wave1Paths, visibility.wave1);
-      setPartState(wave2Paths, visibility.wave2);
-      setPartState(wave3Paths, visibility.wave3);
-      setPartState(mutePaths, visibility.mute);
+      setHiddenState(wave1Paths);
+      setHiddenState(wave2Paths);
+      setHiddenState(wave3Paths);
+      setHiddenState(mutePaths);
+
+      const openingGroups: NodeListOf<SVGPathElement>[] = [basePaths];
+      if (visibility.wave1) openingGroups.push(wave1Paths);
+      if (visibility.wave2) openingGroups.push(wave2Paths);
+      if (visibility.wave3) openingGroups.push(wave3Paths);
+      if (visibility.mute) openingGroups.push(mutePaths);
+
+      const tl = gsap.timeline({
+        onStart: () => {
+          isAnimatingRef.current = true;
+        },
+        onComplete: () => {
+          isAnimatingRef.current = false;
+          timelineRef.current = null;
+          const queuedLevel = queuedLevelRef.current;
+          if (queuedLevel !== null && queuedLevel !== clampedLevel) {
+            queuedLevelRef.current = null;
+            setCurrentLevel(queuedLevel);
+          }
+        }
+      });
+      timelineRef.current = tl;
+
+      openingGroups.forEach((paths, i) => {
+        if (!paths.length) return;
+        const startAt = i * 0.05;
+        Array.from(paths).forEach((path) => {
+          const length = path.getTotalLength();
+          tl.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+            opacity: 1,
+            filter: "blur(0px)",
+          }, startAt);
+          tl.to(path, {
+            strokeDashoffset: 0,
+            duration: "random(0.1, 0.5)",
+            ease: "power2.in",
+            delay: "random(0, 0.5)",
+          }, startAt);
+        });
+      });
+
       previousVisibilityRef.current = visibility;
       return;
     }
@@ -271,7 +310,7 @@ export default function VolumeIcon({
           strokeDashoffset: 0,
           duration: "random(0.1, 0.5)",
           ease: "power2.in",
-          delay: "random(0, 0.2)",
+          delay: "random(0, 0.5)",
         }, startAt);
       } else {
         tl.set(paths, {
@@ -284,6 +323,7 @@ export default function VolumeIcon({
           filter: "blur(10px)",
           duration: 0.3,
           ease: "power2.in",
+          delay: "random(0, 0.5)",
         }, startAt);
       }
     });

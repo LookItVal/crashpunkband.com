@@ -5,14 +5,12 @@ import LineGroup from "@/components/CRASHTheme/Utilities/LineGroup";
 import C from "@/components/CRASHTheme/Logo/C";
 import Brushstroke from "@/components/CRASHTheme/Utilities/Brushstroke";
 import CircleGroup from "@/components/CRASHTheme/Utilities/CircleGroup";
-import PlayIcon, { PlayIconHandle } from "@/components/CRASHTheme/Glyphs/Icons/PlayIcon";
-import PauseIcon, { PauseIconHandle } from "@/components/CRASHTheme/Glyphs/Icons/PauseIcon";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
 
 export default function TestPage() {
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <AudioPlayer audioSrc="/audio/test-audio.mp3" />
+      <AudioPlayer audioSrc="/audio/Cut Loose.wav" />
     </main>
   );
 }

@@ -47,6 +47,20 @@ export default function VolumeControl({
   const lineStart = useMemo(() => ({ x: position.x, y: faderTop }), [position.x, faderTop]);
   const lineEnd = useMemo(() => ({ x: position.x, y: faderBottom }), [position.x, faderBottom]);
   const knobCenter = useMemo(() => ({ x: position.x, y: knobY }), [position.x, knobY]);
+  const knobLocalCenter = useMemo(() => ({ x: 0, y: 0 }), []);
+  const lineOptions = useMemo(() => ({
+    smoothness: 0.8,
+    segmentLength: 16,
+    preSegmentNoiseMagnitudes: 3,
+    postSegmentNoiseMagnitudes: 0.8,
+  }), []);
+  const knobCircleOptions = useMemo(() => ({
+    rotation: -90,
+    overhangAngle: -10,
+    overhangAngleNoise: 10,
+    segments: 4,
+    segmentNoiseMagnitudes: 1,
+  }), []);
 
   const setVolumeValue = useCallback((nextVolume: number) => {
     const clampedVolume = Math.max(0, Math.min(1, nextVolume));
@@ -151,6 +165,8 @@ export default function VolumeControl({
   useGSAP(() => {
     if (!localRef.current) return;
 
+    const lineGroup = localRef.current.querySelector<SVGGElement>('[data-part="fader-line"]');
+    const knobGroup = localRef.current.querySelector<SVGGElement>('[data-part="fader-knob"]');
     const linePaths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="fader-line"] path');
     const knobPaths = localRef.current.querySelectorAll<SVGPathElement>('[data-part="fader-knob"] path');
     const allPaths = [...Array.from(linePaths), ...Array.from(knobPaths)];
@@ -171,29 +187,47 @@ export default function VolumeControl({
 
     if (isOpen) {
       // Draw in: line first, then knob
-      tl.set(linePaths, {
-        strokeDasharray: 200,
-        strokeDashoffset: 200,
+      tl.set(lineGroup, {
         opacity: 1,
-        filter: "blur(0px)",
       });
+
+      linePaths.forEach((path) => {
+        const pathLength = path.getTotalLength();
+        tl.set(path, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength,
+          opacity: 1,
+          filter: "blur(0px)",
+        }, 0);
+      });
+
       tl.to(linePaths, {
         strokeDashoffset: 0,
         duration: 0.4,
         ease: "power2.out",
       });
-      tl.set(knobPaths, {
-        strokeDasharray: 100,
-        strokeDashoffset: 100,
+
+      const knobStartAt = 0.3;
+      knobPaths.forEach((path) => {
+        const pathLength = path.getTotalLength();
+        tl.set(path, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength,
+          opacity: 1,
+          filter: "blur(0px)",
+        }, knobStartAt);
+      });
+
+      tl.set(knobGroup, {
         opacity: 1,
-        filter: "blur(0px)",
-      }, "-=0.1");
+      }, knobStartAt);
+
       tl.to(knobPaths, {
         strokeDashoffset: 0,
         duration: "random(0.1, 0.3)",
         ease: "power2.in",
         delay: "random(0, 0.1)",
-      });
+      }, knobStartAt);
     } else {
       // Fade out: blur and fade both
       tl.set(allPaths, {
@@ -207,6 +241,11 @@ export default function VolumeControl({
         duration: 0.3,
         ease: "power2.in",
       });
+      tl.to([lineGroup, knobGroup], {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in",
+      }, "<");
     }
 
     return () => {
@@ -220,7 +259,7 @@ export default function VolumeControl({
 
   const lineStrokeOptions = useMemo(() => ({
     stroke: "white",
-    strokeWidth: 3,
+    strokeWidth: 5,
     strokeLinecap: "round" as const,
   }), []);
 
@@ -233,62 +272,55 @@ export default function VolumeControl({
   return (
     <g ref={localRef}>
       <g onClick={handleToggle} style={{ cursor: 'pointer' }}>
+        <rect
+          x={position.x - (size * 0.72)}
+          y={position.y - (size * 0.72)}
+          width={size * 1.44}
+          height={size * 1.44}
+          fill="transparent"
+        />
         <VolumeIcon ref={volumeIconRef} size={size} position={position} />
       </g>
       
-      {isOpen && (
-        <>
-          <g data-part="fader-line">
-            <rect
-              x={position.x - 14}
-              y={faderBottom - 10}
-              width={28}
-              height={faderHeight + 20}
-              fill="transparent"
-              onMouseDown={handleTrackMouseDown}
-              style={{ cursor: "ns-resize" }}
-            />
-            <LineGroup
-              start={lineStart}
-              end={lineEnd}
-              count={1}
-              options={{
-                smoothness: 0,
-                segments: 0,
-                preSegmentNoiseMagnitudes: 0,
-                postSegmentNoiseMagnitudes: 0,
-              }}
-              strokeOptions={lineStrokeOptions}
-            />
-          </g>
-          <g
-            data-part="fader-knob"
-            onMouseDown={handleMouseDown}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-          >
-            <circle
-              cx={knobCenter.x}
-              cy={knobCenter.y}
-              r={12}
-              fill="transparent"
-            />
-            <CircleGroup
-              center={knobCenter}
-              radius={8}
-              count={1}
-              postNoiseMagnitude={0}
-              options={{
-                rotation: 0,
-                overhangAngle: 0,
-                overhangAngleNoise: 0,
-                segments: 4,
-                segmentNoiseMagnitudes: 0,
-              }}
-              strokeOptions={knobStrokeOptions}
-            />
-          </g>
-        </>
-      )}
+      <g data-part="fader-line" style={{ opacity: 0 }}>
+        <rect
+          x={position.x - 14}
+          y={faderBottom - 10}
+          width={28}
+          height={faderHeight + 20}
+          fill="transparent"
+          onMouseDown={isOpen ? handleTrackMouseDown : undefined}
+          style={{ cursor: isOpen ? "ns-resize" : "default" }}
+        />
+        <LineGroup
+          start={lineStart}
+          end={lineEnd}
+          count={1}
+          options={lineOptions}
+          strokeOptions={lineStrokeOptions}
+        />
+      </g>
+      <g
+        data-part="fader-knob"
+        onMouseDown={isOpen ? handleMouseDown : undefined}
+        style={{ opacity: 0, cursor: isOpen ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+        transform={`translate(${knobCenter.x} ${knobCenter.y})`}
+      >
+        <circle
+          cx={0}
+          cy={0}
+          r={12}
+          fill="transparent"
+        />
+        <CircleGroup
+          center={knobLocalCenter}
+          radius={8}
+          count={1}
+          postNoiseMagnitude={0}
+          options={knobCircleOptions}
+          strokeOptions={knobStrokeOptions}
+        />
+      </g>
     </g>
   );
 }
