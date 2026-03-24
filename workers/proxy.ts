@@ -62,7 +62,7 @@ async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fr
       redirect: "follow",
       headers: {
         "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Cloudflare-Worker",
         Accept: "text/calendar,application/octet-stream,*/*;q=0.1",
         Referer: "https://calendar.google.com/",
       },
@@ -146,7 +146,7 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
       redirect: "follow",
       headers: {
         "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Cloudflare-Worker",
         Accept: "image/*,*/*;q=0.1",
         Referer: "https://drive.google.com/",
       },
