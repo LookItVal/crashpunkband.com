@@ -43,6 +43,12 @@ async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fr
 
   const cached = await cache.match(cacheKey);
   if (cached) {
+    console.log(JSON.stringify({
+      event: "Served ICS from short-term cache",
+      fromShortCache: true,
+      fromStaleCache: false
+    }));
+    
     return { body: await cached.text(), fromCache: true };
   }
 
@@ -72,6 +78,15 @@ async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fr
   if (!upstreamSuccess || !upstream?.ok) {
     const staleBody = await env.STALE_CALENDAR_ICS.get('calendar.ics');
     if (staleBody) {
+      console.log(JSON.stringify({
+        event: "Upstream ICS fetch failed, serving stale cache",
+        success: upstreamSuccess,
+        error: String(upstreamError),
+        errorType: (upstreamError as Error)?.constructor?.name || "unknown",
+        status: upstream?.status,
+        fromShortCache: false,
+        fromStaleCache: true
+      }));
       return { body: staleBody, fromCache: true };
     }
 
