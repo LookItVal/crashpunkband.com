@@ -7,5 +7,5 @@ compatibility_date = "2026-03-04"
 id = "b4d2428b1de641e0893fe9e0e35f40f0"
 binding = "STALE_CALENDAR_ICS"
 
-[[observability]]
+[[observability.logs]]
 enabled = true
