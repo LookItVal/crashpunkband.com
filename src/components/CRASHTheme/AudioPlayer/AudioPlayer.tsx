@@ -46,7 +46,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
         <PauseIcon ref={pauseIconRef} size={100} position={{ x: 50, y: 50 }} fill="#FFFFFF" visible={false}/>
       </svg>
       <p>long play track</p>
-      <svg viewBox="0 -50 100 200" className="w-14 h-32 overflow-visible">
+      <svg viewBox="0 0 100 100" className="w-14 h-14 overflow-visible">
         <VolumeControl size={100} position={{ x: 50, y: 50 }} onVolumeChange={handleVolumeChange} />
       </svg>
     </div>
