@@ -124,8 +124,8 @@ export class Line {
       segments.push(this.preSegmentPoints[0].applyVector(this.angle, belzier_magnitude));
       let lastPoint = segments[0];
       for (let i = 1; i <= this.segments; i++) {
-        let nextPoint = lastPoint.applyVector(this.angle, segmentLength);
-        let controlPoint = nextPoint.applyVector(this.angle - 180, belzier_magnitude);
+        const nextPoint = lastPoint.applyVector(this.angle, segmentLength);
+        const controlPoint = nextPoint.applyVector(this.angle - 180, belzier_magnitude);
         segments.push(controlPoint);
         segments.push(nextPoint);
         lastPoint = nextPoint;
