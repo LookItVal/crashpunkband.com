@@ -95,6 +95,13 @@ async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fr
   await cache.put(cacheKey, cacheResponse);
   await env.STALE_CALENDAR_ICS.put('calendar.ics', body, { expirationTtl: STALE_CACHE_DURATION_SECONDS });
 
+  console.log(JSON.stringify({
+    event: "Fetched ICS from upstream",
+    success: upstreamSuccess,
+    status: upstream?.status,
+    fromShortCache: false,
+    fromStaleCache: false
+  }));
   return { body, fromCache: false };
 }
 
@@ -105,6 +112,12 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
 
   const cached = await cache.match(cacheKey);
   if (cached) {
+    console.log(JSON.stringify({
+      event: "Served image from short-term cache",
+      fromShortCache: true,
+      fromStaleCache: false
+    }));
+
     return { response: cached, fromCache: true };
   }
   
@@ -134,6 +147,17 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
     const staleData = await env.STALE_CALENDAR_ICS.get(`image-${id}`, { type: "arrayBuffer" });
     if (staleData) {
       const contentType = "image/jpeg"; // default to jpeg, since we don't store content type in stale cache
+
+      console.log(JSON.stringify({
+        event: "Upstream image fetch failed, serving stale cache",
+        success: upstreamSuccess,
+        error: String(upstreamError),
+        errorType: (upstreamError as Error)?.constructor?.name || "unknown",
+        status: upstream?.status,
+        fromShortCache: false,
+        fromStaleCache: true
+      }));
+
       return {
         response: new Response(staleData, {
           status: 200,
@@ -165,6 +189,14 @@ async function getOrFetchImage(id: string, cache: Cache, env: Env): Promise<{ re
   });
   await cache.put(cacheKey, cacheResponse.clone());
   await env.STALE_CALENDAR_ICS.put(`image-${id}`, imageBuffer, { expirationTtl: STALE_CACHE_DURATION_SECONDS });
+
+  console.log(JSON.stringify({
+    event: "Fetched image from upstream",
+    success: upstreamSuccess,
+    status: upstream?.status,
+    fromShortCache: false,
+    fromStaleCache: false
+  }));
 
   return { response: cacheResponse, fromCache: false };
 }
