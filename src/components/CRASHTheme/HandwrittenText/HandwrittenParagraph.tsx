@@ -304,6 +304,8 @@ export default function HandwrittenParagraph({
                   defaultLineOptions={{
                     preSegmentNoiseMagnitudes: 0.05,
                     postSegmentNoiseMagnitudes: 0.015,
+                    //preSegmentNoiseMagnitudes: 0,
+                    //postSegmentNoiseMagnitudes: 0,
                     segmentLength: 0.3,
                     smoothness: 0.1,
                   }}

@@ -25,10 +25,12 @@ export default function TestPage() {
           mobileStrokeWidth={2}
           textAlign="center"
         >
-          {`AAAA BBBB CCCCC DDDD FFFFF GGGGG IIIII JJJJ\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\nthe quick brown fox jumps over the lazy dog`}
+          {`AAAA BBBB CCCCC DDDD FFFFF GGGGG IIIII JJJJ\n\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\n\nthe quick brown fox jumps over the lazy dog\n\n1234567890 !?;:'/\\@$#%&*[]()<>"'“”-+=_`}
         </HandwrittenParagraph>
       </div>
-      <AudioPlayer audioSrc="/audio/Cut Loose.mp3" />
+      <div className="pt-10">
+        <AudioPlayer audioSrc="/audio/Cut Loose.mp3" />
+      </div>
     </main>
   );
 }
