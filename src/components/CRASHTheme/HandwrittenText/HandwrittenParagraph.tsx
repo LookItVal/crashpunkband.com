@@ -25,6 +25,8 @@ type HandwrittenParagraphProps = {
   mobileStrokeWidth?: number;
   /** Max viewport width considered mobile (default 768). */
   mobileBreakpoint?: number;
+  /** Text alignment for both text and SVG glyph layout. */
+  textAlign?: "left" | "center" | "right";
   /** Extra className on the outer wrapper. */
   className?: string;
 };
@@ -45,6 +47,7 @@ export default function HandwrittenParagraph({
   strokeWidth = 2,
   mobileStrokeWidth,
   mobileBreakpoint = 768,
+  textAlign = "left",
   className = "",
 }: HandwrittenParagraphProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -118,7 +121,7 @@ export default function HandwrittenParagraph({
       observer.disconnect();
       window.removeEventListener("resize", updateLayout);
     };
-  }, [children, effectiveFontSize]);
+  }, [children, effectiveFontSize, textAlign]);
 
   useGSAP(() => {
     if (!rootRef.current || !cell || hasAnimatedRef.current) return;
@@ -226,6 +229,7 @@ export default function HandwrittenParagraph({
           lineHeight: 1.2,
           whiteSpace: "pre-wrap",
           overflowWrap: "anywhere",
+          textAlign,
           color: "transparent",
           /* Allow text selection even though it's invisible */
           WebkitUserSelect: "text",
@@ -250,6 +254,7 @@ export default function HandwrittenParagraph({
           lineHeight: 1.2,
           whiteSpace: "pre-wrap",
           overflowWrap: "anywhere",
+          textAlign,
         }}
       >
         {chars.map((ch, idx) => (
