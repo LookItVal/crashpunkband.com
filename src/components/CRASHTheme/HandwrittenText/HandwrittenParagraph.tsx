@@ -15,10 +15,16 @@ type HandwrittenParagraphProps = {
   children: string;
   /** Base font-size in px applied to the monospace layer (default 20). */
   fontSize?: number;
+  /** Mobile override for font size in px. Falls back to fontSize when unset. */
+  mobileFontSize?: number;
   /** Stroke colour passed to every Shape (default "white"). */
   strokeColor?: string;
   /** Stroke width passed to every Shape (default 2). */
   strokeWidth?: number;
+  /** Mobile override for stroke width. Falls back to strokeWidth when unset. */
+  mobileStrokeWidth?: number;
+  /** Max viewport width considered mobile (default 768). */
+  mobileBreakpoint?: number;
   /** Extra className on the outer wrapper. */
   className?: string;
 };
@@ -34,12 +40,17 @@ type HandwrittenParagraphProps = {
 export default function HandwrittenParagraph({
   children,
   fontSize = 20,
+  mobileFontSize,
   strokeColor = "white",
   strokeWidth = 2,
+  mobileStrokeWidth,
+  mobileBreakpoint = 768,
   className = "",
 }: HandwrittenParagraphProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
   const hasAnimatedRef = useRef(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // ── Measure the real monospace character cell ───────────────────────
   // We render a hidden single character, measure it, and use that to
@@ -47,26 +58,67 @@ export default function HandwrittenParagraph({
   // regardless of browser / OS font rendering differences.
   const measureRef = useRef<HTMLSpanElement>(null);
   const [cell, setCell] = useState<{ w: number; h: number } | null>(null);
+  const [charLayout, setCharLayout] = useState<Array<{ left: number; top: number }>>([]);
+
+  const effectiveFontSize = isMobile && mobileFontSize !== undefined ? mobileFontSize : fontSize;
+  const effectiveStrokeWidth = isMobile && mobileStrokeWidth !== undefined ? mobileStrokeWidth : strokeWidth;
+
+  const chars = useMemo(() => Array.from(children), [children]);
+
+  const shapes = useMemo(() => {
+    return chars.map((ch) => {
+      if (ch === " " || ch === "\t" || ch === "\n") return null;
+      return getCharShape(ch) ?? null;
+    });
+  }, [chars]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const update = () => {
+      setIsMobile(window.innerWidth <= mobileBreakpoint);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [mobileBreakpoint]);
 
   useEffect(() => {
     if (!measureRef.current) return;
     const rect = measureRef.current.getBoundingClientRect();
     setCell({ w: rect.width, h: rect.height });
-  }, [fontSize]);
+  }, [effectiveFontSize]);
 
-  // ── Split text into lines ─────────────────────────────────────────
-  const lines = useMemo(() => children.split("\n"), [children]);
+  useEffect(() => {
+    if (!layoutRef.current) return;
 
-  // ── Derive shape data per character ───────────────────────────────
-  // Each entry is either a ShapeDefinition (renderable) or null (space / unknown).
-  const shapesPerLine = useMemo(() => {
-    return lines.map((line) =>
-      Array.from(line).map((ch) => {
-        if (ch === " " || ch === "\t") return null;
-        return getCharShape(ch) ?? null;
-      })
-    );
-  }, [lines]);
+    const updateLayout = () => {
+      if (!layoutRef.current) return;
+      const containerRect = layoutRef.current.getBoundingClientRect();
+      const spans = layoutRef.current.querySelectorAll<HTMLSpanElement>("span[data-char-idx]");
+      const next = Array.from(spans).map((span) => {
+        const rect = span.getBoundingClientRect();
+        return {
+          left: rect.left - containerRect.left,
+          top: rect.top - containerRect.top,
+        };
+      });
+      setCharLayout(next);
+    };
+
+    updateLayout();
+
+    const observer = new ResizeObserver(() => updateLayout());
+    observer.observe(layoutRef.current);
+    if (rootRef.current) observer.observe(rootRef.current);
+
+    window.addEventListener("resize", updateLayout);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateLayout);
+    };
+  }, [children, effectiveFontSize]);
 
   useGSAP(() => {
     if (!rootRef.current || !cell || hasAnimatedRef.current) return;
@@ -142,11 +194,11 @@ export default function HandwrittenParagraph({
       trigger.kill();
       tl.kill();
     };
-  }, { dependencies: [cell, children] });
+  }, { dependencies: [cell, children, charLayout.length, effectiveFontSize] });
 
   // ── Render ────────────────────────────────────────────────────────
   return (
-    <div ref={rootRef} className={`relative inline-block ${className}`}>
+    <div ref={rootRef} className={`relative w-full ${className}`}>
       {/* Hidden measurement span — one character to derive cell size */}
       <span
         ref={measureRef}
@@ -155,7 +207,7 @@ export default function HandwrittenParagraph({
           position: "absolute",
           visibility: "hidden",
           fontFamily: "monospace",
-          fontSize: `${fontSize}px`,
+          fontSize: `${effectiveFontSize}px`,
           lineHeight: 1.2,
           whiteSpace: "pre",
           pointerEvents: "none",
@@ -170,9 +222,10 @@ export default function HandwrittenParagraph({
           position: "relative",
           zIndex: 1,
           fontFamily: "monospace",
-          fontSize: `${fontSize}px`,
+          fontSize: `${effectiveFontSize}px`,
           lineHeight: 1.2,
           whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
           color: "transparent",
           /* Allow text selection even though it's invisible */
           WebkitUserSelect: "text",
@@ -180,6 +233,30 @@ export default function HandwrittenParagraph({
         }}
       >
         {children}
+      </div>
+
+      {/* Hidden wrap layout layer used to measure per-character positions */}
+      <div
+        ref={layoutRef}
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: -1,
+          visibility: "hidden",
+          pointerEvents: "none",
+          fontFamily: "monospace",
+          fontSize: `${effectiveFontSize}px`,
+          lineHeight: 1.2,
+          whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
+        }}
+      >
+        {chars.map((ch, idx) => (
+          <span data-char-idx={idx} key={`char-${idx}`}>
+            {ch}
+          </span>
+        ))}
       </div>
 
       {/* SVG shapes layer — absolutely positioned on top of the text */}
@@ -196,57 +273,46 @@ export default function HandwrittenParagraph({
             pointerEvents: "none",
           }}
         >
-          {shapesPerLine.map((lineShapes, lineIdx) => (
-            <div
-              key={lineIdx}
-              style={{
-                height: `${cell.h}px`,
-                position: "relative",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {lineShapes.map((shape, charIdx) => {
-                if (!shape) return null;
+          {shapes.map((shape, idx) => {
+            if (!shape || !charLayout[idx]) return null;
 
-                // Scale the unit-cell shape to match the measured cell
-                const scaleX = cell.w / CELL_WIDTH;
-                const scaleY = cell.h / CELL_HEIGHT;
+            // Scale the unit-cell shape to match the measured cell
+            const scaleX = cell.w / CELL_WIDTH;
+            const scaleY = cell.h / CELL_HEIGHT;
 
-                return (
-                  <svg
-                    key={charIdx}
-                    width={cell.w}
-                    height={cell.h}
-                    viewBox={`0 0 ${CELL_WIDTH} ${CELL_HEIGHT}`}
-                    preserveAspectRatio="none"
-                    style={{
-                      position: "absolute",
-                      left: `${charIdx * cell.w}px`,
-                      top: 0,
-                      overflow: "visible",
-                    }}
-                  >
-                    <Shape
-                      shape={shape}
-                      defaultLineOptions={{
-                        preSegmentNoiseMagnitudes: 0.05,
-                        postSegmentNoiseMagnitudes: 0.015,
-                        segmentLength: 0.3,
-                        smoothness: 0.1,
-                      }}
-                      defaultCount={1}
-                      defaultStrokeOptions={{
-                        stroke: strokeColor,
-                        strokeWidth: strokeWidth / Math.max(scaleX, scaleY),
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                      }}
-                    />
-                  </svg>
-                );
-              })}
-            </div>
-          ))}
+            return (
+              <svg
+                key={`svg-char-${idx}`}
+                width={cell.w}
+                height={cell.h}
+                viewBox={`0 0 ${CELL_WIDTH} ${CELL_HEIGHT}`}
+                preserveAspectRatio="none"
+                style={{
+                  position: "absolute",
+                  left: `${charLayout[idx].left}px`,
+                  top: `${charLayout[idx].top}px`,
+                  overflow: "visible",
+                }}
+              >
+                <Shape
+                  shape={shape}
+                  defaultLineOptions={{
+                    preSegmentNoiseMagnitudes: 0.05,
+                    postSegmentNoiseMagnitudes: 0.015,
+                    segmentLength: 0.3,
+                    smoothness: 0.1,
+                  }}
+                  defaultCount={1}
+                  defaultStrokeOptions={{
+                    stroke: strokeColor,
+                    strokeWidth: effectiveStrokeWidth / Math.max(scaleX, scaleY),
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                  }}
+                />
+              </svg>
+            );
+          })}
         </div>
       )}
     </div>

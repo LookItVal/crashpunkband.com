@@ -387,7 +387,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   };
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-6 scale-70 md:scale-100">
       <audio ref={audioRef} src={audioSrc} preload="metadata" />
       <svg ref={playControlRef} viewBox="0 0 100 100" className="w-14 h-14 overflow-visible" onClick={togglePlay}>
         <g data-part="play-ring">
