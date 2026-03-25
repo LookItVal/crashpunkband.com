@@ -32,7 +32,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   const rafProgressRef = useRef<number | null>(null);
 
   const circleCenter = useMemo(() => ({ x: 50, y: 50 }), []);
-  const circleStrokeOptions = useMemo(() => ({ stroke: "white", strokeWidth: 5 }), []);
+  const circleStrokeOptions = useMemo(() => ({ stroke: "white", strokeWidth: 5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const }), []);
   const trackStart = useMemo(() => ({ x: 16, y: 50 }), []);
   const trackEnd = useMemo(() => ({ x: 484, y: 50 }), []);
   const trackLineOptions = useMemo(() => ({
@@ -45,6 +45,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     stroke: "white",
     strokeWidth: 5,
     strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
   }), []);
   const trackProgressLineOptions = useMemo(() => ({
     smoothness: 0.8,

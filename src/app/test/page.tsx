@@ -1,15 +1,14 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import LineGroup from "@/components/CRASHTheme/Utilities/LineGroup";
-import C from "@/components/CRASHTheme/Logo/C";
-import Brushstroke from "@/components/CRASHTheme/Utilities/Brushstroke";
-import CircleGroup from "@/components/CRASHTheme/Utilities/CircleGroup";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
+import HandwrittenParagraph from "@/components/CRASHTheme/HandwrittenText/HandwrittenParagraph";
 
 export default function TestPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-8 p-8">
+      <HandwrittenParagraph fontSize={50} strokeWidth={4}>
+        {`AAAA BBBB CCCCC DDDD FFFFF GGGGG IIIII JJJJ\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\nthe quick brown fox jumps over the lazy dog`}
+      </HandwrittenParagraph>
       <AudioPlayer audioSrc="/audio/Cut Loose.mp3" />
     </main>
   );
