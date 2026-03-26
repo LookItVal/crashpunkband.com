@@ -504,7 +504,13 @@ const symbols: Record<string, ShapeDefinition> = {
     .build(),
   "_": new ShapeBuilder()
     .addLine({ x: 0.1, y: 0.9 }, { x: 0.5, y: 0.9 })
-    .build()
+    .build(),
+  ",": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.8 }, { x: 0.2, y: 1 })
+    .build(),
+  ".": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.85 }, { x: 0.3, y: 0.9 })
+    .build(),
 };
 
 // ── Merged lookup ───────────────────────────────────────────────────────
