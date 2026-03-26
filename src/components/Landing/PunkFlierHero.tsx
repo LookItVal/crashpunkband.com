@@ -68,20 +68,35 @@ export default function PunkFlierHero() {
               priority
             />
           </div>
-          <p className="mx-auto max-w-2xl text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-200 sm:text-xs md:text-sm">
-            Book us now: bookcrashpunk@example.com
-          </p>
+          <div className="mx-auto max-w-2xl">
+            <HanddrawnText
+              fontSize={12}
+              mobileFontSize={10}
+              strokeColor="#e4e4e7"
+              strokeWidth={2.2}
+              mobileStrokeWidth={1.6}
+              textAlign="center"
+            >
+              Book us now: bookcrashpunk@example.com
+            </HanddrawnText>
+          </div>
         </div>
 
-        <div className="grid gap-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-3">
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <div>Lorem Ipsum</div>
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              Lorem Ipsum
+            </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <div>Dolor Sit Amet</div>
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              Dolor Sit Amet
+            </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <div>Consectetur Adipiscing</div>
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              Consectetur Adipiscing
+            </HanddrawnText>
           </HandDrawnFrame>
         </div>
 
@@ -94,9 +109,11 @@ export default function PunkFlierHero() {
             showBottom={true}
             showLeft={false}
           />
-          <p className="mb-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">
-            Stay connected
-          </p>
+          <div className="mb-3">
+            <HanddrawnText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2.2} textAlign="center">
+              Stay connected
+            </HanddrawnText>
+          </div>
           <SocialMediaLinks compact />
         </div>
       </section>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import HandDrawnFrame from "./HandDrawnFrame";
+import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 const galleryItems = [
   {
@@ -36,9 +37,15 @@ export default function MediaGallery() {
       <HandDrawnFrame contentClassName="p-6 md:p-8">
         <section>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-2xl font-black uppercase tracking-[0.2em]">Gallery</h2>
-            <HandDrawnFrame className="inline-block" contentClassName="px-3 py-1">
-              <span className="text-xs font-bold uppercase tracking-[0.2em]">Lorem Ipsum</span>
+            <div className="max-w-56">
+              <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
+                Gallery
+              </HandwrittenText>
+            </div>
+            <HandDrawnFrame className="inline-block" contentClassName="px-4 py-2">
+              <HandwrittenText className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+                Lorem Ipsum
+              </HandwrittenText>
             </HandDrawnFrame>
           </div>
 
@@ -59,7 +66,11 @@ export default function MediaGallery() {
                       </div>
                     </HandDrawnFrame>
                   </button>
-                  <p className="p-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">{item.label}</p>
+                  <div className="p-2">
+                    <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2}>
+                      {item.label}
+                    </HandwrittenText>
+                  </div>
                 </article>
               </HandDrawnFrame>
             ))}
@@ -77,10 +88,12 @@ export default function MediaGallery() {
         >
           <button
             type="button"
-            className="absolute right-4 top-4 text-sm font-black uppercase tracking-[0.2em] text-white"
+            className="absolute right-4 top-4"
             onClick={() => setActiveIndex(null)}
           >
-            Close
+            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={2.2}>
+              Close
+            </HandwrittenText>
           </button>
           <div className="relative h-[82vh] w-full max-w-6xl" onClick={(event) => event.stopPropagation()}>
             <Image

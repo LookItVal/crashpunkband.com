@@ -1,6 +1,7 @@
 import GsapIntro from "./GsapIntro";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
+import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 const services = [
   { name: "Spotify", href: "https://open.spotify.com" },
@@ -24,9 +25,11 @@ export default function StreamingLinks() {
               target="_blank"
               rel="noreferrer"
               className="w-full"
-              textClassName="text-xs font-bold uppercase tracking-[0.2em]"
+              textClassName="w-full"
             >
-              {service.name}
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+                {service.name}
+              </HandwrittenText>
             </HighlightButton>
           </HandDrawnFrame>
         ))}

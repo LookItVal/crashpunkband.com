@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { useEffect, useMemo, useRef, useState } from "react";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
+import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 type CalendarEvent = {
   id: string;
@@ -437,16 +438,22 @@ export default function EventCalendar({
     <HandDrawnFrame contentClassName="p-6 md:p-8">
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-2xl font-black uppercase tracking-[0.2em]">Event Calendar</h2>
+          <div className="max-w-[20rem]">
+            <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
+              Event Calendar
+            </HandwrittenText>
+          </div>
           <div className="flex flex-wrap items-center gap-2">
             <HandDrawnFrame className="inline-block" contentClassName="px-3 py-2">
               <HighlightButton
                 href={joinUrl}
                 target="_blank"
                 rel="noreferrer"
-                textClassName="text-[10px] font-bold uppercase tracking-[0.18em] sm:text-xs"
+                textClassName="w-full"
               >
-                Follow Calendar
+                <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+                  Follow Calendar
+                </HandwrittenText>
                 </HighlightButton>
             </HandDrawnFrame>
           </div>
@@ -454,30 +461,48 @@ export default function EventCalendar({
 
         {isLoading ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
-            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">Loading calendar...</p>
+            <div className="w-full max-w-md">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                Loading calendar...
+              </HandwrittenText>
+            </div>
           </HandDrawnFrame>
         ) : errorMessage ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
-            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">{errorMessage}</p>
+            <div className="w-full max-w-md">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                {errorMessage}
+              </HandwrittenText>
+            </div>
           </HandDrawnFrame>
         ) : upcomingEvents.length === 0 ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
-            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-300">
-              No upcoming events.
-            </p>
+            <div className="w-full max-w-md">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                No upcoming events.
+              </HandwrittenText>
+            </div>
           </HandDrawnFrame>
         ) : (
           <div className="space-y-6">
             <div ref={eventListRef} className="space-y-3">
               {paginatedEvents.map((event) => (
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
-                  <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-10 gap-y-2 md:text-[14px] text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300 text-center">
-                    <p className="text-zinc-100 text-[14px] min-w-[15em]">{event.showName || "Show name"}</p>
+                  <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-10 gap-y-2 text-center">
+                    <div className="min-w-[15em]">
+                      <HandwrittenText fontSize={14} mobileFontSize={10} strokeColor="#f4f4f5" strokeWidth={2.3} textAlign="center">
+                        {event.showName || "Show name"}
+                      </HandwrittenText>
+                    </div>
                     
                     <div className="flex items-center justify-between md:gap-x-6 gap-x-3 gap-y-2 flex-wrap grow">
                       <div className="flex flex-col items-center align-center justify-center grow">
-                        <p className="text-zinc-500 text-[8px]">When: </p>
-                        <p className="text-center">{getWhenDisplayLabel(event.startDateTime) || "TBD"}</p>
+                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                          When:
+                        </HandwrittenText>
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                          {getWhenDisplayLabel(event.startDateTime) || "TBD"}
+                        </HandwrittenText>
                       </div>
 
                       {(() => {
@@ -485,38 +510,54 @@ export default function EventCalendar({
 
                         return (
                           <div className="flex flex-col items-center align-center justify-center grow">
-                            <p className="text-zinc-500 text-[8px]">Where: </p>
+                            <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                              Where:
+                            </HandwrittenText>
                             {locationLink.href ? (
                               <HighlightButton
                                 href={locationLink.href}
                                 target="_blank"
                                 rel="noreferrer"
-                                textClassName="font-bold uppercase tracking-[0.14em] text-zinc-200"
+                                textClassName="w-full"
                               >
-                                {locationLink.label}
+                                <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={2} textAlign="center">
+                                  {locationLink.label}
+                                </HandwrittenText>
                               </HighlightButton>
                             ) : (
-                              <p>{locationLink.label}</p>
+                              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                                {locationLink.label}
+                              </HandwrittenText>
                             )}
                           </div>
                         );
                       })()}
 
                       <div className="flex flex-col items-center align-center justify-center grow">
-                        <p className="text-zinc-500 text-[8px]">Doors: </p>
-                        <p>{formatDoorsTimeLabel(event.doorsDateTime)}</p>
+                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                          Doors:
+                        </HandwrittenText>
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                          {formatDoorsTimeLabel(event.doorsDateTime)}
+                        </HandwrittenText>
                       </div>
 
                       {event.flyerImageUrl ? (
                         <HighlightButton
                           className="grow"
-                          textClassName="w-full text-center block! font-bold uppercase tracking-[0.15em] md:text-[14px] text-[11px]"
+                          textClassName="w-full text-center block!"
                           onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
                         >
-                          View Flyer
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={2} textAlign="center">
+                            View Flyer
+                          </HandwrittenText>
                         </HighlightButton>
                       ) : (
-                        <span className="text-zinc-500 grow text-center block! md:text-[14px] text-[11px]">No Flyer</span>
+                        <span className="grow text-center block!">
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#71717a" strokeWidth={2} textAlign="center">
+                            No Flyer
+                          </HandwrittenText>
+                        </span>
                       )}
                     </div>
                   </article>
@@ -525,27 +566,33 @@ export default function EventCalendar({
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
-                Page {currentPage} of {totalPages}
-              </p>
+              <div className="max-w-[16rem]">
+                <HandwrittenText fontSize={10} mobileFontSize={9} strokeColor="#a1a1aa" strokeWidth={1.8}>
+                  {`Page ${currentPage} of ${totalPages}`}
+                </HandwrittenText>
+              </div>
 
               <div className="flex items-center gap-2">
                 <HandDrawnFrame className="inline-block" contentClassName="px-3 py-2">
                   <HighlightButton
                     disabled={currentPage <= 1 || isPageTransitioning}
                     onClick={() => animateToPage(Math.max(1, currentPage - 1))}
-                    textClassName="text-[10px] font-bold uppercase tracking-[0.16em]"
+                    textClassName="w-full"
                   >
-                    Previous
+                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.9} textAlign="center">
+                      Previous
+                    </HandwrittenText>
                   </HighlightButton>
                 </HandDrawnFrame>
                 <HandDrawnFrame className="inline-block" contentClassName="px-3 py-2">
                   <HighlightButton
                     disabled={currentPage >= totalPages || isPageTransitioning}
                     onClick={() => animateToPage(Math.min(totalPages, currentPage + 1))}
-                    textClassName="text-[10px] font-bold uppercase tracking-[0.16em]"
+                    textClassName="w-full"
                   >
-                    Next
+                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.9} textAlign="center">
+                      Next
+                    </HandwrittenText>
                   </HighlightButton>
                 </HandDrawnFrame>
               </div>
@@ -564,10 +611,12 @@ export default function EventCalendar({
         >
           <button
             type="button"
-            className="absolute right-4 top-4 text-sm font-black uppercase tracking-[0.2em] text-white"
+            className="absolute right-4 top-4"
             onClick={() => setActiveFlyer(null)}
           >
-            Close
+            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={2.2}>
+              Close
+            </HandwrittenText>
           </button>
           <div className="relative flex h-[82vh] w-full max-w-6xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
             <img src={activeFlyer.url} alt={activeFlyer.alt} className="max-h-full max-w-full object-contain" />

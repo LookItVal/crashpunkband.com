@@ -143,8 +143,10 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
         ) : (
           <div className="flex flex-col items-center gap-4 text-center">
             <HandDrawnFrame contentClassName="px-6 py-3">
-              <HighlightButton href="#listen" textClassName="text-2xl font-black uppercase tracking-[0.25em]">
-                Listen now
+              <HighlightButton href="#listen" textClassName="w-full">
+                <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={3} textAlign="center">
+                  Listen now
+                </HandwrittenText>
               </HighlightButton>
             </HandDrawnFrame>
             <StreamingLinks />

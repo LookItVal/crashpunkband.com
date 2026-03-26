@@ -40,7 +40,17 @@ export default function HighlightButton({
 
     const tilt = (Math.random() * 2 - 1) * Math.max(0, angleRandomness);
 
-    gsap.killTweensOf([highlightRef.current, textRef.current]);
+    const strokePaths = Array.from(textRef.current.querySelectorAll<SVGPathElement>("path"));
+
+    // Capture original per-path stroke once so we can restore correctly.
+    strokePaths.forEach((path) => {
+      if (!path.dataset.baseStroke) {
+        const computedStroke = window.getComputedStyle(path).stroke;
+        path.dataset.baseStroke = computedStroke || path.getAttribute("stroke") || "#f5f5f5";
+      }
+    });
+
+    gsap.killTweensOf([highlightRef.current, textRef.current, ...strokePaths]);
     gsap.to(highlightRef.current, {
       scaleX: 1,
       rotate: tilt,
@@ -53,6 +63,14 @@ export default function HighlightButton({
       duration: 0.2,
       ease: "power1.out",
     });
+
+    strokePaths.forEach((path) => {
+      gsap.to(path, {
+        stroke: "#050505",
+        duration: 0.2,
+        ease: "power1.out",
+      });
+    });
   };
 
   const animateOut = () => {
@@ -64,7 +82,9 @@ export default function HighlightButton({
       return;
     }
 
-    gsap.killTweensOf([highlightRef.current, textRef.current]);
+    const strokePaths = Array.from(textRef.current.querySelectorAll<SVGPathElement>("path"));
+
+    gsap.killTweensOf([highlightRef.current, textRef.current, ...strokePaths]);
     gsap.to(highlightRef.current, {
       scaleX: 0,
       rotate: 0,
@@ -76,6 +96,14 @@ export default function HighlightButton({
       color: "#f5f5f5",
       duration: 0.2,
       ease: "power1.out",
+    });
+
+    strokePaths.forEach((path) => {
+      gsap.to(path, {
+        stroke: path.dataset.baseStroke || "#f5f5f5",
+        duration: 0.2,
+        ease: "power1.out",
+      });
     });
   };
 
@@ -107,10 +135,16 @@ export default function HighlightButton({
     if (!disabled) return;
     if (!highlightRef.current || !textRef.current) return;
 
+    const strokePaths = Array.from(textRef.current.querySelectorAll<SVGPathElement>("path"));
+
     // Immediately clear any highlight and text color when disabled
-    gsap.killTweensOf([highlightRef.current, textRef.current]);
+    gsap.killTweensOf([highlightRef.current, textRef.current, ...strokePaths]);
     gsap.set(highlightRef.current, { scaleX: 0, rotate: 0, transformOrigin: "right center" });
     gsap.set(textRef.current, { color: "#f5f5f5" });
+
+    strokePaths.forEach((path) => {
+      gsap.set(path, { stroke: path.dataset.baseStroke || "#f5f5f5" });
+    });
   }, [disabled]);
 
   if (href) {

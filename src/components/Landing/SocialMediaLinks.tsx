@@ -1,6 +1,7 @@
 import GsapIntro from "./GsapIntro";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
+import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 type SocialPlatform = "instagram" | "tiktok" | "youtube" | "spotify" | "applemusic" | "facebook";
 
@@ -77,17 +78,25 @@ export default function SocialMediaLinks({ compact = false }: SocialMediaLinksPr
           <HandDrawnFrame
             key={link.name}
             className="inline-block"
-            contentClassName={compact ? "px-3 py-2 text-[10px]" : "px-4 py-2 text-xs"}
+            contentClassName={compact ? "px-3 py-2" : "px-4 py-3"}
           >
             <HighlightButton
               href={link.href}
               target="_blank"
               rel="noreferrer"
               className="w-full"
-              textClassName="font-bold uppercase tracking-[0.18em]"
+              textClassName="w-full"
             >
               <SocialIcon platform={link.platform} className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
-              <span>{link.name}</span>
+              <HandwrittenText
+                className="w-auto"
+                fontSize={compact ? 10 : 11}
+                mobileFontSize={compact ? 9 : 10}
+                strokeWidth={compact ? 1.8 : 2}
+                textAlign="left"
+              >
+                {link.name}
+              </HandwrittenText>
             </HighlightButton>
           </HandDrawnFrame>
         ))}
