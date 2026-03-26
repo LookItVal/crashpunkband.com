@@ -39,7 +39,7 @@ type HandwrittenParagraphProps = {
  * exactly the same size & position using absolute positioning so the two
  * layers overlap perfectly.
  */
-export default function HandwrittenParagraph({
+export default function HandwrittenText({
   children,
   fontSize = 20,
   mobileFontSize,
@@ -302,10 +302,10 @@ export default function HandwrittenParagraph({
                 <Shape
                   shape={shape}
                   defaultLineOptions={{
-                    preSegmentNoiseMagnitudes: 0.05,
-                    postSegmentNoiseMagnitudes: 0.015,
-                    //preSegmentNoiseMagnitudes: 0,
-                    //postSegmentNoiseMagnitudes: 0,
+                    //preSegmentNoiseMagnitudes: 0.05,
+                    //postSegmentNoiseMagnitudes: 0.015,
+                    preSegmentNoiseMagnitudes: 0,
+                    postSegmentNoiseMagnitudes: 0,
                     segmentLength: 0.3,
                     smoothness: 0.1,
                   }}

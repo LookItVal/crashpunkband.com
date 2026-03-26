@@ -111,6 +111,7 @@ const uppercase: Record<string, ShapeDefinition> = {
     .addLine({ x: 0.05, y: 0.5 }, { x: 0.3, y: 0.9 })
     .addLine({ x: 0.3, y: 0.9 }, { x: 0.55, y: 0.5 })
     .addLine({ x: 0.55, y: 0.5 }, { x: 0.3, y: 0.1 })
+    .addLine({ x: 0.3, y: 0.475 }, { x: 0.3, y: 0.525 })
     .build(),
   P: new ShapeBuilder()
     .addLine({ x: 0.1, y: 0.1 }, { x: 0.1, y: 0.9 })
@@ -311,7 +312,7 @@ const digits: Record<string, ShapeDefinition> = {
     .addLine({ x: 0.05, y: 0.5 }, { x: 0.3, y: 0.9 })
     .addLine({ x: 0.3, y: 0.9 }, { x: 0.55, y: 0.5 })
     .addLine({ x: 0.55, y: 0.5 }, { x: 0.3, y: 0.1 })
-    .addLine({ x: 0.3, y: 0.475 }, { x: 0.3, y: 0.525 })
+    .addLine({ x: 0.175, y: 0.7 }, { x: 0.425, y: 0.3 })
     .build(),
   "1": new ShapeBuilder()
     .addLine({ x: 0.3, y: 0.1 }, { x: 0.3, y: 0.9 })
@@ -324,44 +325,186 @@ const digits: Record<string, ShapeDefinition> = {
     .addLine({ x: 0.5, y: 0.3 }, { x: 0.1, y: 0.9 })
     .addLine({ x: 0.1, y: 0.9 }, { x: 0.5, y: 0.9 })
     .build(),
-  "3": placeholder(),
-  "4": placeholder(),
-  "5": placeholder(),
-  "6": placeholder(),
-  "7": placeholder(),
-  "8": placeholder(),
-  "9": placeholder(),
+  "3": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.3 }, { x: 0.3, y: 0.1 })
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.5, y: 0.3 })
+    .addLine({ x: 0.5, y: 0.3 }, { x: 0.3, y: 0.5 })
+    .addLine({ x: 0.3, y: 0.5 }, { x: 0.5, y: 0.7 })
+    .addLine({ x: 0.5, y: 0.7 }, { x: 0.3, y: 0.9 })
+    .addLine({ x: 0.3, y: 0.9 }, { x: 0.1, y: 0.7 })
+    .build(),
+  "4": new ShapeBuilder()
+    .addLine({ x: 0.4, y: 0.1 }, { x: 0.4, y: 0.9 })
+    .addLine({ x: 0.1, y: 0.5 }, { x: 0.55, y: 0.5 })
+    .addLine({ x: 0.1, y: 0.1 }, { x: 0.1, y: 0.5 })
+    .build(),
+  "5": new ShapeBuilder()
+    .addLine({ x: 0.5, y: 0.1 }, { x: 0.1, y: 0.1 })
+    .addLine({ x: 0.1, y: 0.1 }, { x: 0.1, y: 0.5 })
+    .addLine({ x: 0.1, y: 0.5 }, { x: 0.3, y: 0.4 })
+    .addLine({ x: 0.3, y: 0.4 }, { x: 0.5, y: 0.65 })
+    .addLine({ x: 0.5, y: 0.65 }, { x: 0.3, y: 0.9 })
+    .addLine({ x: 0.3, y: 0.9 }, { x: 0.1, y: 0.7 })
+    .build(),
+  "6": new ShapeBuilder()
+    .addLine({ x: 0.45, y: 0.25 }, { x: 0.3, y: 0.1 })
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.1, y: 0.5 })
+    .addLine({ x: 0.1, y: 0.5 }, { x: 0.3, y: 0.9 })
+    .addLine({ x: 0.3, y: 0.9 }, { x: 0.5, y: 0.6 })
+    .addLine({ x: 0.5, y: 0.6 }, { x: 0.15, y: 0.6 })
+    .build(),
+  "7": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.1 }, { x: 0.5, y: 0.1 })
+    .addLine({ x: 0.5, y: 0.1 }, { x: 0.3, y: 0.9 })
+    .addLine({ x: 0.3, y: 0.45 }, { x: 0.5, y: 0.45 })
+    .build(),
+  "8": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.1, y: 0.3 })
+    .addLine({ x: 0.1, y: 0.3 }, { x: 0.5, y: 0.7 })
+    .addLine({ x: 0.5, y: 0.7 }, { x: 0.3, y: 0.9 })
+    .addLine({ x: 0.3, y: 0.9 }, { x: 0.1, y: 0.7 })
+    .addLine({ x: 0.1, y: 0.7 }, { x: 0.5, y: 0.3 })
+    .addLine({ x: 0.5, y: 0.3 }, { x: 0.3, y: 0.1 })
+    .build(),
+  "9": new ShapeBuilder()
+    .addLine({ x: 0.45, y: 0.1 }, { x: 0.45, y: 0.9 })
+    .addLine({ x: 0.45, y: 0.1 }, { x: 0.15, y: 0.3 })
+    .addLine({ x: 0.15, y: 0.3 }, { x: 0.45, y: 0.5 })
+    .build()
 };
 
 // ── Punctuation / symbols ───────────────────────────────────────────────
 // !?;:'/\\@$#%&*[]()<>"'“”-+=_
 const symbols: Record<string, ShapeDefinition> = {
-  "!": placeholder(),
-  "?": placeholder(),
-  ";": placeholder(),
-  ":": placeholder(),
-  "'": placeholder(),
-  "/": placeholder(),
-  "\\": placeholder(),
-  "@": placeholder(),
-  "$": placeholder(),
-  "#": placeholder(),
-  "%": placeholder(),
-  "&": placeholder(),
-  "*": placeholder(),
-  "[": placeholder(),
-  "]": placeholder(),
-  "(": placeholder(),
-  ")": placeholder(),
-  "<": placeholder(),
-  ">": placeholder(),
-  '"': placeholder(),
-  "“": placeholder(),
-  "”": placeholder(),
-  "-": placeholder(),
-  "+": placeholder(),
-  "=": placeholder(),
-  "_": placeholder(),
+  "!": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.3, y: 0.6 })
+    .addLine({ x: 0.3, y: 0.85 }, { x: 0.3, y: 0.9 })
+    .build(),
+  "?": new ShapeBuilder()
+    .addLine({ x: 0.15, y: 0.1 }, { x: 0.45, y: 0.25 })
+    .addLine({ x: 0.45, y: 0.25 }, { x: 0.15, y: 0.5 })
+    .addLine({ x: 0.15, y: 0.5 }, { x: 0.15, y: 0.6 })
+    .addLine({ x: 0.15, y: 0.85 }, { x: 0.15, y: 0.9 })
+    .build(),
+  ";": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.2 }, { x: 0.3, y: 0.25 })
+    .addLine({ x: 0.3, y: 0.8 }, { x: 0.2, y: 1 })
+    .build(),
+  ":": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.2 }, { x: 0.3, y: 0.25 })
+    .addLine({ x: 0.3, y: 0.8 }, { x: 0.3, y: 0.85 })
+    .build(),
+  "'": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.3, y: 0.25 })
+    .build(),
+  "/": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.9 }, { x: 0.5, y: 0.1 })
+    .build(),
+  "\\": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.1 }, { x: 0.5, y: 0.9 })
+    .build(),
+  "@": new ShapeBuilder()
+    .addLine({ x: 0.35, y: 0.525 }, { x: 0.35, y: 0.775 })
+    .addLine({ x: 0.35, y: 0.55 }, { x: 0.2, y: 0.65 })
+    .addLine({ x: 0.2, y: 0.65 }, { x: 0.35, y: 0.725 })
+    .addLine({ x: 0.35, y: 0.775 }, { x: 0.55, y: 0.65 })
+    .addLine({ x: 0.55, y: 0.65 }, { x: 0.4, y: 0.4 })
+    .addLine({ x: 0.4, y: 0.4 }, { x: 0.1, y: 0.55 })
+    .addLine({ x: 0.1, y: 0.55 }, { x: 0.1, y: 0.8 })
+    .addLine({ x: 0.1, y: 0.8 }, { x: 0.35, y: 0.9 })
+    .addLine({ x: 0.35, y: 0.9 }, { x: 0.5, y: 0.825 })
+    .build(),
+  "$": new ShapeBuilder()
+    .addLine({ x: 0.5, y: 0.35 }, { x: 0.3, y: 0.2 })
+    .addLine({ x: 0.3, y: 0.2 }, { x: 0.1, y: 0.4 })
+    .addLine({ x: 0.1, y: 0.4 }, { x: 0.5, y: 0.6 })
+    .addLine({ x: 0.5, y: 0.6 }, { x: 0.3, y: 0.8 })
+    .addLine({ x: 0.3, y: 0.8 }, { x: 0.1, y: 0.65 })
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.3, y: 0.9 })
+    .build(),
+  "#": new ShapeBuilder()
+    .addLine({ x: 0.2, y: 0.25 }, { x: 0.2, y: 0.75 })
+    .addLine({ x: 0.4, y: 0.25 }, { x: 0.4, y: 0.75 })
+    .addLine({ x: 0.1, y: 0.375 }, { x: 0.5, y: 0.375 })
+    .addLine({ x: 0.1, y: 0.625 }, { x: 0.5, y: 0.625 })
+    .build(),
+  "%": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.9 }, { x: 0.5, y: 0.1 })
+    .addLine({ x: 0.15, y: 0.15 }, { x: 0.05, y: 0.25 })
+    .addLine({ x: 0.05, y: 0.25 }, { x: 0.15, y: 0.35 })
+    .addLine({ x: 0.15, y: 0.35 }, { x: 0.25, y: 0.25 })
+    .addLine({ x: 0.25, y: 0.25 }, { x: 0.15, y: 0.15 })
+    .addLine({ x: 0.45, y: 0.85 }, { x: 0.35, y: 0.75 })
+    .addLine({ x: 0.35, y: 0.75 }, { x: 0.45, y: 0.65 })
+    .addLine({ x: 0.45, y: 0.65 }, { x: 0.55, y: 0.75 })
+    .addLine({ x: 0.55, y: 0.75 }, { x: 0.45, y: 0.85 })
+    .build(),
+  "&": new ShapeBuilder()
+    .addLine({ x: 0.55, y: 0.85 }, { x: 0.1, y: 0.3 })
+    .addLine({ x: 0.1, y: 0.3 }, { x: 0.25, y: 0.1 })
+    .addLine({ x: 0.25, y: 0.1 }, { x: 0.4, y: 0.3 })
+    .addLine({ x: 0.4, y: 0.3 }, { x: 0.05, y: 0.7 })
+    .addLine({ x: 0.05, y: 0.7 }, { x: 0.25, y: 0.9 })
+    .addLine({ x: 0.25, y: 0.9 }, { x: 0.55, y: 0.55 })
+    .build(),
+  "*": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.2 }, { x: 0.3, y: 0.5 })
+    .addLine({ x: 0.15, y: 0.35 }, { x: 0.45, y: 0.35 })
+    .addLine({ x: 0.2, y: 0.25 }, { x: 0.4, y: 0.45 })
+    .addLine({ x: 0.4, y: 0.25 }, { x: 0.2, y: 0.45 })
+    .build(),
+  "[": new ShapeBuilder()
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.2, y: 0.9 })
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.4, y: 0.1 })
+    .addLine({ x: 0.2, y: 0.9 }, { x: 0.4, y: 0.9 })
+    .build(),
+  "]": new ShapeBuilder()
+    .addLine({ x: 0.4, y: 0.1 }, { x: 0.4, y: 0.9 })
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.4, y: 0.1 })
+    .addLine({ x: 0.2, y: 0.9 }, { x: 0.4, y: 0.9 })
+    .build(),
+  "(": new ShapeBuilder()
+    .addLine({ x: 0.4, y: 0.1 }, { x: 0.2, y: 0.5 })
+    .addLine({ x: 0.2, y: 0.5 }, { x: 0.4, y: 0.9 })
+    .build(),
+  ")": new ShapeBuilder()
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.4, y: 0.5 })
+    .addLine({ x: 0.4, y: 0.5 }, { x: 0.2, y: 0.9 })
+    .build(),
+  "<": new ShapeBuilder()
+    .addLine({ x: 0.45, y: 0.5 }, { x: 0.15, y: 0.7 })
+    .addLine({ x: 0.15, y: 0.7 }, { x: 0.45, y: 0.9 })
+    .build(),
+  ">": new ShapeBuilder()
+    .addLine({ x: 0.15, y: 0.5 }, { x: 0.45, y: 0.7 })
+    .addLine({ x: 0.45, y: 0.7 }, { x: 0.15, y: 0.9 })
+    .build(),
+  '"': new ShapeBuilder()
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.2, y: 0.25 })
+    .addLine({ x: 0.4, y: 0.1 }, { x: 0.4, y: 0.25 })
+    .build(),
+  "“": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.1 }, { x: 0.2, y: 0.25 })
+    .addLine({ x: 0.5, y: 0.1 }, { x: 0.4, y: 0.25 })
+    .build(),
+  "”": new ShapeBuilder()
+    .addLine({ x: 0.2, y: 0.1 }, { x: 0.3, y: 0.25 })
+    .addLine({ x: 0.4, y: 0.1 }, { x: 0.5, y: 0.25 })
+    .build(),
+  "-": new ShapeBuilder()
+    .addLine({ x: 0.15, y: 0.5 }, { x: 0.45, y: 0.5 })
+    .build(),
+  "+": new ShapeBuilder()
+    .addLine({ x: 0.3, y: 0.35 }, { x: 0.3, y: 0.65 })
+    .addLine({ x: 0.15, y: 0.5 }, { x: 0.45, y: 0.5 })
+    .build(),
+  "=": new ShapeBuilder()
+    .addLine({ x: 0.15, y: 0.4 }, { x: 0.45, y: 0.4 })
+    .addLine({ x: 0.15, y: 0.6 }, { x: 0.45, y: 0.6 })
+    .build(),
+  "_": new ShapeBuilder()
+    .addLine({ x: 0.1, y: 0.9 }, { x: 0.5, y: 0.9 })
+    .build()
 };
 
 // ── Merged lookup ───────────────────────────────────────────────────────
