@@ -3,6 +3,7 @@
 import { useMemo, useRef, useEffect, useState } from "react";
 import { getCharShape, CELL_WIDTH, CELL_HEIGHT } from "@/config/handwrittenFont";
 import Shape from "@/components/CRASHTheme/Utilities/Shape";
+import { LineOptions } from "@/lib/geometry/Line";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -25,6 +26,8 @@ type HandwrittenParagraphProps = {
   mobileStrokeWidth?: number;
   /** Max viewport width considered mobile (default 768). */
   mobileBreakpoint?: number;
+  /** Optional overrides for SVG line generation options. */
+  lineOptions?: LineOptions;
   /** Text alignment for both text and SVG glyph layout. */
   textAlign?: "left" | "center" | "right";
   /**
@@ -35,6 +38,8 @@ type HandwrittenParagraphProps = {
    * - jitter: no entry; redraws stroke randomness every frame
    */
   animation?: "enter" | "stagger" | "none" | "jitter";
+  /** Semantic tag for the text layer (SEO/accessibility). */
+  as?: "p" | "h1" | "h2" | "h3";
   /** Extra className on the outer wrapper. */
   className?: string;
 };
@@ -55,10 +60,14 @@ export default function HandwrittenText({
   strokeWidth = 2,
   mobileStrokeWidth,
   mobileBreakpoint = 768,
+  lineOptions,
   textAlign = "left",
   animation = "enter",
+  as = "p",
   className = "",
 }: HandwrittenParagraphProps) {
+  const TextTag = as;
+
   const rootRef = useRef<HTMLDivElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
   const hasAnimatedRef = useRef(false);
@@ -75,6 +84,13 @@ export default function HandwrittenText({
 
   const effectiveFontSize = isMobile && mobileFontSize !== undefined ? mobileFontSize : fontSize;
   const effectiveStrokeWidth = isMobile && mobileStrokeWidth !== undefined ? mobileStrokeWidth : strokeWidth;
+  const effectiveLineOptions = useMemo<LineOptions>(() => ({
+    preSegmentNoiseMagnitudes: 0.05,
+    postSegmentNoiseMagnitudes: 0.015,
+    segmentLength: 0.3,
+    smoothness: 0.1,
+    ...lineOptions,
+  }), [lineOptions]);
 
   const chars = useMemo(() => Array.from(children), [children]);
 
@@ -261,7 +277,7 @@ export default function HandwrittenText({
       </span>
 
       {/* Invisible but selectable + accessible monospace text layer */}
-      <div
+      <TextTag
         style={{
           position: "relative",
           zIndex: 1,
@@ -278,7 +294,7 @@ export default function HandwrittenText({
         }}
       >
         {children}
-      </div>
+      </TextTag>
 
       {/* Hidden wrap layout layer used to measure per-character positions */}
       <div
@@ -343,14 +359,7 @@ export default function HandwrittenText({
                 <Shape
                   shape={shape}
                   redrawToken={animation === "jitter" ? jitterTick : 0}
-                  defaultLineOptions={{
-                    preSegmentNoiseMagnitudes: 0.05,
-                    postSegmentNoiseMagnitudes: 0.015,
-                    //preSegmentNoiseMagnitudes: 0,
-                    //postSegmentNoiseMagnitudes: 0,
-                    segmentLength: 0.3,
-                    smoothness: 0.1,
-                  }}
+                  defaultLineOptions={effectiveLineOptions}
                   defaultCount={1}
                   defaultStrokeOptions={{
                     stroke: strokeColor,

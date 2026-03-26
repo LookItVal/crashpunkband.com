@@ -15,6 +15,11 @@ export default function TestPage() {
           mobileStrokeWidth={3}
           textAlign="center"
           animation="jitter"
+          as='h1'
+          lineOptions={{
+            preSegmentNoiseMagnitudes: 0.025,
+            postSegmentNoiseMagnitudes: 0.015
+          }}
         >
           {`CRASH PUNK BAND`}
         </HandwrittenText>
