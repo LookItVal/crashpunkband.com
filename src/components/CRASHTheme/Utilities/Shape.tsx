@@ -8,6 +8,7 @@ import CurveGroup from "@/components/CRASHTheme/Utilities/CurveGroup";
 type ShapeProps = {
   ref?: React.Ref<SVGElement>;
 	shape: ShapeDefinition;
+  redrawToken?: number;
 	defaultCount?: number;
   defaultBrushstrokeOptions?: {
     noiseMagnitude: number;
@@ -20,6 +21,7 @@ type ShapeProps = {
 export default function Shape({
   ref,
 	shape,
+  redrawToken,
 	defaultCount,
   defaultBrushstrokeOptions,
 	defaultLineOptions,
@@ -53,6 +55,7 @@ export default function Shape({
                 key={`${"shape"}-${i}`}
                 start={segment.start}
                 end={segment.end}
+                redrawToken={redrawToken}
                 count={segment.count ?? defaultCount}
                 options={segment.lineOptions ?? defaultLineOptions}
                 strokeOptions={segment.strokeOptions ?? defaultStrokeOptions}

@@ -27,6 +27,14 @@ type HandwrittenParagraphProps = {
   mobileBreakpoint?: number;
   /** Text alignment for both text and SVG glyph layout. */
   textAlign?: "left" | "center" | "right";
+  /**
+   * Animation mode:
+   * - enter: current entrance animation
+   * - stagger: entrance animation with accumulating cursor offset
+   * - none: no animation; starts fully drawn
+   * - jitter: no entry; redraws stroke randomness every frame
+   */
+  animation?: "enter" | "stagger" | "none" | "jitter";
   /** Extra className on the outer wrapper. */
   className?: string;
 };
@@ -48,6 +56,7 @@ export default function HandwrittenText({
   mobileStrokeWidth,
   mobileBreakpoint = 768,
   textAlign = "left",
+  animation = "enter",
   className = "",
 }: HandwrittenParagraphProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -62,6 +71,7 @@ export default function HandwrittenText({
   const measureRef = useRef<HTMLSpanElement>(null);
   const [cell, setCell] = useState<{ w: number; h: number } | null>(null);
   const [charLayout, setCharLayout] = useState<Array<{ left: number; top: number }>>([]);
+  const [jitterTick, setJitterTick] = useState(0);
 
   const effectiveFontSize = isMobile && mobileFontSize !== undefined ? mobileFontSize : fontSize;
   const effectiveStrokeWidth = isMobile && mobileStrokeWidth !== undefined ? mobileStrokeWidth : strokeWidth;
@@ -94,6 +104,25 @@ export default function HandwrittenText({
   }, [effectiveFontSize]);
 
   useEffect(() => {
+    hasAnimatedRef.current = false;
+  }, [children, animation]);
+
+  useEffect(() => {
+    if (animation !== "jitter") return;
+
+    let rafId = 0;
+    const tick = () => {
+      setJitterTick((prev) => (prev + 1) % 1000000);
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    rafId = window.requestAnimationFrame(tick);
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
+  }, [animation]);
+
+  useEffect(() => {
     if (!layoutRef.current) return;
 
     const updateLayout = () => {
@@ -124,7 +153,7 @@ export default function HandwrittenText({
   }, [children, effectiveFontSize, textAlign]);
 
   useGSAP(() => {
-    if (!rootRef.current || !cell || hasAnimatedRef.current) return;
+    if (!rootRef.current || !cell) return;
 
     const paths = Array.from(rootRef.current.querySelectorAll("path"));
     if (!paths.length) return;
@@ -132,6 +161,17 @@ export default function HandwrittenText({
     // Normalize every path to a 0..1 drawing domain so timing feels
     // consistent even for very short glyph strokes.
     paths.forEach((p) => p.setAttribute("pathLength", "1"));
+
+    if (animation === "none" || animation === "jitter") {
+      gsap.set(paths, {
+        strokeDasharray: "1 0",
+        strokeDashoffset: 0,
+        opacity: 1,
+      });
+      return;
+    }
+
+    if (hasAnimatedRef.current) return;
 
     gsap.set(paths, {
       strokeDasharray: "0 1",
@@ -159,11 +199,12 @@ export default function HandwrittenText({
         ease: "none",
       }, 0);
 
-      tl.add(pathTl, gsap.utils.random(0, 1));
+      tl.add(pathTl, gsap.utils.random(0, 1) + (animation === "stagger" ? cursor : 0));
 
       // Keep strokes flowing in order while allowing randomized overlap.
-      // Too apply this, add it to the above tl.add() call
-      cursor += gsap.utils.random(0, 0.01);
+      if (animation === "stagger") {
+        cursor += gsap.utils.random(0, 0.01);
+      }
     });
 
     const trigger = ScrollTrigger.create({
@@ -197,7 +238,7 @@ export default function HandwrittenText({
       trigger.kill();
       tl.kill();
     };
-  }, { dependencies: [cell, children, charLayout.length, effectiveFontSize] });
+  }, { dependencies: [cell, children, charLayout.length, effectiveFontSize, animation] });
 
   // ── Render ────────────────────────────────────────────────────────
   return (
@@ -301,11 +342,12 @@ export default function HandwrittenText({
               >
                 <Shape
                   shape={shape}
+                  redrawToken={animation === "jitter" ? jitterTick : 0}
                   defaultLineOptions={{
-                    //preSegmentNoiseMagnitudes: 0.05,
-                    //postSegmentNoiseMagnitudes: 0.015,
-                    preSegmentNoiseMagnitudes: 0,
-                    postSegmentNoiseMagnitudes: 0,
+                    preSegmentNoiseMagnitudes: 0.05,
+                    postSegmentNoiseMagnitudes: 0.015,
+                    //preSegmentNoiseMagnitudes: 0,
+                    //postSegmentNoiseMagnitudes: 0,
                     segmentLength: 0.3,
                     smoothness: 0.1,
                   }}

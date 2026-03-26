@@ -5,6 +5,7 @@ import { Line, LineOptions } from "@/lib/geometry/Line";
 type LineGroupProps = {
   start: PointLike;
   end: PointLike;
+  redrawToken?: number;
   count?: number;
   options?: LineOptions;
   strokeOptions?: {
@@ -18,6 +19,7 @@ type LineGroupProps = {
 function LineGroup({
   start,
   end,
+  redrawToken,
   count = 2,
   options = {
     smoothness: 0.8,
@@ -35,7 +37,7 @@ function LineGroup({
 }: LineGroupProps) {
   const pathData = useMemo(() => {
     return Array.from({ length: count }, () => new Line(start, end, options).pathData);
-  }, [start.x, start.y, end.x, end.y, count,
+  }, [start.x, start.y, end.x, end.y, redrawToken, count,
     options.smoothness, options.segments, options.segmentLength,
     options.preSegmentNoiseMagnitudes, options.postSegmentNoiseMagnitudes]);
 
