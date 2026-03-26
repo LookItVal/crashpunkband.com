@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HandDrawnFrame from "./HandDrawnFrame";
+import HanddrawnText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 import SocialMediaLinks from "./SocialMediaLinks";
 
 export default function PunkFlierHero() {
@@ -19,7 +20,14 @@ export default function PunkFlierHero() {
               showBottom={true}
               showLeft={false}
             >
-              <span className="text-sm font-black uppercase tracking-[0.2em]">Kansas City Based</span>
+              <HanddrawnText
+                fontSize={13}
+                textAlign="center"
+                strokeWidth={2}
+                className="pb-3"
+              >
+                Kansas City Based
+              </HanddrawnText>
             </HandDrawnFrame>
             <HandDrawnFrame
               className="sm:rotate-3 inline-block"
@@ -29,7 +37,14 @@ export default function PunkFlierHero() {
               showBottom={true}
               showLeft={false}
             >
-              <span className="text-sm font-black uppercase tracking-[0.2em]">Punk Rock</span>
+              <HanddrawnText
+                fontSize={13}
+                textAlign="center"
+                strokeWidth={2}
+                className="pb-3"
+              >
+                Punk Rock
+              </HanddrawnText>
             </HandDrawnFrame>
           </div>
           <HandDrawnFrame

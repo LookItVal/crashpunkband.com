@@ -5,7 +5,7 @@ import MediaGallery from "../components/Landing/MediaGallery";
 import PunkFlierHero from "../components/Landing/PunkFlierHero";
 
 export default function Home() {
-  const releaseDate = "2026-06-01T00:00:00Z";
+  const releaseDate = "2026-03-26T20:50:00Z";
 
   return (
     <main className="min-h-screen bg-black text-white">

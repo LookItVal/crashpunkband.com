@@ -62,7 +62,7 @@ export default function HandwrittenText({
   mobileBreakpoint = 768,
   lineOptions,
   textAlign = "left",
-  animation = "enter",
+  animation = "none",
   as = "p",
   className = "",
 }: HandwrittenParagraphProps) {

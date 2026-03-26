@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
 import StreamingLinks from "./StreamingLinks";
+import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 type CountdownBannerProps = {
   targetDate: string | Date;
@@ -34,9 +35,34 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
   const padded = value.toString().padStart(2, "0");
 
   return (
-    <HandDrawnFrame className="min-w-16 md:min-w-20" contentClassName="px-2 py-2 text-center md:px-3">
-      <div className="text-2xl font-black tracking-widest md:text-3xl">{padded}</div>
-      <div className="text-[8px] font-bold uppercase tracking-[0.14em] text-white/80 md:text-xs md:tracking-[0.25em]">{label}</div>
+    <HandDrawnFrame className="min-w-14 md:min-w-20" contentClassName="px-0 py-2 text-center md:px-3">
+      <div className="pt-1 text-2xl font-black tracking-widest md:text-3xl">
+        <HandwrittenText
+          fontSize={24}
+          textAlign="center"
+          animation="jitter"
+          strokeWidth={2.5}
+          mobileBreakpoint={500}
+          mobileFontSize={14}
+          mobileStrokeWidth={2}
+        >
+          {padded}
+        </HandwrittenText>
+      </div>
+
+      <div className="py-1 text-[8px] font-bold tracking-[0.14em] md:tracking-[0.25em]">
+        <HandwrittenText
+          fontSize={13}
+          textAlign="center"
+          strokeColor="grey"
+          strokeWidth={2.5}
+          mobileBreakpoint={500}
+          mobileFontSize={7}
+          mobileStrokeWidth={1}
+        >
+          {label.toUpperCase()}
+        </HandwrittenText>
+      </div>
     </HandDrawnFrame>
   );
 }
@@ -67,7 +93,15 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
       <section className="relative">
         {!isReleased ? (
           <div className="flex flex-col gap-5">
-            <h2 className="text-center text-3xl font-black uppercase tracking-[0.35em] md:text-4xl">NEW MUSIC COMING SOON</h2>
+            <HandwrittenText
+              fontSize={30}
+              strokeWidth={4}
+              textAlign="center"
+              animation="jitter"
+
+            >
+              {`NEW MUSIC COMING SOON`}
+            </HandwrittenText>
             <div className="w-full overflow-x-auto pb-1">
               <div className="mx-auto flex w-max flex-nowrap items-center justify-center gap-2 md:gap-3">
                 <NumberUnit label="Days" value={time.days} />
