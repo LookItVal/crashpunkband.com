@@ -5,6 +5,8 @@ import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
 import StreamingLinks from "./StreamingLinks";
 import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
+import gsap from "gsap";
+import { useRef } from "react";
 
 type CountdownBannerProps = {
   targetDate: string | Date;
@@ -68,13 +70,10 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
 }
 
 export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
-  const [time, setTime] = useState<TimeRemaining>({
-    totalMs: 1,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const [time, setTime] = useState<TimeRemaining>(() => getTimeRemaining(targetDate));
+  const [showReleased, setShowReleased] = useState(() => getTimeRemaining(targetDate).totalMs <= 0);
+  const countdownRef = useRef<HTMLDivElement>(null);
+  const transitionStartedRef = useRef(false);
 
   useEffect(() => {
     setTime(getTimeRemaining(targetDate));
@@ -88,11 +87,41 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
 
   const isReleased = useMemo(() => time.totalMs <= 0, [time.totalMs]);
 
+  useEffect(() => {
+    if (!isReleased) {
+      setShowReleased(false);
+      transitionStartedRef.current = false;
+      return;
+    }
+
+    if (showReleased || transitionStartedRef.current) return;
+
+    if (!countdownRef.current) {
+      setShowReleased(true);
+      return;
+    }
+
+    transitionStartedRef.current = true;
+    const tween = gsap.to(countdownRef.current, {
+      opacity: 0,
+      filter: "blur(10px)",
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => {
+        setShowReleased(true);
+      },
+    });
+
+    return () => {
+      tween.kill();
+    };
+  }, [isReleased, showReleased]);
+
   return (
     <HandDrawnFrame className="relative" contentClassName="p-6 md:p-8">
       <section className="relative">
-        {!isReleased ? (
-          <div className="flex flex-col gap-5">
+        {!showReleased ? (
+          <div ref={countdownRef} className="flex flex-col gap-5" style={{ opacity: 1, filter: "blur(0px)" }}>
             <HandwrittenText
               fontSize={30}
               strokeWidth={4}
