@@ -3,13 +3,14 @@
 import Image from "next/image";
 import { useState } from "react";
 import HandDrawnFrame from "./HandDrawnFrame";
+import HighlightButton from "./HighlightButton";
 import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 const galleryItems = [
   {
     src: "/photos/AnnieMaesBand1.webp",
-    alt: "CRASH live performance at Annie Mae's in Manhattan, Kansas",
-    label: "Annie Mae's - Manhattan, Kansas",
+    alt: "CRASH live performance at Auntie Mae's in Manhattan, Kansas",
+    label: "Auntie Mae's - Manhattan, Kansas",
   },
   {
     src: "/photos/BoobieTrap1.webp",
@@ -90,7 +91,10 @@ const galleryItems = [
 
 export default function MediaGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(4);
   const activeItem = activeIndex !== null ? galleryItems[activeIndex] : null;
+  const visibleItems = galleryItems.slice(0, visibleCount);
+  const hasMoreItems = visibleCount < galleryItems.length;
 
   return (
     <>
@@ -110,7 +114,7 @@ export default function MediaGallery() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {galleryItems.map((item, index) => (
+            {visibleItems.map((item, index) => (
               <HandDrawnFrame key={`${item.label}-${index}`} className="group" contentClassName="p-2">
                 <article>
                   <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
@@ -139,6 +143,16 @@ export default function MediaGallery() {
               </HandDrawnFrame>
             ))}
           </div>
+
+          {hasMoreItems ? (
+            <div className="mt-6 flex justify-center">
+              <HighlightButton onClick={() => setVisibleCount((count) => Math.min(count + 4, galleryItems.length))}>
+                <HandwrittenText fontSize={13} mobileFontSize={11} strokeWidth={2.4} mobileStrokeWidth={2}>
+                  Load More
+                </HandwrittenText>
+              </HighlightButton>
+            </div>
+          ) : null}
         </section>
       </HandDrawnFrame>
 
