@@ -12,9 +12,9 @@ export type SongConfig = {
 
 export const SONGS: SongConfig[] = [
   {
-    code: "cutloose123",
+    code: "cutloose321",
     title: "Cut Loose",
-    audioFile: "/audio/Cut Loose.wav",
+    audioFile: "/audio/Cut Loose.mp3",
   },
   {
     code: "gottahaveit456",

@@ -1,29 +1,12 @@
-import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getSongByCode, getAllSongCodes } from "@/config/songs";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
+import type { SongConfig } from "@/config/songs";
 
-type PageProps = {
-  params: Promise<{
-    code: string;
-  }>;
+type SongCodePageProps = {
+  song: SongConfig;
 };
 
-export async function generateStaticParams() {
-  const codes = getAllSongCodes();
-  return codes.map((code) => ({
-    code,
-  }));
-}
-
-export default async function SongPage({ params }: PageProps) {
-  const { code } = await params;
-  const song = getSongByCode(code);
-
-  if (!song) {
-    notFound();
-  }
-
+export default function SongCodePage({ song }: SongCodePageProps) {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="max-w-2xl w-full flex flex-col items-center gap-12">

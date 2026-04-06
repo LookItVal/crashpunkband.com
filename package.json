@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/generate-song-pages.mjs",
     "dev": "next dev --turbopack",
+    "prebuild": "node scripts/generate-song-pages.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "preexport": "node scripts/generate-song-pages.mjs",
     "export": "next build && next export"
   },
   "dependencies": {

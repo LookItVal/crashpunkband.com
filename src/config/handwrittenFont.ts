@@ -511,6 +511,15 @@ const symbols: Record<string, ShapeDefinition> = {
   ".": new ShapeBuilder()
     .addLine({ x: 0.3, y: 0.85 }, { x: 0.3, y: 0.9 })
     .build(),
+  "©": new ShapeBuilder()
+    .addLine({ x: 0.35, y: 0.55 }, { x: 0.2, y: 0.65 })
+    .addLine({ x: 0.2, y: 0.65 }, { x: 0.35, y: 0.75 })
+    .addLine({ x: 0.6, y: 0.65 }, { x: 0.4, y: 0.4 })
+    .addLine({ x: 0.4, y: 0.4 }, { x: 0.1, y: 0.55 })
+    .addLine({ x: 0.1, y: 0.55 }, { x: 0.1, y: 0.8 })
+    .addLine({ x: 0.1, y: 0.8 }, { x: 0.35, y: 0.9 })
+    .addLine({ x: 0.4, y: 0.9 }, { x: 0.6, y: 0.65 })
+    .build(),
 };
 
 // ── Merged lookup ───────────────────────────────────────────────────────

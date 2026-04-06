@@ -7,25 +7,85 @@ import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 
 const galleryItems = [
   {
-    src: "/crash_replay.jpg",
-    alt: "CRASH promo still",
-    label: "Lorem Ipsum",
+    src: "/photos/AnnieMaesBand1.webp",
+    alt: "CRASH live performance at Annie Mae's in Manhattan, Kansas",
+    label: "Annie Mae's - Manhattan, Kansas",
   },
   {
-    src: "/crash_banner.png",
-    alt: "CRASH logo banner",
-    label: "Dolor Sit",
+    src: "/photos/BoobieTrap1.webp",
+    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
   },
   {
-    src: "/crash_replay.jpg",
-    alt: "CRASH rehearsal scene",
-    label: "Amet Elit",
+    src: "/photos/BoobieTrapBand3.webp",
+    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
   },
   {
-    src: "/crash_banner.png",
-    alt: "CRASH artwork",
-    label: "Sed Eiusmod",
+    src: "/photos/BoobieTrapCash5.webp",
+    alt: "Cash of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
   },
+  {
+    src: "/photos/BoobieTrapFish1.webp",
+    alt: "Fish of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
+  },
+  {
+    src: "/photos/BoobieTrapHero1.webp",
+    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
+  },
+  {
+    src: "/photos/BoobieTrapKnoxx1.webp",
+    alt: "Knoxx of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
+  },
+  {
+    src: "/photos/BoobieTrapKnoxx2.webp",
+    alt: "Knoxx of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
+  },
+  {
+    src: "/photos/BoobieTrapMoshPit1.webp",
+    alt: "Mosh pit at CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    label: "The Boobie Trap - Topeka, Kansas",
+  },
+  {
+    src: "/photos/CRASHoutside2.webp",
+    alt: "CRASH backstage at Farewell in Kansas City, Missouri",
+    label: "Farewell - Kansas City, Missouri",
+  },
+  {
+    src: "/photos/CRASHoutside3.webp",
+    alt: "CRASH backstage at Farewell in Kansas City, Missouri",
+    label: "Farewell - Kansas City, Missouri",
+  },
+  {
+    src: "/photos/ReplayBand1.webp",
+    alt: "CRASH live performance at Replay in Lawrence, Kansas",
+    label: "Replay - Lawrence, Kansas",
+  },
+  {
+    src: "/photos/ReplayBand2.webp",
+    alt: "CRASH live performance at Replay in Lawrence, Kansas",
+    label: "Replay - Lawrence, Kansas",
+  },
+  {
+    src: "/photos/ReplayCash1.webp",
+    alt: "Cash of CRASH performing live at Replay in Lawrence, Kansas",
+    label: "Replay - Lawrence, Kansas",
+  },
+  {
+    src: "/photos/ReplayKnoxx1.webp",
+    alt: "Knoxx of CRASH performing live at Replay in Lawrence, Kansas",
+    label: "Replay - Lawrence, Kansas",
+  },
+  {
+    src: "/photos/ReplayStrings1.webp",
+    alt: "Strings of CRASH performing live at Replay in Lawrence, Kansas",
+    label: "Replay - Lawrence, Kansas",
+  }
 ];
 
 export default function MediaGallery() {
@@ -55,13 +115,17 @@ export default function MediaGallery() {
                 <article>
                   <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
                     <HandDrawnFrame contentClassName="p-1">
-                      <div className="relative h-48 w-full overflow-hidden md:h-56">
+                      <div className="relative aspect-3/2 w-full overflow-hidden">
                         <Image
                           src={item.src}
                           alt={item.alt}
                           fill
                           className="object-cover transition duration-300 group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 shadow-[inset_0_0_10px_10px_rgba(0,0,0,1)]"
                         />
                       </div>
                     </HandDrawnFrame>

@@ -32,7 +32,7 @@ export default function TestPage() {
           textAlign="center"
           animation="none"
         >
-          {`1234567890 ! @ # $ % & * () [] <> , . ? / \\ ' "`}
+          {`1234567890 ! @ # $ % & * () [] <> , . ? / \\ ' " ©`}
         </HandwrittenText>
                 <HandwrittenText
           fontSize={35}

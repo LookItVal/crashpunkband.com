@@ -14,10 +14,10 @@ export default function LandingFooter() {
               fontSize={11}
               mobileFontSize={9}
               strokeColor="#a1a1aa"
-              strokeWidth={2}
+              strokeWidth={1.5}
               textAlign="center"
             >
-              {"© 2024 CRASH. All rights reserved."}
+              {`© ${new Date().getFullYear()} CRASH. All rights reserved.`}
             </HandwrittenText>
           </div>
         </div>

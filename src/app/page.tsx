@@ -1,4 +1,5 @@
 import CountdownBanner from "../components/Landing/CountdownBanner";
+import BandMembersSection from "../components/Landing/BandMembersSection";
 import EventCalendar from "../components/Landing/EventCalendar";
 import LandingFooter from "../components/Landing/LandingFooter";
 import MediaGallery from "../components/Landing/MediaGallery";
@@ -12,6 +13,7 @@ export default function Home() {
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-8 md:px-10 md:py-10">
         <CountdownBanner targetDate={releaseDate} />
         <PunkFlierHero />
+        <BandMembersSection />
         <MediaGallery />
         <EventCalendar />
         <LandingFooter />
