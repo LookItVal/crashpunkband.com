@@ -38,9 +38,9 @@ export default function BandMembersSection() {
           </HandwrittenText>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {members.map((member) => (
-            <HandDrawnFrame key={member.name} className="h-full" contentClassName="p-2">
+            <HandDrawnFrame key={member.name} className="h-full" contentClassName="p-5">
               <article className="flex h-full flex-col">
                 <HandDrawnFrame contentClassName="p-1">
                   <div className="relative aspect-square w-full overflow-hidden">

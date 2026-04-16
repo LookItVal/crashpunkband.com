@@ -108,14 +108,14 @@ export default function MediaGallery() {
             </div>
             <HandDrawnFrame className="inline-block" contentClassName="px-4 py-2">
               <HandwrittenText className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
-                Lorem Ipsum
+                Our Shows
               </HandwrittenText>
             </HandDrawnFrame>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {visibleItems.map((item, index) => (
-              <HandDrawnFrame key={`${item.label}-${index}`} className="group" contentClassName="p-2">
+              <HandDrawnFrame key={`${item.label}-${index}`} className="group" contentClassName="p-3">
                 <article>
                   <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
                     <HandDrawnFrame contentClassName="p-1">

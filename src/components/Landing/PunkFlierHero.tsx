@@ -14,7 +14,7 @@ export default function PunkFlierHero() {
           <div className="flex flex-col items-center gap-4 pb-4 sm:flex-row sm:justify-between">
             <HandDrawnFrame
               className="inline-block sm:-rotate-3"
-              contentClassName="px-3 pb-1"
+              contentClassName="px-3 pb-3"
               showTop={false}
               showRight={false}
               showBottom={true}
@@ -31,7 +31,7 @@ export default function PunkFlierHero() {
             </HandDrawnFrame>
             <HandDrawnFrame
               className="sm:rotate-3 inline-block"
-              contentClassName="px-3 pb-1"
+              contentClassName="px-3 pb-3"
               showTop={false}
               showRight={false}
               showBottom={true}
@@ -77,7 +77,7 @@ export default function PunkFlierHero() {
               mobileStrokeWidth={1.6}
               textAlign="center"
             >
-              Book us now: bookcrashpunk@example.com
+              Book us now: crash.booking.official@gmail.com
             </HanddrawnText>
           </div>
         </div>
@@ -85,17 +85,17 @@ export default function PunkFlierHero() {
         <div className="grid gap-3 sm:grid-cols-3">
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
-              Lorem Ipsum
+              Big Sound
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
-              Dolor Sit Amet
+              Loud Instruments
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
-              Consectetur Adipiscing
+              Routy Crowds
             </HanddrawnText>
           </HandDrawnFrame>
         </div>

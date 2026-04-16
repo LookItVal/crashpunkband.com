@@ -12,15 +12,60 @@ export type SongConfig = {
 
 export const SONGS: SongConfig[] = [
   {
-    code: "cutloose321",
+    code: "cut-loose",
     title: "Cut Loose",
-    audioFile: "/audio/Cut Loose.mp3",
+    audioFile: "/audio/CUT LOOSE.mp3",
   },
   {
-    code: "gottahaveit456",
-    title: "Gotta Have It",
-    audioFile: "/audio/Gotta Have It.wav",
+    code: "answers",
+    title: "Answers",
+    audioFile: "/audio/ANSWERS.mp3",
   },
+  {
+    code: "decay",
+    title: "Decay",
+    audioFile: "/audio/DECAY.mp3",
+  },
+  {
+    code: "fight-back",
+    title: "Fight Back",
+    audioFile: "/audio/FIGHT BACK.mp3",
+  },
+  {
+    code: "fried",
+    title: "Fried",
+    audioFile: "/audio/FRIED.mp3",
+  },
+  {
+    code: "give-me-fire",
+    title: "Give Me Fire",
+    audioFile: "/audio/GIVE ME FIRE.mp3",
+  },
+  {
+    code: "kill-the-shill",
+    title: "Kill The Shill",
+    audioFile: "/audio/KILL THE SHILL.mp3",
+  },
+  {
+    code: "major-headcase",
+    title: "Major Headcase",
+    audioFile: "/audio/MAJOR HEADCASE.mp3",
+  },
+  {
+    code: "outrage",
+    title: "Outrage",
+    audioFile: "/audio/OUTRAGE.mp3",
+  },
+  {
+    code: "take-back",
+    title: "Take Back",
+    audioFile: "/audio/TAKE BACK.mp3",
+  },
+  {
+    code: "throw-me-away",
+    title: "Throw Me Away",
+    audioFile: "/audio/THROW ME AWAY.mp3",
+  }
 ];
 
 /**
