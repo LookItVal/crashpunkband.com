@@ -1,4 +1,3 @@
-import GsapIntro from "./GsapIntro";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
 import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
@@ -46,35 +45,33 @@ type SocialMediaLinksProps = {
 
 export default function SocialMediaLinks({ compact = false }: SocialMediaLinksProps) {
   return (
-    <GsapIntro>
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {socialLinks.map((link) => (
-          <HandDrawnFrame
-            key={link.name}
-            className="inline-block"
-            contentClassName={compact ? "px-3 py-2" : "px-4 py-3"}
+    <div className="flex flex-wrap items-center justify-center gap-2">
+      {socialLinks.map((link) => (
+        <HandDrawnFrame
+          key={link.name}
+          className="inline-block"
+          contentClassName={compact ? "px-3 py-2" : "px-4 py-3"}
+        >
+          <HighlightButton
+            href={link.href}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full"
+            textClassName="w-full"
           >
-            <HighlightButton
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full"
-              textClassName="w-full"
+            <SocialIcon platform={link.platform} className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
+            <HandwrittenText
+              className="w-auto"
+              fontSize={compact ? 10 : 11}
+              mobileFontSize={compact ? 9 : 10}
+              strokeWidth={compact ? 1.8 : 2}
+              textAlign="left"
             >
-              <SocialIcon platform={link.platform} className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
-              <HandwrittenText
-                className="w-auto"
-                fontSize={compact ? 10 : 11}
-                mobileFontSize={compact ? 9 : 10}
-                strokeWidth={compact ? 1.8 : 2}
-                textAlign="left"
-              >
-                {link.name}
-              </HandwrittenText>
-            </HighlightButton>
-          </HandDrawnFrame>
-        ))}
-      </div>
-    </GsapIntro>
+              {link.name}
+            </HandwrittenText>
+          </HighlightButton>
+        </HandDrawnFrame>
+      ))}
+    </div>
   );
 }
