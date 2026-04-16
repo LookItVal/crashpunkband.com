@@ -24,13 +24,19 @@ function validateCode(code) {
 }
 
 function createPageSource(code) {
-  return `import { notFound } from "next/navigation";
+  return `import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import SongCodePage from "@/components/CRASHTheme/SongCodePage";
 import { getSongByCode } from "@/config/songs";
 
-export default function SongPage() {
-  const song = getSongByCode("${code}");
+const song = getSongByCode("${code}");
 
+export const metadata: Metadata = {
+  title: song ? \`CRASH - \${song.title}\` : "CRASH",
+  description: song ? \`Listen to \${song.title} by CRASH.\` : "Listen now.",
+};
+
+export default function SongPage() {
   if (!song) {
     notFound();
   }
