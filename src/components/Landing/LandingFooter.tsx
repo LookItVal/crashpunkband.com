@@ -17,7 +17,7 @@ export default function LandingFooter() {
               strokeWidth={1.5}
               textAlign="center"
             >
-              {`©\u00a0${new Date().getFullYear()}\u00a0CRASH. All\u00a0rights\u00a0reserved.`}
+              {`©\u00a0${new Date().getFullYear()}\u00a0CRASH.\u00a0All\u00a0rights\u00a0reserved.`}
             </HandwrittenText>
           </div>
         </div>
