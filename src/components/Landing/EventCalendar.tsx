@@ -438,7 +438,7 @@ export default function EventCalendar({
     <HandDrawnFrame contentClassName="p-6 md:p-8">
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="max-w-[20rem]">
+          <div className="w-25">
             <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
               Event Calendar
             </HandwrittenText>
@@ -449,12 +449,12 @@ export default function EventCalendar({
                 href={joinUrl}
                 target="_blank"
                 rel="noreferrer"
-                textClassName="w-full"
+                textClassName="w-34"
               >
                 <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
-                  Follow Calendar
+                  {"Follow\u00a0Calendar"}
                 </HandwrittenText>
-                </HighlightButton>
+              </HighlightButton>
             </HandDrawnFrame>
           </div>
         </div>

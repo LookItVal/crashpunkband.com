@@ -101,7 +101,7 @@ export default function MediaGallery() {
       <HandDrawnFrame contentClassName="p-6 md:p-8">
         <section>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <div className="max-w-56">
+            <div className="w-1/3">
               <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
                 Gallery
               </HandwrittenText>
