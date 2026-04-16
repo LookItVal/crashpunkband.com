@@ -438,7 +438,7 @@ export default function EventCalendar({
     <HandDrawnFrame contentClassName="p-6 md:p-8">
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="w-25">
+          <div className="md:w-32 w-25">
             <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
               Event Calendar
             </HandwrittenText>
