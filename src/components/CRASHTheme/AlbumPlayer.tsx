@@ -184,7 +184,7 @@ export default function AlbumPlayer() {
       <div className="flex flex-col lg:flex-row lg:items-center gap-8">
         {/* Tracklist — left on desktop, below on mobile */}
         <div className="order-2 lg:order-1 lg:w-1/2">
-          <HandDrawnFrame contentClassName="p-4 md:p-6">
+          <HandDrawnFrame contentClassName="p-8 md:p-10">
             <div className="mb-4">
               <HandwrittenText
                 as="h2"
