@@ -278,7 +278,11 @@ export default function HandwrittenText({
         M
       </span>
 
-      {/* Invisible but selectable + accessible monospace text layer */}
+      {/* Invisible but selectable + accessible monospace text layer.
+          Each character is wrapped in its own <span> so that line-break
+          opportunities match the measurement layer exactly — Chrome wraps
+          individual inline elements differently from a single text run
+          when overflow-wrap: anywhere is in effect. */}
       <TextTag
         style={{
           position: "relative",
@@ -295,7 +299,9 @@ export default function HandwrittenText({
           userSelect: "text",
         }}
       >
-        {children}
+        {chars.map((ch, idx) => (
+          <span key={`text-${idx}`}>{ch}</span>
+        ))}
       </TextTag>
 
       {/* Hidden wrap layout layer used to measure per-character positions */}

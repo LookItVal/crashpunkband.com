@@ -10,16 +10,27 @@ import LineGroup from "@/components/CRASHTheme/Utilities/LineGroup";
 
 type AudioPlayerProps = {
   audioSrc: string;
+  onEnded?: () => void;
+  onPlaying?: () => void;
+  autoPlay?: boolean;
+  togglePlaySignal?: number;
+  /** When provided, AudioPlayer controls this external element instead of rendering its own. */
+  externalAudioRef?: React.RefObject<HTMLAudioElement | null>;
+  /** Bump to force re-bind event listeners after swapping the external element. */
+  audioElementKey?: number;
 };
 
-export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
+export default function AudioPlayer({ audioSrc, onEnded, onPlaying, autoPlay, togglePlaySignal, externalAudioRef, audioElementKey = 0 }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.75);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const internalAudioRef = useRef<HTMLAudioElement>(null);
+  const getAudio = useCallback((): HTMLAudioElement | null => {
+    return externalAudioRef?.current ?? internalAudioRef.current;
+  }, [externalAudioRef]);
   const trackSvgRef = useRef<SVGSVGElement>(null);
   const trackProgressGroupRef = useRef<SVGGElement>(null);
   const playIconRef = useRef<PlayIconHandle>(null);
@@ -30,6 +41,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   const previousIsPlayingRef = useRef(false);
   const isSeekingRef = useRef(false);
   const rafProgressRef = useRef<number | null>(null);
+  const prevAudioSrcRef = useRef(audioSrc);
 
   const circleCenter = useMemo(() => ({ x: 50, y: 50 }), []);
   const circleStrokeOptions = useMemo(() => ({ stroke: "white", strokeWidth: 5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const }), []);
@@ -68,7 +80,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   const trackKnobLocalCenter = useMemo(() => ({ x: 0, y: 0 }), []);
 
   const resolveDuration = useCallback(() => {
-    const audio = audioRef.current;
+    const audio = getAudio();
     if (!audio) return 0;
 
     if (Number.isFinite(audio.duration) && audio.duration > 0) {
@@ -83,7 +95,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     }
 
     return 0;
-  }, []);
+  }, [getAudio]);
 
   const syncDuration = useCallback(() => {
     const nextDuration = resolveDuration();
@@ -92,7 +104,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
       return nextDuration;
     }
 
-    const audio = audioRef.current;
+    const audio = getAudio();
     if (audio && audio.currentTime > 0) {
       const provisionalDuration = audio.currentTime + 1;
       setDuration((prev) => Math.max(prev, provisionalDuration));
@@ -100,7 +112,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     }
 
     return 0;
-  }, [resolveDuration]);
+  }, [resolveDuration, getAudio]);
 
   const progress = useMemo(() => {
     if (duration <= 0) return 0;
@@ -113,7 +125,8 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   }, [progress, trackStart.x, trackStart.y, trackEnd.x]);
 
   const applySeekFromClientPoint = useCallback((clientX: number, clientY: number) => {
-    if (!audioRef.current || !trackSvgRef.current) return;
+    const audio = getAudio();
+    if (!audio || !trackSvgRef.current) return;
 
     const resolvedDuration = syncDuration() || duration;
     if (resolvedDuration <= 0) return;
@@ -129,9 +142,9 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     const ratio = (clampedX - trackStart.x) / (trackEnd.x - trackStart.x);
     const nextTime = ratio * resolvedDuration;
 
-    audioRef.current.currentTime = nextTime;
+    audio.currentTime = nextTime;
     setCurrentTime(nextTime);
-  }, [duration, syncDuration, trackStart.x, trackEnd.x]);
+  }, [duration, syncDuration, trackStart.x, trackEnd.x, getAudio]);
 
   const handleTrackPointerDown = useCallback((e: React.PointerEvent<SVGRectElement>) => {
     e.stopPropagation();
@@ -265,7 +278,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   }, [handleTrackPointerMove, handleTrackPointerUp]);
 
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = getAudio();
     if (!audio || !isPlaying) {
       if (rafProgressRef.current !== null) {
         window.cancelAnimationFrame(rafProgressRef.current);
@@ -275,9 +288,9 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     }
 
     const tick = () => {
-      if (!audioRef.current) return;
+      if (!audio) return;
       syncDuration();
-      setCurrentTime(audioRef.current.currentTime || 0);
+      setCurrentTime(audio.currentTime || 0);
       rafProgressRef.current = window.requestAnimationFrame(tick);
     };
 
@@ -289,10 +302,10 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
         rafProgressRef.current = null;
       }
     };
-  }, [isPlaying, syncDuration]);
+  }, [isPlaying, syncDuration, getAudio, audioElementKey]);
 
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = getAudio();
     if (!audio) return;
 
     const handleLoadedMetadata = () => {
@@ -309,6 +322,10 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
       setIsPlaying(true);
     };
 
+    const handlePlaying = () => {
+      onPlaying?.();
+    };
+
     const handlePause = () => {
       setIsPlaying(false);
     };
@@ -316,6 +333,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     const handleEnded = () => {
       setIsPlaying(false);
       setCurrentTime(audio.duration || 0);
+      onEnded?.();
     };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -324,8 +342,14 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     audio.addEventListener("durationchange", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("play", handlePlay);
+    audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("ended", handleEnded);
+
+    // Sync initial state — the element may already be playing after a swap
+    if (!audio.paused) setIsPlaying(true);
+    syncDuration();
+    setCurrentTime(audio.currentTime || 0);
 
     return () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -334,10 +358,27 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
       audio.removeEventListener("durationchange", handleLoadedMetadata);
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [audioSrc, syncDuration]);
+  }, [audioSrc, syncDuration, onEnded, onPlaying, getAudio, audioElementKey]);
+
+  useEffect(() => {
+    // When using an external audio element, the parent manages loading.
+    if (externalAudioRef) return;
+
+    const audio = getAudio();
+    if (!audio || audioSrc === prevAudioSrcRef.current) return;
+
+    prevAudioSrcRef.current = audioSrc;
+    audio.load();
+
+    if (autoPlay) {
+      setIsPlaying(true);
+      void audio.play().catch(() => setIsPlaying(false));
+    }
+  }, [audioSrc, autoPlay, externalAudioRef, getAudio]);
 
   useEffect(() => {
     if (!trackProgressGroupRef.current) return;
@@ -356,9 +397,10 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
   }, [progress]);
 
   useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = volume;
-  }, [volume]);
+    const audio = getAudio();
+    if (!audio) return;
+    audio.volume = volume;
+  }, [volume, getAudio, audioElementKey]);
 
   useEffect(() => {
     if (previousIsPlayingRef.current === isPlaying) return;
@@ -367,8 +409,8 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
     previousIsPlayingRef.current = isPlaying;
   }, [isPlaying]);
 
-  const togglePlay = () => {
-    const audio = audioRef.current;
+  const togglePlay = useCallback(() => {
+    const audio = getAudio();
     if (!audio) return;
 
     if (audio.paused) {
@@ -380,7 +422,15 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
       setIsPlaying(false);
       audio.pause();
     }
-  };
+  }, [getAudio]);
+
+  const togglePlaySignalRef = useRef(togglePlaySignal ?? 0);
+  useEffect(() => {
+    if (togglePlaySignal !== undefined && togglePlaySignal !== togglePlaySignalRef.current) {
+      togglePlaySignalRef.current = togglePlaySignal;
+      togglePlay();
+    }
+  }, [togglePlaySignal, togglePlay]);
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume);
@@ -388,7 +438,7 @@ export default function AudioPlayer({ audioSrc }: AudioPlayerProps) {
 
   return (
     <div className="flex items-center gap-6 scale-70 md:scale-100">
-      <audio ref={audioRef} src={audioSrc} preload="metadata" />
+      {!externalAudioRef && <audio ref={internalAudioRef} src={audioSrc} preload="metadata" />}
       <svg ref={playControlRef} viewBox="0 0 100 100" className="w-14 h-14 overflow-visible" onClick={togglePlay}>
         <g data-part="play-ring">
           <CircleGroup
