@@ -31,8 +31,8 @@ export default function BandMembersSection() {
             className="leading-tight"
             fontSize={24}
             mobileFontSize={18}
-            strokeWidth={3}
-            mobileStrokeWidth={2.4}
+            strokeWidth={1.8}
+            mobileStrokeWidth={1.5}
           >
             CASH, KNOXX, and FISH are CRASH
           </HandwrittenText>
@@ -59,10 +59,10 @@ export default function BandMembersSection() {
                 </HandDrawnFrame>
 
                 <div className="space-y-1 px-2 pt-3 pb-2">
-                  <HandwrittenText as="h3" fontSize={14} mobileFontSize={11} strokeWidth={2.5}>
+                  <HandwrittenText as="h3" fontSize={14} mobileFontSize={11} strokeWidth={1.7}>
                     {member.name}
                   </HandwrittenText>
-                  <HandwrittenText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2}>
+                  <HandwrittenText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5}>
                     {member.role}
                   </HandwrittenText>
                 </div>

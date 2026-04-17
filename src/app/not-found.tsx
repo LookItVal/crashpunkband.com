@@ -12,8 +12,8 @@ export default function NotFound() {
                 as="h1"
                 fontSize={72}
                 mobileFontSize={48}
-                strokeWidth={4}
-                mobileStrokeWidth={3}
+                strokeWidth={2}
+                mobileStrokeWidth={1.6}
               >
                 404
               </HandwrittenText>
@@ -21,7 +21,7 @@ export default function NotFound() {
           </div>
 
           <div className="mb-8 max-w-md">
-            <HandwrittenText as="h2" fontSize={28} mobileFontSize={20} strokeWidth={3} mobileStrokeWidth={2.5}>
+            <HandwrittenText as="h2" fontSize={28} mobileFontSize={20} strokeWidth={1.9} mobileStrokeWidth={1.5}>
               Page Not Found
             </HandwrittenText>
           </div>
@@ -31,7 +31,7 @@ export default function NotFound() {
               fontSize={14}
               mobileFontSize={12}
               strokeColor="#d4d4d8"
-              strokeWidth={2}
+              strokeWidth={1.5}
               textAlign="center"
             >
               Looks like this page crashed. The signal got lost in the noise.
@@ -42,8 +42,8 @@ export default function NotFound() {
             <HandwrittenText
               fontSize={16}
               mobileFontSize={13}
-              strokeWidth={2.5}
-              mobileStrokeWidth={2}
+              strokeWidth={1.7}
+              mobileStrokeWidth={1.4}
               textAlign="center"
             >
               Back to CRASH

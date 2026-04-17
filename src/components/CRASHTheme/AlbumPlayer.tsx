@@ -190,8 +190,8 @@ export default function AlbumPlayer() {
                 as="h2"
                 fontSize={20}
                 mobileFontSize={16}
-                strokeWidth={2.8}
-                mobileStrokeWidth={2.2}
+                strokeWidth={1.8}
+                mobileStrokeWidth={1.5}
               >
                 TRACKLIST
               </HandwrittenText>
@@ -212,7 +212,7 @@ export default function AlbumPlayer() {
                         key={`track-${track.number}`}
                         fontSize={13}
                         mobileFontSize={10}
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         strokeColor="#ffffff"
                       >
                         {`${track.number}.\u00a0${track.title}`}
@@ -250,7 +250,7 @@ export default function AlbumPlayer() {
           <HandwrittenText
             fontSize={10}
             mobileFontSize={8}
-            strokeWidth={1.6}
+            strokeWidth={1.3}
             strokeColor="#71717a"
             textAlign="center"
           >
@@ -264,8 +264,8 @@ export default function AlbumPlayer() {
             className="max-w-lg"
             fontSize={28}
             mobileFontSize={20}
-            strokeWidth={3}
-            mobileStrokeWidth={2.4}
+            strokeWidth={1.9}
+            mobileStrokeWidth={1.5}
           >
             {displayTitle}
           </HandwrittenText>

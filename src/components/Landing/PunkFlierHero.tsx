@@ -23,7 +23,7 @@ export default function PunkFlierHero() {
               <HanddrawnText
                 fontSize={13}
                 textAlign="center"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 className="pb-3"
               >
                 Kansas City Based
@@ -40,7 +40,7 @@ export default function PunkFlierHero() {
               <HanddrawnText
                 fontSize={13}
                 textAlign="center"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 className="pb-3"
               >
                 Punk Rock
@@ -73,8 +73,8 @@ export default function PunkFlierHero() {
               fontSize={12}
               mobileFontSize={10}
               strokeColor="#e4e4e7"
-              strokeWidth={2.2}
-              mobileStrokeWidth={1.6}
+              strokeWidth={1.5}
+              mobileStrokeWidth={1.3}
               textAlign="center"
             >
               Book us now: crash.booking.official@gmail.com
@@ -84,17 +84,17 @@ export default function PunkFlierHero() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
               Big Sound
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
               Loud Instruments
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
               Routy Crowds
             </HanddrawnText>
           </HandDrawnFrame>
@@ -110,7 +110,7 @@ export default function PunkFlierHero() {
             showLeft={false}
           />
           <div className="mb-3">
-            <HanddrawnText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={2.2} textAlign="center">
+            <HanddrawnText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
               Stay connected
             </HanddrawnText>
           </div>

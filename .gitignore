@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated page files
+/src/app/answers/
+/src/app/cut-loose/
+/src/app/decay/
+/src/app/fight-back/
+/src/app/fried/
+/src/app/give-me-fire/
+/src/app/kill-the-shill/
+/src/app/major-headcase/
+/src/app/outrage/
+/src/app/take-back/
+/src/app/throw-me-away/

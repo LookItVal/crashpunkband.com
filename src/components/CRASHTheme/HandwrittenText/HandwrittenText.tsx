@@ -20,7 +20,7 @@ type HandwrittenParagraphProps = {
   mobileFontSize?: number;
   /** Stroke colour passed to every Shape (default "white"). */
   strokeColor?: string;
-  /** Stroke width passed to every Shape (default 2). */
+  /** Stroke width passed to every Shape (default 1.5). */
   strokeWidth?: number;
   /** Mobile override for stroke width. Falls back to strokeWidth when unset. */
   mobileStrokeWidth?: number;
@@ -57,7 +57,7 @@ export default function HandwrittenText({
   fontSize = 20,
   mobileFontSize,
   strokeColor = "white",
-  strokeWidth = 2,
+  strokeWidth = 1.5,
   mobileStrokeWidth,
   mobileBreakpoint = 768,
   lineOptions,

@@ -27,7 +27,7 @@ export default function StreamingLinks() {
               className="w-full"
               textClassName="w-full"
             >
-              <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
                 {service.name}
               </HandwrittenText>
             </HighlightButton>

@@ -64,7 +64,7 @@ export default function SocialMediaLinks({ compact = false }: SocialMediaLinksPr
               className="w-auto"
               fontSize={compact ? 10 : 11}
               mobileFontSize={compact ? 9 : 10}
-              strokeWidth={compact ? 1.8 : 2}
+              strokeWidth={compact ? 1.4 : 1.5}
               textAlign="left"
             >
               {link.name}

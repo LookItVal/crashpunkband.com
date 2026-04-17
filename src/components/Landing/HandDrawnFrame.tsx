@@ -131,7 +131,7 @@ export default function HandDrawnFrame({
   angleRandomness = 0.3,
   roughness = 0.5,
   roughnessScale = 0.1,
-  thickness = 3,
+  thickness = 4,
   showTop = true,
   showRight = true,
   showBottom = true,

@@ -102,12 +102,12 @@ export default function MediaGallery() {
         <section>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="w-1/3">
-              <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
+              <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={1.9} mobileStrokeWidth={1.5}>
                 Gallery
               </HandwrittenText>
             </div>
             <HandDrawnFrame className="inline-block" contentClassName="px-4 py-2">
-              <HandwrittenText className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+              <HandwrittenText className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
                 Our Shows
               </HandwrittenText>
             </HandDrawnFrame>
@@ -135,7 +135,7 @@ export default function MediaGallery() {
                     </HandDrawnFrame>
                   </button>
                   <div className="p-2">
-                    <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2}>
+                    <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5}>
                       {item.label}
                     </HandwrittenText>
                   </div>
@@ -147,7 +147,7 @@ export default function MediaGallery() {
           {hasMoreItems ? (
             <div className="mt-6 flex justify-center">
               <HighlightButton onClick={() => setVisibleCount((count) => Math.min(count + 4, galleryItems.length))}>
-                <HandwrittenText fontSize={13} mobileFontSize={11} strokeWidth={2.4} mobileStrokeWidth={2}>
+                <HandwrittenText fontSize={13} mobileFontSize={11} strokeWidth={1.6} mobileStrokeWidth={1.4}>
                   Load More
                 </HandwrittenText>
               </HighlightButton>
@@ -169,7 +169,7 @@ export default function MediaGallery() {
             className="absolute right-4 top-4"
             onClick={() => setActiveIndex(null)}
           >
-            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={2.2}>
+            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={1.6}>
               Close
             </HandwrittenText>
           </button>

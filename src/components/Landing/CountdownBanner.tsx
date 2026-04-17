@@ -43,10 +43,10 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
           fontSize={24}
           textAlign="center"
           animation="jitter"
-          strokeWidth={2.5}
+          strokeWidth={1.6}
           mobileBreakpoint={500}
           mobileFontSize={14}
-          mobileStrokeWidth={2}
+          mobileStrokeWidth={1.3}
         >
           {padded}
         </HandwrittenText>
@@ -57,7 +57,7 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
           fontSize={13}
           textAlign="center"
           strokeColor="grey"
-          strokeWidth={2.5}
+          strokeWidth={1.5}
           mobileBreakpoint={500}
           mobileFontSize={7}
           mobileStrokeWidth={1}
@@ -124,7 +124,7 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
           <div ref={countdownRef} className="flex flex-col gap-5" style={{ opacity: 1, filter: "blur(0px)" }}>
             <HandwrittenText
               fontSize={30}
-              strokeWidth={4}
+              strokeWidth={1.9}
               textAlign="center"
               animation="jitter"
 
@@ -144,7 +144,7 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
           <div className="flex flex-col items-center gap-4 text-center">
             <HandDrawnFrame contentClassName="px-6 py-3">
               <HighlightButton href="#listen" textClassName="w-full">
-                <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={3} textAlign="center">
+                <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={1.8} mobileStrokeWidth={1.5} textAlign="center">
                   Listen now
                 </HandwrittenText>
               </HighlightButton>

@@ -439,7 +439,7 @@ export default function EventCalendar({
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="md:w-32 w-25">
-            <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={3.2} mobileStrokeWidth={2.5}>
+            <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={1.9} mobileStrokeWidth={1.5}>
               Event Calendar
             </HandwrittenText>
           </div>
@@ -451,7 +451,7 @@ export default function EventCalendar({
                 rel="noreferrer"
                 textClassName="w-34"
               >
-                <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={2} textAlign="center">
+                <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
                   {"Follow\u00a0Calendar"}
                 </HandwrittenText>
               </HighlightButton>
@@ -462,7 +462,7 @@ export default function EventCalendar({
         {isLoading ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
             <div className="w-full max-w-md">
-              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                 Loading calendar...
               </HandwrittenText>
             </div>
@@ -470,7 +470,7 @@ export default function EventCalendar({
         ) : errorMessage ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
             <div className="w-full max-w-md">
-              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                 {errorMessage}
               </HandwrittenText>
             </div>
@@ -478,7 +478,7 @@ export default function EventCalendar({
         ) : upcomingEvents.length === 0 ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
             <div className="w-full max-w-md">
-              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                 No upcoming events.
               </HandwrittenText>
             </div>
@@ -490,17 +490,17 @@ export default function EventCalendar({
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
                   <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-10 gap-y-2 text-center">
                     <div className="min-w-[15em]">
-                      <HandwrittenText fontSize={14} mobileFontSize={10} strokeColor="#f4f4f5" strokeWidth={2.3} textAlign="center">
+                      <HandwrittenText fontSize={14} mobileFontSize={10} strokeColor="#f4f4f5" strokeWidth={1.7} textAlign="center">
                         {event.showName || "Show name"}
                       </HandwrittenText>
                     </div>
                     
                     <div className="flex items-center justify-between md:gap-x-6 gap-x-3 gap-y-2 flex-wrap grow">
                       <div className="flex flex-col items-center align-center justify-center grow">
-                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.2} textAlign="center">
                           When:
                         </HandwrittenText>
-                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                           {getWhenDisplayLabel(event.startDateTime) || "TBD"}
                         </HandwrittenText>
                       </div>
@@ -510,7 +510,7 @@ export default function EventCalendar({
 
                         return (
                           <div className="flex flex-col items-center align-center justify-center grow">
-                            <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                            <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.2} textAlign="center">
                               Where:
                             </HandwrittenText>
                             {locationLink.href ? (
@@ -520,12 +520,12 @@ export default function EventCalendar({
                                 rel="noreferrer"
                                 textClassName="w-full"
                               >
-                                <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={2} textAlign="center">
+                                <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center">
                                   {locationLink.label}
                                 </HandwrittenText>
                               </HighlightButton>
                             ) : (
-                              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                                 {locationLink.label}
                               </HandwrittenText>
                             )}
@@ -534,10 +534,10 @@ export default function EventCalendar({
                       })()}
 
                       <div className="flex flex-col items-center align-center justify-center grow">
-                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.6} textAlign="center">
+                        <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.2} textAlign="center">
                           Doors:
                         </HandwrittenText>
-                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={2} textAlign="center">
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
                           {formatDoorsTimeLabel(event.doorsDateTime)}
                         </HandwrittenText>
                       </div>
@@ -548,13 +548,13 @@ export default function EventCalendar({
                           textClassName="w-full text-center block!"
                           onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
                         >
-                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={2} textAlign="center">
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center">
                             View Flyer
                           </HandwrittenText>
                         </HighlightButton>
                       ) : (
                         <span className="grow text-center block!">
-                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#71717a" strokeWidth={2} textAlign="center">
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#71717a" strokeWidth={1.5} textAlign="center">
                             No Flyer
                           </HandwrittenText>
                         </span>
@@ -567,7 +567,7 @@ export default function EventCalendar({
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="max-w-[16rem]">
-                <HandwrittenText fontSize={10} mobileFontSize={9} strokeColor="#a1a1aa" strokeWidth={1.8}>
+                <HandwrittenText fontSize={10} mobileFontSize={9} strokeColor="#a1a1aa" strokeWidth={1.4}>
                   {`Page ${currentPage} of ${totalPages}`}
                 </HandwrittenText>
               </div>
@@ -579,7 +579,7 @@ export default function EventCalendar({
                     onClick={() => animateToPage(Math.max(1, currentPage - 1))}
                     textClassName="w-full"
                   >
-                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.9} textAlign="center">
+                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.4} textAlign="center">
                       Previous
                     </HandwrittenText>
                   </HighlightButton>
@@ -590,7 +590,7 @@ export default function EventCalendar({
                     onClick={() => animateToPage(Math.min(totalPages, currentPage + 1))}
                     textClassName="w-full"
                   >
-                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.9} textAlign="center">
+                    <HandwrittenText fontSize={10} mobileFontSize={9} strokeWidth={1.4} textAlign="center">
                       Next
                     </HandwrittenText>
                   </HighlightButton>
@@ -614,7 +614,7 @@ export default function EventCalendar({
             className="absolute right-4 top-4"
             onClick={() => setActiveFlyer(null)}
           >
-            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={2.2}>
+            <HandwrittenText fontSize={14} mobileFontSize={12} strokeWidth={1.6}>
               Close
             </HandwrittenText>
           </button>

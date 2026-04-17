@@ -37,8 +37,8 @@ export default function SongCodePage({ song }: SongCodePageProps) {
           className="max-w-lg"
           fontSize={30}
           mobileFontSize={22}
-          strokeWidth={3}
-          mobileStrokeWidth={2.4}
+          strokeWidth={1.9}
+          mobileStrokeWidth={1.5}
         >
           {displayTitle}
         </HandwrittenText>
