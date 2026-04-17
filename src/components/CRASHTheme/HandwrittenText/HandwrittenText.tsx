@@ -203,7 +203,7 @@ export default function HandwrittenText({
     // Build a child timeline for each stroke so opacity + draw happen
     // as one seamless animation instead of separate phases.
     paths.forEach((path) => {
-      const strokeDuration = gsap.utils.random(0.1, 0.5);
+      const strokeDuration = animation === "stagger" ? gsap.utils.random(0.1, 0.3) : gsap.utils.random(0.1, 0.5);
 
       const pathTl = gsap.timeline();
       pathTl.to(path, {
@@ -217,11 +217,11 @@ export default function HandwrittenText({
         ease: "none",
       }, 0);
 
-      tl.add(pathTl, gsap.utils.random(0, 1) + (animation === "stagger" ? cursor : 0));
+      tl.add(pathTl, (animation === "stagger" ? cursor + gsap.utils.random(0, 0.05) : gsap.utils.random(0, 1)));
 
       // Keep strokes flowing in order while allowing randomized overlap.
       if (animation === "stagger") {
-        cursor += gsap.utils.random(0, 0.01);
+        cursor += gsap.utils.random(0, 0.05) + 0.05;
       }
     });
 

@@ -26,7 +26,7 @@ export default function SongCodePage({ song }: SongCodePageProps) {
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_18px_8px_rgba(0,0,0,0.45)]"
+              className="pointer-events-none absolute inset-0 shadow-[inset_0_0_40px_8px_rgba(0,0,0,1)]"
             />
           </div>
         </div>

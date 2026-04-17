@@ -6,17 +6,17 @@ const members = [
   {
     name: "CASH",
     role: "Guitars",
-    photo: "/photos/CASH.webp",
+    photo: "/photos/CASHblack.webp",
   },
   {
     name: "KNOXX",
     role: "Vocals",
-    photo: "/photos/KNOXX.webp",
+    photo: "/photos/KNOXXblack.webp",
   },
   {
     name: "FISH",
     role: "Drums",
-    photo: "/photos/FISH.webp",
+    photo: "/photos/FISHblack.webp",
   },
 ];
 
