@@ -97,7 +97,7 @@ export default function PunkFlierHero() {
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
             <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
-              Routy Crowds
+              Rowdy Crowds
             </HanddrawnText>
           </HandDrawnFrame>
         </div>
