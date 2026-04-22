@@ -20,7 +20,7 @@ export default function SongCodePage({ song }: SongCodePageProps) {
 
       <div className="relative z-10 max-w-2xl w-full flex flex-col items-center gap-12">
         <div className="w-full max-w-md px-4">
-          <div className="relative w-full overflow-hidden bg-black">
+          <div className="relative w-full overflow-hidden">
             <Image
               src="/Album_Cover.png"
               alt="Album cover"
@@ -33,23 +33,24 @@ export default function SongCodePage({ song }: SongCodePageProps) {
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 shadow-[inset_0_0_40px_8px_rgba(0,0,0,1)]"
             />
+            <div className="absolute z-10 inset-0 top-10">
+              <FeatherGlowPlate className="px-10 py-3" inset="-1.1rem -1.4rem" radius="2.5rem" blur="12px">
+                <HandwrittenText
+                  as="h1"
+                  animation="stagger"
+                  textAlign="center"
+                  className="max-w-lg"
+                  fontSize={30}
+                  mobileFontSize={25}
+                  strokeWidth={2.5}
+                  mobileStrokeWidth={2}
+                >
+                  {displayTitle}
+                </HandwrittenText>
+              </FeatherGlowPlate>
+            </div>
           </div>
         </div>
-
-        <FeatherGlowPlate className="px-10 py-3" inset="-1.1rem -1.4rem" radius="2.5rem" blur="12px">
-          <HandwrittenText
-            as="h1"
-            animation="stagger"
-            textAlign="center"
-            className="max-w-lg"
-            fontSize={30}
-            mobileFontSize={22}
-            strokeWidth={1.9}
-            mobileStrokeWidth={1.5}
-          >
-            {displayTitle}
-          </HandwrittenText>
-        </FeatherGlowPlate>
 
         <FeatherGlowPlate className="px-20 py-4" inset="-1.35rem -1.8rem" radius="3rem" blur="12px">
           <AudioPlayer audioSrc={song.audioFile} />

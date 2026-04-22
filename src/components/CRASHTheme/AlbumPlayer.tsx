@@ -229,8 +229,8 @@ export default function AlbumPlayer() {
         </div>
 
         {/* Album art — right on desktop, top on mobile */}
-        <div className="order-1 lg:order-2 lg:w-1/2 flex items-start">
-          <div className="relative w-full overflow-hidden bg-black">
+        <div className="order-1 lg:order-2 lg:w-1/4 w-1/2 m-auto flex items-start">
+          <div className="relative overflow-hidden bg-black">
             <Image
               src="/Album_Cover.png"
               alt="Album cover"
