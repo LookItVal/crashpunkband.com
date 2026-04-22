@@ -142,14 +142,17 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-4 text-center">
+            <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={2} mobileStrokeWidth={1.5} textAlign="center">
+              NEW MUSIC OUT
+            </HandwrittenText>
+
             <HandDrawnFrame contentClassName="px-6 py-3">
-              <HighlightButton href="#listen" textClassName="w-full">
-                <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={1.8} mobileStrokeWidth={1.5} textAlign="center">
-                  Listen now
+              <HighlightButton href="/listen-now" textClassName="w-full">
+                <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={1.8} mobileStrokeWidth={1.5} textAlign="center" animation="jitter">
+                  Listen Now
                 </HandwrittenText>
               </HighlightButton>
             </HandDrawnFrame>
-            <StreamingLinks />
           </div>
         )}
       </section>

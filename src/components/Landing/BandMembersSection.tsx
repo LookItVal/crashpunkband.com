@@ -59,7 +59,7 @@ export default function BandMembersSection() {
                 </HandDrawnFrame>
 
                 <div className="space-y-1 px-2 pt-3 pb-2">
-                  <HandwrittenText as="h3" fontSize={14} mobileFontSize={11} strokeWidth={1.7}>
+                  <HandwrittenText as="h3" fontSize={14} mobileFontSize={11} strokeWidth={1.7} animation="jitter">
                     {member.name}
                   </HandwrittenText>
                   <HandwrittenText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5}>

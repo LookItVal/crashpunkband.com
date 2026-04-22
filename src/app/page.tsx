@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const releaseDate = "2026-04-30T00:00:00";
+  const releaseDate = "2026-05-01T00:00:00";
 
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-8 md:px-10 md:py-10">
-        {/* <CountdownBanner targetDate={releaseDate} /> */}
+        <CountdownBanner targetDate={releaseDate} />
         <PunkFlierHero />
         <BandMembersSection />
         <MediaGallery />

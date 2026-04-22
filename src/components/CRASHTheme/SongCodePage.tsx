@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import AnimatedAlbumBands from "@/components/CRASHTheme/AnimatedAlbumBands";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
-import HandDrawnFrame from "@/components/Landing/HandDrawnFrame";
+import FeatherGlowPlate from "@/components/CRASHTheme/FeatherGlowPlate";
 import HandwrittenText from "@/components/CRASHTheme/HandwrittenText/HandwrittenText";
 import type { SongConfig } from "@/config/songs";
 
@@ -12,8 +15,10 @@ export default function SongCodePage({ song }: SongCodePageProps) {
   const displayTitle = `"${song.title.toUpperCase()}"`;
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="max-w-2xl w-full flex flex-col items-center gap-12">
+    <main className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center p-4">
+      <AnimatedAlbumBands topDurationSeconds={300} bottomDurationSeconds={180} />
+
+      <div className="relative z-10 max-w-2xl w-full flex flex-col items-center gap-12">
         <div className="w-full max-w-md px-4">
           <div className="relative w-full overflow-hidden bg-black">
             <Image
@@ -30,19 +35,25 @@ export default function SongCodePage({ song }: SongCodePageProps) {
             />
           </div>
         </div>
-        <HandwrittenText
-          as="h1"
-          animation="stagger"
-          textAlign="center"
-          className="max-w-lg"
-          fontSize={30}
-          mobileFontSize={22}
-          strokeWidth={1.9}
-          mobileStrokeWidth={1.5}
-        >
-          {displayTitle}
-        </HandwrittenText>
-        <AudioPlayer audioSrc={song.audioFile} />
+
+        <FeatherGlowPlate className="px-10 py-3" inset="-1.1rem -1.4rem" radius="2.5rem" blur="12px">
+          <HandwrittenText
+            as="h1"
+            animation="stagger"
+            textAlign="center"
+            className="max-w-lg"
+            fontSize={30}
+            mobileFontSize={22}
+            strokeWidth={1.9}
+            mobileStrokeWidth={1.5}
+          >
+            {displayTitle}
+          </HandwrittenText>
+        </FeatherGlowPlate>
+
+        <FeatherGlowPlate className="px-20 py-4" inset="-1.35rem -1.8rem" radius="3rem" blur="12px">
+          <AudioPlayer audioSrc={song.audioFile} />
+        </FeatherGlowPlate>
       </div>
     </main>
   );

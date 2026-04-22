@@ -452,7 +452,7 @@ export default function EventCalendar({
                 textClassName="w-34"
               >
                 <HandwrittenText fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
-                  {"Follow\u00a0Calendar"}
+                  {"Follow Calendar"}
                 </HandwrittenText>
               </HighlightButton>
             </HandDrawnFrame>
@@ -462,7 +462,7 @@ export default function EventCalendar({
         {isLoading ? (
           <HandDrawnFrame className="min-h-56" contentClassName="flex min-h-56 items-center justify-center px-6 py-8">
             <div className="w-full max-w-md">
-              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
                 Loading calendar...
               </HandwrittenText>
             </div>
@@ -490,7 +490,7 @@ export default function EventCalendar({
                 <HandDrawnFrame key={event.id} contentClassName="px-4 py-3">
                   <article data-calendar-row className="flex md:flex-row flex-col items-center justify-between gap-x-10 gap-y-2 text-center">
                     <div className="min-w-[15em]">
-                      <HandwrittenText fontSize={14} mobileFontSize={10} strokeColor="#f4f4f5" strokeWidth={1.7} textAlign="center">
+                      <HandwrittenText fontSize={14} mobileFontSize={10} strokeColor="#f4f4f5" strokeWidth={1.7} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) ? "jitter" : "none"}>
                         {event.showName || "Show name"}
                       </HandwrittenText>
                     </div>
@@ -500,7 +500,7 @@ export default function EventCalendar({
                         <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.2} textAlign="center">
                           When:
                         </HandwrittenText>
-                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) ? "jitter" : "none"}>
                           {getWhenDisplayLabel(event.startDateTime) || "TBD"}
                         </HandwrittenText>
                       </div>
@@ -520,12 +520,12 @@ export default function EventCalendar({
                                 rel="noreferrer"
                                 textClassName="w-full"
                               >
-                                <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center">
+                                <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) ? "jitter" : "none"}>
                                   {locationLink.label}
                                 </HandwrittenText>
                               </HighlightButton>
                             ) : (
-                              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+                              <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) ? "jitter" : "none"}>
                                 {locationLink.label}
                               </HandwrittenText>
                             )}
@@ -537,7 +537,7 @@ export default function EventCalendar({
                         <HandwrittenText fontSize={8} mobileFontSize={7} strokeColor="#71717a" strokeWidth={1.2} textAlign="center">
                           Doors:
                         </HandwrittenText>
-                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+                        <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.doorsDateTime) ? "jitter" : "none"}>
                           {formatDoorsTimeLabel(event.doorsDateTime)}
                         </HandwrittenText>
                       </div>
@@ -548,7 +548,7 @@ export default function EventCalendar({
                           textClassName="w-full text-center block!"
                           onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
                         >
-                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center">
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) ? "jitter" : "none"}>
                             View Flyer
                           </HandwrittenText>
                         </HighlightButton>

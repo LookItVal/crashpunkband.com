@@ -38,6 +38,8 @@ type HandwrittenParagraphProps = {
    * - jitter: no entry; redraws stroke randomness every frame
    */
   animation?: "enter" | "stagger" | "none" | "jitter";
+  /** Frames per second for the jitter animation (default 10). */
+  jitterFps?: number;
   /** Semantic tag for the text layer (SEO/accessibility). */
   as?: "p" | "h1" | "h2" | "h3";
   /** Extra className on the outer wrapper. */
@@ -63,6 +65,7 @@ export default function HandwrittenText({
   lineOptions,
   textAlign = "left",
   animation = "none",
+  jitterFps = 15,
   as = "p",
   className = "",
 }: HandwrittenParagraphProps) {
@@ -128,9 +131,15 @@ export default function HandwrittenText({
   useEffect(() => {
     if (animation !== "jitter") return;
 
+    const interval = 1000 / jitterFps;
     let rafId = 0;
-    const tick = () => {
-      setJitterTick((prev) => (prev + 1) % 1000000);
+    let lastTime = -Infinity;
+
+    const tick = (time: number) => {
+      if (time - lastTime >= interval) {
+        lastTime = time;
+        setJitterTick((prev) => (prev + 1) % 1000000);
+      }
       rafId = window.requestAnimationFrame(tick);
     };
 
@@ -138,7 +147,7 @@ export default function HandwrittenText({
     return () => {
       window.cancelAnimationFrame(rafId);
     };
-  }, [animation]);
+  }, [animation, jitterFps]);
 
   useEffect(() => {
     if (!layoutRef.current) return;

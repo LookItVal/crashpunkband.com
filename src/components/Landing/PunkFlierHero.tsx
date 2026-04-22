@@ -25,6 +25,7 @@ export default function PunkFlierHero() {
                 textAlign="center"
                 strokeWidth={1.5}
                 className="pb-3"
+                animation="jitter"
               >
                 Kansas City Based
               </HanddrawnText>
@@ -42,6 +43,7 @@ export default function PunkFlierHero() {
                 textAlign="center"
                 strokeWidth={1.5}
                 className="pb-3"
+                animation="jitter"
               >
                 Punk Rock
               </HanddrawnText>
@@ -84,17 +86,17 @@ export default function PunkFlierHero() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
-              Big Sound
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
+              Big Energy
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
               Loud Instruments
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
               Routy Crowds
             </HanddrawnText>
           </HandDrawnFrame>

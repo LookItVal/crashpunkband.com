@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
+import FeatherGlowPlate from "@/components/CRASHTheme/FeatherGlowPlate";
 import HandDrawnFrame from "@/components/Landing/HandDrawnFrame";
 import HandwrittenText from "@/components/CRASHTheme/HandwrittenText/HandwrittenText";
 import HighlightButton from "@/components/Landing/HighlightButton";
@@ -184,45 +185,47 @@ export default function AlbumPlayer() {
       <div className="flex flex-col lg:flex-row lg:items-center gap-8">
         {/* Tracklist — left on desktop, below on mobile */}
         <div className="order-2 lg:order-1 lg:w-1/2">
-          <HandDrawnFrame contentClassName="p-8 md:p-10">
-            <div className="mb-4">
-              <HandwrittenText
-                as="h2"
-                fontSize={20}
-                mobileFontSize={16}
-                strokeWidth={1.8}
-                mobileStrokeWidth={1.5}
-              >
-                TRACKLIST
-              </HandwrittenText>
-            </div>
-            <div className="space-y-0.5 flex flex-col">
-              {ALBUM_TRACKS.map((track, index) => (
-                <div key={track.number}>
-                  <HighlightButton
-                    onClick={() => switchTrack(index)}
-                  >
-                    <div className="flex items-center gap-3 py-1.5 pr-5">
-                      {index === currentTrackIndex ? (
-                        <FaPlay className="h-2.5 w-2.5 shrink-0" />
-                      ) : (
-                        <span className="h-2.5 w-2.5 shrink-0" />
-                      )}
-                      <HandwrittenText
-                        key={`track-${track.number}`}
-                        fontSize={13}
-                        mobileFontSize={10}
-                        strokeWidth={1.5}
-                        strokeColor="#ffffff"
-                      >
-                        {`${track.number}.\u00a0${track.title}`}
-                      </HandwrittenText>
-                    </div>
-                  </HighlightButton>
-                </div>
-              ))}
-            </div>
-          </HandDrawnFrame>
+          <FeatherGlowPlate className="w-full px-10 py-10 md:px-20 md:py-20" inset="-1.4rem -1.7rem" radius="3rem" blur="14px">
+            <HandDrawnFrame contentClassName="p-8 md:p-10">
+              <div className="mb-4">
+                <HandwrittenText
+                  as="h2"
+                  fontSize={20}
+                  mobileFontSize={16}
+                  strokeWidth={1.8}
+                  mobileStrokeWidth={1.5}
+                >
+                  TRACKLIST
+                </HandwrittenText>
+              </div>
+              <div className="space-y-0.5 flex flex-col">
+                {ALBUM_TRACKS.map((track, index) => (
+                  <div key={track.number}>
+                    <HighlightButton
+                      onClick={() => switchTrack(index)}
+                    >
+                      <div className="flex items-center gap-3 py-1.5 pr-5">
+                        {index === currentTrackIndex ? (
+                          <FaPlay className="h-2.5 w-2.5 shrink-0" />
+                        ) : (
+                          <span className="h-2.5 w-2.5 shrink-0" />
+                        )}
+                        <HandwrittenText
+                          key={`track-${track.number}`}
+                          fontSize={13}
+                          mobileFontSize={10}
+                          strokeWidth={1.5}
+                          strokeColor="#ffffff"
+                        >
+                          {`${track.number}.\u00a0${track.title}`}
+                        </HandwrittenText>
+                      </div>
+                    </HighlightButton>
+                  </div>
+                ))}
+              </div>
+            </HandDrawnFrame>
+          </FeatherGlowPlate>
         </div>
 
         {/* Album art — right on desktop, top on mobile */}
@@ -246,39 +249,43 @@ export default function AlbumPlayer() {
 
       {/* Now Playing — full width below the two columns */}
       <div className="flex flex-col items-center gap-6">
-        <div ref={nowPlayingRef} className="w-full flex flex-col items-center gap-2">
-          <HandwrittenText
-            fontSize={10}
-            mobileFontSize={8}
-            strokeWidth={1.3}
-            strokeColor="#71717a"
-            textAlign="center"
-          >
-            NOW PLAYING
-          </HandwrittenText>
-          <HandwrittenText
-            key={currentTrackIndex}
-            as="h1"
-            animation="stagger"
-            textAlign="center"
-            className="max-w-lg"
-            fontSize={28}
-            mobileFontSize={20}
-            strokeWidth={1.9}
-            mobileStrokeWidth={1.5}
-          >
-            {displayTitle}
-          </HandwrittenText>
-        </div>
+        <FeatherGlowPlate className="px-15 py-3" inset="-1.1rem -1.4rem" radius="2.5rem" blur="12px">
+          <div ref={nowPlayingRef} className="w-full flex flex-col items-center gap-2">
+            <HandwrittenText
+              fontSize={10}
+              mobileFontSize={8}
+              strokeWidth={1.3}
+              strokeColor="#71717a"
+              textAlign="center"
+            >
+              NOW PLAYING
+            </HandwrittenText>
+            <HandwrittenText
+              key={currentTrackIndex}
+              as="h1"
+              animation="stagger"
+              textAlign="center"
+              className="max-w-lg"
+              fontSize={28}
+              mobileFontSize={20}
+              strokeWidth={1.9}
+              mobileStrokeWidth={1.5}
+            >
+              {displayTitle}
+            </HandwrittenText>
+          </div>
+        </FeatherGlowPlate>
 
-        <AudioPlayer
-          audioSrc={currentTrack.audioFile}
-          externalAudioRef={activeAudioRef}
-          audioElementKey={audioKey}
-          onEnded={handleTrackEnded}
-          autoPlay={shouldAutoPlay}
-          togglePlaySignal={togglePlaySignal}
-        />
+        <FeatherGlowPlate className="px-25 py-4" inset="-1.35rem -1.8rem" radius="3rem" blur="12px">
+          <AudioPlayer
+            audioSrc={currentTrack.audioFile}
+            externalAudioRef={activeAudioRef}
+            audioElementKey={audioKey}
+            onEnded={handleTrackEnded}
+            autoPlay={shouldAutoPlay}
+            togglePlaySignal={togglePlaySignal}
+          />
+        </FeatherGlowPlate>
       </div>
     </div>
   );
