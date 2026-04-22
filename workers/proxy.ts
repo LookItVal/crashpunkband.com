@@ -36,6 +36,24 @@ function driveViewUrlFromId(id: string): string {
   return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(id)}`;
 }
 
+async function purgeShortCache(cache: Cache, imageIds: string[]): Promise<{ icsDeleted: boolean; imageDeleteResults: Record<string, boolean> }> {
+  const icsKey = new Request(CACHE_KEY_ICS_URL, { method: "GET" });
+
+  // Cache API has no key enumeration, so image keys must be supplied explicitly.
+  const imageDeleteResults: Record<string, boolean> = {};
+  const imageDeletes = imageIds.map(async (id) => {
+    const imageKey = new Request(`${CACHE_KEY_IMAGE_BASE_URL}${encodeURIComponent(id)}`, {
+      method: "GET",
+    });
+    const deleted = await cache.delete(imageKey);
+    imageDeleteResults[id] = deleted;
+  });
+
+  const [icsDeleted] = await Promise.all([cache.delete(icsKey), ...imageDeletes]);
+
+  return { icsDeleted, imageDeleteResults };
+}
+
 
 async function getOrFetchICS(cache: Cache, env: Env): Promise<{ body: string; fromCache: boolean }> {
   // Try cache first
@@ -229,6 +247,60 @@ export default {
 
     // Open Cache API
     const cache = caches.default as Cache;
+
+    // Admin route: purge only short-term Cache API entries, not stale KV.
+    if (url.pathname === "/admin/purge-short-cache") {
+      if (method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: corsHeaders });
+      }
+
+      if (method !== "GET" && method !== "POST") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: corsHeaders,
+        });
+      }
+
+      try {
+        const imageIds = url.searchParams.getAll("imageId").filter((id) => id.trim().length > 0);
+        const result = await purgeShortCache(cache, imageIds);
+        return new Response(
+          JSON.stringify(
+            {
+              ok: true,
+              purged: result,
+              note:
+                "Only short-term Cache API entries were purged. KV stale cache was not modified. For image cache entries, pass one or more imageId query params.",
+              timestamp: new Date().toISOString(),
+            },
+            null,
+            2
+          ),
+          {
+            status: 200,
+            headers: {
+              ...corsHeaders,
+              "content-type": "application/json",
+              "cache-control": "no-store, max-age=0",
+            },
+          }
+        );
+      } catch (err: unknown) {
+        return new Response(
+          JSON.stringify(
+            {
+              ok: false,
+              error: String(err),
+              errorType: (err as Error).constructor.name,
+              timestamp: new Date().toISOString(),
+            },
+            null,
+            2
+          ),
+          { status: 500, headers: { "content-type": "application/json", ...corsHeaders } }
+        );
+      }
+    }
 
     if (method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders });
