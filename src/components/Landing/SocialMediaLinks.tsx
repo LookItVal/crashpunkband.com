@@ -5,13 +5,13 @@ import { SiBandcamp, SiFacebook, SiInstagram, SiSoundcloud, SiYoutube } from "re
 
 type SocialPlatform = "instagram" | "facebook" | "youtube" | "bandcamp" | "soundcloud";
 
-type SocialLink = {
+export type SocialLink = {
   name: string;
   href: string;
   platform: SocialPlatform;
 };
 
-const socialLinks: SocialLink[] = [
+export const socialLinks: SocialLink[] = [
   { name: "Instagram", href: "https://www.instagram.com/crash.punk.band", platform: "instagram" },
   { name: "Facebook", href: "https://www.facebook.com/profile.php?id=61578805764907", platform: "facebook" },
   { name: "Youtube", href: "https://www.youtube.com/@crashpunkband", platform: "youtube" },
