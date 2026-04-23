@@ -24,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Preload LCP image so the browser discovers and prioritises it from the initial HTML */}
+        <link rel="preload" as="image" href="/crash_banner.png" fetchPriority="high" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

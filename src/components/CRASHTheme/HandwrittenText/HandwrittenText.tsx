@@ -170,16 +170,29 @@ export default function HandwrittenText({
       setCharLayout(next);
     };
 
-    updateLayout();
+    // Defer layout reads to the next animation frame so that rapid
+    // ResizeObserver / resize firings from multiple instances all batch
+    // into a single read pass rather than forcing reflows mid-event.
+    let rafId = 0;
+    const scheduleUpdate = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        updateLayout();
+      });
+    };
 
-    const observer = new ResizeObserver(() => updateLayout());
+    scheduleUpdate();
+
+    const observer = new ResizeObserver(scheduleUpdate);
     observer.observe(layoutRef.current);
     if (rootRef.current) observer.observe(rootRef.current);
 
-    window.addEventListener("resize", updateLayout);
+    window.addEventListener("resize", scheduleUpdate);
     return () => {
+      window.cancelAnimationFrame(rafId);
       observer.disconnect();
-      window.removeEventListener("resize", updateLayout);
+      window.removeEventListener("resize", scheduleUpdate);
     };
   }, [children, effectiveFontSize, effectiveLineHeight, textAlign]);
 
@@ -238,27 +251,15 @@ export default function HandwrittenText({
       }
     });
 
+    // start: "bottom bottom" fires exactly when the element's bottom edge
+    // crosses the viewport's bottom edge — i.e. the element is fully visible.
+    // This removes the need to call getBoundingClientRect() on every scroll
+    // frame (the old onUpdate pattern), which was the primary reflow source.
     const trigger = ScrollTrigger.create({
       trigger: rootRef.current,
-      start: "top bottom",
-      onUpdate: (self) => {
-        if (hasAnimatedRef.current || !rootRef.current) return;
-        const rect = rootRef.current.getBoundingClientRect();
-        const vh = window.innerHeight || document.documentElement.clientHeight;
-        const fullyVisible = rect.top >= 0 && rect.bottom <= vh;
-        if (!fullyVisible) return;
-
-        hasAnimatedRef.current = true;
-        tl.play(0);
-        self.kill();
-      },
+      start: "bottom bottom",
       onEnter: (self) => {
-        if (hasAnimatedRef.current || !rootRef.current) return;
-        const rect = rootRef.current.getBoundingClientRect();
-        const vh = window.innerHeight || document.documentElement.clientHeight;
-        const fullyVisible = rect.top >= 0 && rect.bottom <= vh;
-        if (!fullyVisible) return;
-
+        if (hasAnimatedRef.current) return;
         hasAnimatedRef.current = true;
         tl.play(0);
         self.kill();

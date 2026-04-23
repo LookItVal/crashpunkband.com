@@ -70,6 +70,8 @@ export default function PunkFlierHero() {
               height={420}
               className="h-auto w-full object-contain"
               priority
+              fetchPriority="high"
+              loading="eager"
             />
           </div>
           <div className="mx-auto max-w-2xl">
