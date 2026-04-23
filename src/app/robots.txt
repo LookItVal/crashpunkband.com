@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /listen-now
+Disallow: /cut-loose
+Disallow: /throw-me-away
