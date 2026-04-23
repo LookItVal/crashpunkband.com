@@ -180,7 +180,6 @@ export default function MediaGallery() {
               fill
               className="object-contain"
               sizes="100vw"
-              priority
             />
           </div>
         </div>

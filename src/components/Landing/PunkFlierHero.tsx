@@ -1,7 +1,10 @@
-import Image from "next/image";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HanddrawnText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 import SocialMediaLinks from "./SocialMediaLinks";
+import { buildResponsiveSrcSet } from "@/lib/images/responsive";
+
+const HERO_IMAGE_SRC = "/crash_banner.webp";
+const HERO_IMAGE_WIDTHS = [320, 480, 640, 768, 960, 1200];
 
 export default function PunkFlierHero() {
   return (
@@ -63,13 +66,14 @@ export default function PunkFlierHero() {
 
         <div className="space-y-4 text-center">
           <div className="mx-auto w-full max-w-xl p-3">
-            <Image
-              src="/crash_banner.png"
+            <img
+              src={HERO_IMAGE_SRC}
+              srcSet={buildResponsiveSrcSet(HERO_IMAGE_SRC, HERO_IMAGE_WIDTHS)}
+              sizes="(max-width: 640px) calc(100vw - 3rem), (max-width: 1024px) 80vw, 768px"
               alt="CRASH Punk Band logo"
-              width={1200}
-              height={420}
+              width={960}
+              height={336}
               className="h-auto w-full object-contain"
-              priority
               fetchPriority="high"
               loading="eager"
             />

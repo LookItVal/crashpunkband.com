@@ -85,6 +85,7 @@ export default function HandwrittenText({
 
   const effectiveFontSize = isMobile && mobileFontSize !== undefined ? mobileFontSize : fontSize;
   const effectiveStrokeWidth = isMobile && mobileStrokeWidth !== undefined ? mobileStrokeWidth : strokeWidth;
+  const effectiveJitterFps = animation === "jitter" && isMobile ? Math.min(jitterFps, 6) : jitterFps;
   const effectiveLineHeight = lineHeight;
   const effectiveLineOptions = useMemo<LineOptions>(() => ({
     preSegmentNoiseMagnitudes: 0.05,
@@ -130,7 +131,11 @@ export default function HandwrittenText({
   useEffect(() => {
     if (animation !== "jitter") return;
 
-    const interval = 1000 / jitterFps;
+    if (effectiveJitterFps <= 1) {
+      return;
+    }
+
+    const interval = 1000 / effectiveJitterFps;
     let rafId = 0;
     let lastTime = -Infinity;
 
@@ -146,7 +151,7 @@ export default function HandwrittenText({
     return () => {
       window.cancelAnimationFrame(rafId);
     };
-  }, [animation, jitterFps]);
+  }, [animation, effectiveJitterFps]);
 
   useEffect(() => {
     if (!layoutRef.current) return;

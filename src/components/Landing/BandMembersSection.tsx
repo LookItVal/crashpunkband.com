@@ -1,6 +1,6 @@
-import Image from "next/image";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
+import { buildResponsiveSrcSet } from "@/lib/images/responsive";
 
 const members = [
   {
@@ -39,17 +39,20 @@ export default function BandMembersSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {members.map((member) => (
+          {members.map((member, index) => (
             <HandDrawnFrame key={member.name} className="h-full" contentClassName="p-5">
               <article className="flex h-full flex-col">
                 <HandDrawnFrame contentClassName="p-1">
                   <div className="relative aspect-square w-full overflow-hidden">
-                    <Image
+                    <img
                       src={member.photo}
+                      srcSet={buildResponsiveSrcSet(member.photo, [192, 256, 320, 384, 512, 640])}
+                      sizes="(max-width: 1024px) calc(100vw - 5rem), 33vw"
                       alt={`${member.name} of CRASH`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="h-full w-full object-cover"
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
                     />
                     <div
                       aria-hidden="true"

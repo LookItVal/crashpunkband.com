@@ -76,13 +76,60 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
   const transitionStartedRef = useRef(false);
 
   useEffect(() => {
-    setTime(getTimeRemaining(targetDate));
+    let timer: number | null = null;
 
-    const timer = window.setInterval(() => {
-      setTime(getTimeRemaining(targetDate));
-    }, 1000);
+    const tick = () => {
+      if (document.visibilityState !== "visible") {
+        return;
+      }
 
-    return () => window.clearInterval(timer);
+      setTime((previous) => {
+        const next = getTimeRemaining(targetDate);
+
+        if (
+          previous.totalMs === next.totalMs &&
+          previous.days === next.days &&
+          previous.hours === next.hours &&
+          previous.minutes === next.minutes &&
+          previous.seconds === next.seconds
+        ) {
+          return previous;
+        }
+
+        return next;
+      });
+    };
+
+    const startTicker = () => {
+      if (timer !== null) {
+        window.clearInterval(timer);
+      }
+
+      tick();
+      timer = window.setInterval(tick, 1000);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        startTicker();
+        return;
+      }
+
+      if (timer !== null) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    startTicker();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      if (timer !== null) {
+        window.clearInterval(timer);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [targetDate]);
 
   const isReleased = useMemo(() => time.totalMs <= 0, [time.totalMs]);

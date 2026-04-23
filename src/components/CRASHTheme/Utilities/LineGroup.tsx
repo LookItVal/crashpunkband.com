@@ -8,11 +8,8 @@ type LineGroupProps = {
   redrawToken?: number;
   count?: number;
   options?: LineOptions;
-  strokeOptions?: {
-    stroke?: string;
-    strokeWidth?: number;
-    strokeLinecap?: "butt" | "round" | "square";
-    strokeLinejoin?: "round" | "bevel" | "miter" | "inherit";
+  strokeOptions?: React.SVGProps<SVGPathElement> & {
+    [key: `data-${string}`]: string | undefined;
   };
 };
 

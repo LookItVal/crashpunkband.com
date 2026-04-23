@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/generate-song-pages.mjs",
+    "predev": "node scripts/generate-song-pages.mjs && node scripts/generate-responsive-images.mjs",
+    "images": "node scripts/generate-responsive-images.mjs",
     "dev": "next dev --turbopack",
-    "prebuild": "node scripts/generate-song-pages.mjs",
+    "prebuild": "node scripts/generate-song-pages.mjs && node scripts/generate-responsive-images.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preexport": "node scripts/generate-song-pages.mjs",
+    "preexport": "node scripts/generate-song-pages.mjs && node scripts/generate-responsive-images.mjs",
     "export": "next build && next export",
     "postinstall": "partytown copylib public/~partytown"
   },
@@ -32,6 +33,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",
     "eslint-config-next": "15.4.5",
+    "sharp": "^0.34.4",
     "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3",
     "wrangler": "^4.84.1"

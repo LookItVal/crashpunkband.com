@@ -1,6 +1,8 @@
 "use client";
 
 import gsap from "gsap";
+import LineGroup from "@/components/CRASHTheme/Utilities/LineGroup";
+import { LineOptions } from "@/lib/geometry/Line";
 import { ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 type HandDrawnFrameProps = {
@@ -61,62 +63,40 @@ function stringToSeed(value: string) {
   return Math.abs(hash) + 1;
 }
 
-function createRoughLinePath(
+function createLineOptions(
   start: Point,
   end: Point,
   roughness: number,
   roughnessScale: number,
-  seed: number,
-) {
-  if (roughness <= 0) {
-    return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
-  }
-
+): LineOptions {
   const dx = end.x - start.x;
   const dy = end.y - start.y;
   const length = Math.hypot(dx, dy);
 
-  if (length === 0) {
-    return `M ${start.x} ${start.y}`;
+  if (length === 0 || roughness <= 0) {
+    return {
+      smoothness: 0,
+      segmentLength: 16,
+      preSegmentNoiseMagnitudes: 0,
+      postSegmentNoiseMagnitudes: 0,
+      segments: null,
+    };
   }
 
-  const unitX = dx / length;
-  const unitY = dy / length;
-  const perpX = -unitY;
-  const perpY = unitX;
   const normalizedScale = Math.max(0.05, roughnessScale);
   const density = 0.5 + normalizedScale * 1.35;
   const wavelengthPx = Math.max(10, 28 / density);
-  const segments = Math.max(6, Math.round(length / Math.max(4, wavelengthPx * 0.7)));
+  const segmentLength = Math.max(4, wavelengthPx * 0.7);
   const lengthFactor = clamp(length / 100, 0.2, 1.8);
   const amplitude = 2.8 * roughness * (0.5 + lengthFactor * 0.5);
-  const frequency = Math.max(0.4, length / wavelengthPx);
 
-  const points: Point[] = [];
-
-  for (let index = 0; index <= segments; index += 1) {
-    const t = index / segments;
-    const baseX = start.x + dx * t;
-    const baseY = start.y + dy * t;
-
-    if (index === 0 || index === segments) {
-      points.push({ x: baseX, y: baseY });
-      continue;
-    }
-
-    const localNoise = hashNoise(t * frequency, seed);
-    const envelope = Math.sin(Math.PI * t);
-    const offset = localNoise * amplitude * envelope;
-
-    points.push({
-      x: baseX + perpX * offset,
-      y: baseY + perpY * offset,
-    });
-  }
-
-  return points
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(3)} ${point.y.toFixed(3)}`)
-    .join(" ");
+  return {
+    smoothness: 0,
+    segmentLength,
+    preSegmentNoiseMagnitudes: 0,
+    postSegmentNoiseMagnitudes: amplitude,
+    segments: null,
+  };
 }
 
 export default function HandDrawnFrame({
@@ -149,14 +129,7 @@ export default function HandDrawnFrame({
 }: HandDrawnFrameProps) {
   const instanceId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const topPathRef = useRef<SVGPathElement | null>(null);
-  const topPathRefSecondary = useRef<SVGPathElement | null>(null);
-  const rightPathRef = useRef<SVGPathElement | null>(null);
-  const rightPathRefSecondary = useRef<SVGPathElement | null>(null);
-  const bottomPathRef = useRef<SVGPathElement | null>(null);
-  const bottomPathRefSecondary = useRef<SVGPathElement | null>(null);
-  const leftPathRef = useRef<SVGPathElement | null>(null);
-  const leftPathRefSecondary = useRef<SVGPathElement | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const hasStartedAnimationRef = useRef(false);
   const hasFinishedAnimationRef = useRef(false);
   const animateTimeoutRef = useRef<number | null>(null);
@@ -275,14 +248,14 @@ export default function HandDrawnFrame({
   const bottomEndAngleShift = varyAngleShift(3, 2);
 
   const {
-    topPath,
-    topPathSecondary,
-    rightPath,
-    rightPathSecondary,
-    bottomPath,
-    bottomPathSecondary,
-    leftPath,
-    leftPathSecondary,
+    topLine,
+    topLineSecondary,
+    rightLine,
+    rightLineSecondary,
+    bottomLine,
+    bottomLineSecondary,
+    leftLine,
+    leftLineSecondary,
     viewBox,
   } = useMemo(() => {
     const frameWidth = size?.width ?? 100;
@@ -344,62 +317,46 @@ export default function HandDrawnFrame({
     };
 
     return {
-      topPath: createRoughLinePath(
-        topStart,
-        topEnd,
-        resolvedRoughness,
-        resolvedScale,
-        1 + randomSeedValue * 0.1,
-      ),
-      topPathSecondary: createRoughLinePath(
-        topStartSecondary,
-        topEndSecondary,
-        resolvedRoughness,
-        resolvedScale,
-        11 + randomSeedValue * 0.17,
-      ),
-      rightPath: createRoughLinePath(
-        rightStart,
-        rightEnd,
-        resolvedRoughness,
-        resolvedScale,
-        2 + randomSeedValue * 0.1,
-      ),
-      rightPathSecondary: createRoughLinePath(
-        rightStartSecondary,
-        rightEndSecondary,
-        resolvedRoughness,
-        resolvedScale,
-        12 + randomSeedValue * 0.17,
-      ),
-      bottomPath: createRoughLinePath(
-        bottomStart,
-        bottomEnd,
-        resolvedRoughness,
-        resolvedScale,
-        3 + randomSeedValue * 0.1,
-      ),
-      bottomPathSecondary: createRoughLinePath(
-        bottomStartSecondary,
-        bottomEndSecondary,
-        resolvedRoughness,
-        resolvedScale,
-        13 + randomSeedValue * 0.17,
-      ),
-      leftPath: createRoughLinePath(
-        leftStart,
-        leftEnd,
-        resolvedRoughness,
-        resolvedScale,
-        4 + randomSeedValue * 0.1,
-      ),
-      leftPathSecondary: createRoughLinePath(
-        leftStartSecondary,
-        leftEndSecondary,
-        resolvedRoughness,
-        resolvedScale,
-        14 + randomSeedValue * 0.17,
-      ),
+      topLine: {
+        start: topStart,
+        end: topEnd,
+        options: createLineOptions(topStart, topEnd, resolvedRoughness, resolvedScale),
+      },
+      topLineSecondary: {
+        start: topStartSecondary,
+        end: topEndSecondary,
+        options: createLineOptions(topStartSecondary, topEndSecondary, resolvedRoughness, resolvedScale),
+      },
+      rightLine: {
+        start: rightStart,
+        end: rightEnd,
+        options: createLineOptions(rightStart, rightEnd, resolvedRoughness, resolvedScale),
+      },
+      rightLineSecondary: {
+        start: rightStartSecondary,
+        end: rightEndSecondary,
+        options: createLineOptions(rightStartSecondary, rightEndSecondary, resolvedRoughness, resolvedScale),
+      },
+      bottomLine: {
+        start: bottomStart,
+        end: bottomEnd,
+        options: createLineOptions(bottomStart, bottomEnd, resolvedRoughness, resolvedScale),
+      },
+      bottomLineSecondary: {
+        start: bottomStartSecondary,
+        end: bottomEndSecondary,
+        options: createLineOptions(bottomStartSecondary, bottomEndSecondary, resolvedRoughness, resolvedScale),
+      },
+      leftLine: {
+        start: leftStart,
+        end: leftEnd,
+        options: createLineOptions(leftStart, leftEnd, resolvedRoughness, resolvedScale),
+      },
+      leftLineSecondary: {
+        start: leftStartSecondary,
+        end: leftEndSecondary,
+        options: createLineOptions(leftStartSecondary, leftEndSecondary, resolvedRoughness, resolvedScale),
+      },
       viewBox: `0 0 ${frameWidth} ${frameHeight}`,
     };
   }, [
@@ -469,34 +426,13 @@ export default function HandDrawnFrame({
     }
 
     const collectPathElements = () => {
-      const pathElements: SVGPathElement[] = [];
-
-      if (showTop && topPathRef.current) {
-        pathElements.push(topPathRef.current);
-      }
-      if (showTop && topPathRefSecondary.current) {
-        pathElements.push(topPathRefSecondary.current);
-      }
-      if (showRight && rightPathRef.current) {
-        pathElements.push(rightPathRef.current);
-      }
-      if (showRight && rightPathRefSecondary.current) {
-        pathElements.push(rightPathRefSecondary.current);
-      }
-      if (showBottom && bottomPathRef.current) {
-        pathElements.push(bottomPathRef.current);
-      }
-      if (showBottom && bottomPathRefSecondary.current) {
-        pathElements.push(bottomPathRefSecondary.current);
-      }
-      if (showLeft && leftPathRef.current) {
-        pathElements.push(leftPathRef.current);
-      }
-      if (showLeft && leftPathRefSecondary.current) {
-        pathElements.push(leftPathRefSecondary.current);
+      if (!svgRef.current) {
+        return [];
       }
 
-      return pathElements;
+      return Array.from(
+        svgRef.current.querySelectorAll<SVGPathElement>('path[data-hand-drawn-frame-line="true"]'),
+      );
     };
 
     const mm = gsap.matchMedia();
@@ -619,16 +555,7 @@ export default function HandDrawnFrame({
         animationTimelineRef.current = null;
       }
 
-      const pathElements = [
-        topPathRef.current,
-        topPathRefSecondary.current,
-        rightPathRef.current,
-        rightPathRefSecondary.current,
-        bottomPathRef.current,
-        bottomPathRefSecondary.current,
-        leftPathRef.current,
-        leftPathRefSecondary.current,
-      ].filter((path): path is SVGPathElement => path !== null);
+      const pathElements = collectPathElements();
 
       pathElements.forEach((path) => {
         gsap.set(path,
@@ -644,16 +571,7 @@ export default function HandDrawnFrame({
         );
       });
 
-      gsap.killTweensOf([
-        topPathRef.current,
-        topPathRefSecondary.current,
-        rightPathRef.current,
-        rightPathRefSecondary.current,
-        bottomPathRef.current,
-        bottomPathRefSecondary.current,
-        leftPathRef.current,
-        leftPathRefSecondary.current,
-      ]);
+      gsap.killTweensOf(pathElements);
     };
   }, [
     animateOnLoad,
@@ -675,6 +593,7 @@ export default function HandDrawnFrame({
   return (
     <div ref={containerRef} className={["relative", className].join(" ")}>
       <svg
+        ref={svgRef}
         aria-hidden="true"
         viewBox={viewBox}
         preserveAspectRatio="none"
@@ -690,105 +609,145 @@ export default function HandDrawnFrame({
             <>
         {showTop ? (
           <>
-            <path
-              ref={topPathRef}
-              d={topPath}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={topLine.start}
+              end={topLine.end}
+              redrawToken={randomSeedValue + 1}
+              count={1}
+              options={topLine.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
-            <path
-              ref={topPathRefSecondary}
-              d={topPathSecondary}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness * 0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={topLineSecondary.start}
+              end={topLineSecondary.end}
+              redrawToken={randomSeedValue + 11}
+              count={1}
+              options={topLineSecondary.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness * 0.9,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
           </>
         ) : null}
         {showRight ? (
           <>
-            <path
-              ref={rightPathRef}
-              d={rightPath}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={rightLine.start}
+              end={rightLine.end}
+              redrawToken={randomSeedValue + 2}
+              count={1}
+              options={rightLine.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
-            <path
-              ref={rightPathRefSecondary}
-              d={rightPathSecondary}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness * 0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={rightLineSecondary.start}
+              end={rightLineSecondary.end}
+              redrawToken={randomSeedValue + 12}
+              count={1}
+              options={rightLineSecondary.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness * 0.9,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
           </>
         ) : null}
         {showBottom ? (
           <>
-            <path
-              ref={bottomPathRef}
-              d={bottomPath}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={bottomLine.start}
+              end={bottomLine.end}
+              redrawToken={randomSeedValue + 3}
+              count={1}
+              options={bottomLine.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
-            <path
-              ref={bottomPathRefSecondary}
-              d={bottomPathSecondary}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness * 0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={bottomLineSecondary.start}
+              end={bottomLineSecondary.end}
+              redrawToken={randomSeedValue + 13}
+              count={1}
+              options={bottomLineSecondary.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness * 0.9,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
           </>
         ) : null}
         {showLeft ? (
           <>
-            <path
-              ref={leftPathRef}
-              d={leftPath}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={leftLine.start}
+              end={leftLine.end}
+              redrawToken={randomSeedValue + 4}
+              count={1}
+              options={leftLine.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
-            <path
-              ref={leftPathRefSecondary}
-              d={leftPathSecondary}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={resolvedThickness * 0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              style={preDrawStyle}
+            <LineGroup
+              start={leftLineSecondary.start}
+              end={leftLineSecondary.end}
+              redrawToken={randomSeedValue + 14}
+              count={1}
+              options={leftLineSecondary.options}
+              strokeOptions={{
+                stroke: "currentColor",
+                strokeWidth: resolvedThickness * 0.9,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                vectorEffect: "non-scaling-stroke",
+                style: preDrawStyle,
+                "data-hand-drawn-frame-line": "true",
+              }}
             />
           </>
         ) : null}

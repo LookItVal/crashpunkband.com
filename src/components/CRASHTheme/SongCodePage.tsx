@@ -1,11 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import AnimatedAlbumBands from "@/components/CRASHTheme/AnimatedAlbumBands";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
 import FeatherGlowPlate from "@/components/CRASHTheme/FeatherGlowPlate";
 import HandwrittenText from "@/components/CRASHTheme/HandwrittenText/HandwrittenText";
 import type { SongConfig } from "@/config/songs";
+import { buildResponsiveSrcSet } from "@/lib/images/responsive";
+
+const ALBUM_COVER_SRC = "/Album_Cover.webp";
+const ALBUM_COVER_WIDTHS = [256, 384, 512, 640, 768, 1024];
 
 type SongCodePageProps = {
   song: SongConfig;
@@ -21,13 +24,16 @@ export default function SongCodePage({ song }: SongCodePageProps) {
       <div className="relative z-10 max-w-2xl w-full flex flex-col items-center gap-12">
         <div className="w-full max-w-md px-4">
           <div className="relative w-full overflow-hidden">
-            <Image
-              src="/Album_Cover.png"
+            <img
+              src={ALBUM_COVER_SRC}
+              srcSet={buildResponsiveSrcSet(ALBUM_COVER_SRC, ALBUM_COVER_WIDTHS)}
+              sizes="(max-width: 768px) calc(100vw - 2rem), 448px"
               alt="Album cover"
-              width={1200}
-              height={1200}
+              width={768}
+              height={768}
               className="w-full h-auto"
-              priority
+              fetchPriority="high"
+              loading="eager"
             />
             <div
               aria-hidden="true"

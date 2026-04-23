@@ -1,0 +1,63 @@
+
+> crashpunkband.com@0.1.0 lint /Users/qvc/Documents/Projects/crashpunkband.com
+> next lint
+
+
+./src/components/CRASHTheme/AlbumPlayer.tsx
+237:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/CRASHTheme/Glyphs/Icons/PauseIcon.tsx
+6:39  Warning: 'ShapeDefinition' is defined but never used.  @typescript-eslint/no-unused-vars
+67:6  Warning: React Hook useMemo has a missing dependency: 'position'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CRASHTheme/Glyphs/Icons/PlayIcon.tsx
+6:39  Warning: 'ShapeDefinition' is defined but never used.  @typescript-eslint/no-unused-vars
+68:6  Warning: React Hook useMemo has a missing dependency: 'position'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CRASHTheme/Glyphs/Icons/VolumeIcon.tsx
+177:6  Warning: React Hook useMemo has a missing dependency: 'position'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CRASHTheme/Logo/C.tsx
+15:9  Warning: 'defaultLineOptions' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CRASHTheme/SongCodePage.tsx
+27:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/CRASHTheme/Utilities/Brushstroke.tsx
+2:10  Warning: 'Line' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CRASHTheme/Utilities/LineGroup.tsx
+40:6  Warning: React Hook useMemo has missing dependencies: 'end', 'options', and 'start'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CRASHTheme/Utilities/Shape.tsx
+22:3  Warning: 'ref' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/FallingCanvas/FallingCanvas.tsx
+167:11  Warning: 'overlap' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/Landing/BandMembersSection.tsx
+47:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/Landing/CountdownBanner.tsx
+6:8  Warning: 'StreamingLinks' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/Landing/HandDrawnFrame.tsx
+666:20  Warning: The ref value 'topPathRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'topPathRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+667:29  Warning: The ref value 'topPathRefSecondary.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'topPathRefSecondary.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+668:22  Warning: The ref value 'rightPathRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'rightPathRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+669:31  Warning: The ref value 'rightPathRefSecondary.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'rightPathRefSecondary.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+670:23  Warning: The ref value 'bottomPathRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'bottomPathRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+671:32  Warning: The ref value 'bottomPathRefSecondary.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'bottomPathRefSecondary.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+672:21  Warning: The ref value 'leftPathRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'leftPathRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+673:30  Warning: The ref value 'leftPathRefSecondary.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'leftPathRefSecondary.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/Landing/PunkFlierHero.tsx
+69:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/config/handwrittenFont.ts
+23:10  Warning: 'placeholder' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/geometry/Point.ts
+1:18  Warning: 'VectorLike' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

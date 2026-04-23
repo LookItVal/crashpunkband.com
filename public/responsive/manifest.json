@@ -1,0 +1,74 @@
+[
+  {
+    "source": "/crash_banner.webp",
+    "generatedDir": "/responsive",
+    "baseName": "crash_banner",
+    "widths": [
+      320,
+      480,
+      640,
+      768,
+      960,
+      1200
+    ],
+    "quality": 78
+  },
+  {
+    "source": "/Album_Cover.webp",
+    "generatedDir": "/responsive",
+    "baseName": "Album_Cover",
+    "widths": [
+      256,
+      384,
+      512,
+      640,
+      717
+    ],
+    "quality": 76
+  },
+  {
+    "source": "/photos/CASHblack.webp",
+    "generatedDir": "/responsive/photos",
+    "baseName": "CASHblack",
+    "widths": [
+      192,
+      256,
+      320,
+      384,
+      512,
+      640,
+      2193
+    ],
+    "quality": 74
+  },
+  {
+    "source": "/photos/KNOXXblack.webp",
+    "generatedDir": "/responsive/photos",
+    "baseName": "KNOXXblack",
+    "widths": [
+      192,
+      256,
+      320,
+      384,
+      512,
+      640,
+      800
+    ],
+    "quality": 74
+  },
+  {
+    "source": "/photos/FISHblack.webp",
+    "generatedDir": "/responsive/photos",
+    "baseName": "FISHblack",
+    "widths": [
+      192,
+      256,
+      320,
+      384,
+      512,
+      640,
+      800
+    ],
+    "quality": 74
+  }
+]

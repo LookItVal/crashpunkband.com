@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
 import FeatherGlowPlate from "@/components/CRASHTheme/FeatherGlowPlate";
@@ -9,6 +8,10 @@ import HandDrawnFrame from "@/components/Landing/HandDrawnFrame";
 import HandwrittenText from "@/components/CRASHTheme/HandwrittenText/HandwrittenText";
 import HighlightButton from "@/components/Landing/HighlightButton";
 import { FaPlay } from "react-icons/fa";
+import { buildResponsiveSrcSet } from "@/lib/images/responsive";
+
+const ALBUM_COVER_SRC = "/Album_Cover.webp";
+const ALBUM_COVER_WIDTHS = [256, 384, 512, 640, 768, 1024];
 
 type AlbumTrack = {
   number: number;
@@ -231,13 +234,16 @@ export default function AlbumPlayer() {
         {/* Album art — right on desktop, top on mobile */}
         <div className="order-1 lg:order-2 lg:w-1/4 w-1/2 m-auto flex items-start">
           <div className="relative overflow-hidden bg-black">
-            <Image
-              src="/Album_Cover.png"
+            <img
+              src={ALBUM_COVER_SRC}
+              srcSet={buildResponsiveSrcSet(ALBUM_COVER_SRC, ALBUM_COVER_WIDTHS)}
+              sizes="(max-width: 1024px) 50vw, 25vw"
               alt="Album cover"
-              width={1200}
-              height={1200}
+              width={768}
+              height={768}
               className="w-full h-auto"
-              priority
+              fetchPriority="high"
+              loading="eager"
             />
             <div
               aria-hidden="true"
