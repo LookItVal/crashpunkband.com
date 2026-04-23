@@ -4,11 +4,6 @@ import { useMemo, useRef, useEffect, useState } from "react";
 import { getCharShape, CELL_WIDTH, CELL_HEIGHT } from "@/config/handwrittenFont";
 import Shape from "@/components/CRASHTheme/Utilities/Shape";
 import { LineOptions } from "@/lib/geometry/Line";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ── Props ───────────────────────────────────────────────────────────────
 type HandwrittenParagraphProps = {
@@ -196,81 +191,102 @@ export default function HandwrittenText({
     };
   }, [children, effectiveFontSize, effectiveLineHeight, textAlign]);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!rootRef.current || !cell) return;
 
-    const paths = Array.from(rootRef.current.querySelectorAll("path"));
-    if (!paths.length) return;
+    let isCancelled = false;
+    let cleanup: (() => void) | undefined;
 
-    // Normalize every path to a 0..1 drawing domain so timing feels
-    // consistent even for very short glyph strokes.
-    paths.forEach((p) => p.setAttribute("pathLength", "1"));
+    const initAnimation = async () => {
+      if (!rootRef.current) return;
 
-    if (animation === "none" || animation === "jitter") {
-      gsap.set(paths, {
-        strokeDasharray: "1 0",
-        strokeDashoffset: 0,
-        opacity: 1,
-      });
-      return;
-    }
+      const paths = Array.from(rootRef.current.querySelectorAll<SVGPathElement>("path"));
+      if (!paths.length) return;
 
-    if (hasAnimatedRef.current) return;
+      // Normalize every path to a 0..1 drawing domain so timing feels
+      // consistent even for very short glyph strokes.
+      paths.forEach((path) => path.setAttribute("pathLength", "1"));
 
-    gsap.set(paths, {
-      strokeDasharray: "0 1",
-      strokeDashoffset: 0,
-      opacity: 0,
-    });
-
-    const tl = gsap.timeline({ paused: true });
-    let cursor = 0;
-
-    // Build a child timeline for each stroke so opacity + draw happen
-    // as one seamless animation instead of separate phases.
-    paths.forEach((path) => {
-      const strokeDuration = animation === "stagger" ? gsap.utils.random(0.1, 0.3) : gsap.utils.random(0.1, 0.5);
-
-      const pathTl = gsap.timeline();
-      pathTl.to(path, {
-        opacity: 1,
-        duration: strokeDuration * 0.25,
-        ease: "none",
-      });
-      pathTl.to(path, {
-        strokeDasharray: "1 0",
-        duration: strokeDuration,
-        ease: "none",
-      }, 0);
-
-      tl.add(pathTl, (animation === "stagger" ? cursor + gsap.utils.random(0, 0.05) : gsap.utils.random(0, 1)));
-
-      // Keep strokes flowing in order while allowing randomized overlap.
-      if (animation === "stagger") {
-        cursor += gsap.utils.random(0, 0.05) + 0.05;
+      // Avoid loading GSAP for non-entrance modes to reduce initial JS cost.
+      if (animation === "none" || animation === "jitter") {
+        paths.forEach((path) => {
+          path.style.strokeDasharray = "1 0";
+          path.style.strokeDashoffset = "0";
+          path.style.opacity = "1";
+        });
+        return;
       }
-    });
 
-    // start: "bottom bottom" fires exactly when the element's bottom edge
-    // crosses the viewport's bottom edge — i.e. the element is fully visible.
-    // This removes the need to call getBoundingClientRect() on every scroll
-    // frame (the old onUpdate pattern), which was the primary reflow source.
-    const trigger = ScrollTrigger.create({
-      trigger: rootRef.current,
-      start: "bottom bottom",
-      onEnter: (self) => {
-        if (hasAnimatedRef.current) return;
-        hasAnimatedRef.current = true;
-        tl.play(0);
-        self.kill();
-      },
-    });
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (isCancelled || !rootRef.current) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (hasAnimatedRef.current) return;
+
+      gsap.set(paths, {
+        strokeDasharray: "0 1",
+        strokeDashoffset: 0,
+        opacity: 0,
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      let cursor = 0;
+
+      // Build a child timeline for each stroke so opacity + draw happen
+      // as one seamless animation instead of separate phases.
+      paths.forEach((path) => {
+        const strokeDuration = animation === "stagger" ? gsap.utils.random(0.1, 0.3) : gsap.utils.random(0.1, 0.5);
+
+        const pathTl = gsap.timeline();
+        pathTl.to(path, {
+          opacity: 1,
+          duration: strokeDuration * 0.25,
+          ease: "none",
+        });
+        pathTl.to(path, {
+          strokeDasharray: "1 0",
+          duration: strokeDuration,
+          ease: "none",
+        }, 0);
+
+        tl.add(pathTl, (animation === "stagger" ? cursor + gsap.utils.random(0, 0.05) : gsap.utils.random(0, 1)));
+
+        // Keep strokes flowing in order while allowing randomized overlap.
+        if (animation === "stagger") {
+          cursor += gsap.utils.random(0, 0.05) + 0.05;
+        }
+      });
+
+      // start: "bottom bottom" fires exactly when the element's bottom edge
+      // crosses the viewport's bottom edge — i.e. the element is fully visible.
+      const trigger = ScrollTrigger.create({
+        trigger: rootRef.current,
+        start: "bottom bottom",
+        onEnter: (self) => {
+          if (hasAnimatedRef.current) return;
+          hasAnimatedRef.current = true;
+          tl.play(0);
+          self.kill();
+        },
+      });
+
+      cleanup = () => {
+        trigger.kill();
+        tl.kill();
+      };
+    };
+
+    void initAnimation();
 
     return () => {
-      trigger.kill();
-      tl.kill();
+      isCancelled = true;
+      cleanup?.();
     };
-  }, { dependencies: [cell, children, charLayout.length, effectiveFontSize, animation] });
+  }, [cell, children, charLayout.length, effectiveFontSize, animation]);
 
   // ── Render ────────────────────────────────────────────────────────
   return (

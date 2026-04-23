@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import CountdownBanner from "../components/Landing/CountdownBanner";
 import BandMembersSection from "../components/Landing/BandMembersSection";
-import EventCalendar from "../components/Landing/EventCalendar";
 import LandingFooter from "../components/Landing/LandingFooter";
-import MediaGallery from "../components/Landing/MediaGallery";
 import PunkFlierHero from "../components/Landing/PunkFlierHero";
 import LookItValTag from "../components/Landing/LookItValTag";
+import DeferredHomeSections from "../components/Landing/DeferredHomeSections";
 import { socialLinks } from "../components/Landing/SocialMediaLinks";
 
 export const metadata: Metadata = {
@@ -65,8 +64,7 @@ export default function Home() {
         <CountdownBanner targetDate={releaseDate} />
         <PunkFlierHero />
         <BandMembersSection />
-        <MediaGallery />
-        <EventCalendar />
+        <DeferredHomeSections />
         <LandingFooter />
       </div>
       <LookItValTag />
