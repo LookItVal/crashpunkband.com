@@ -106,7 +106,7 @@ export default function PunkFlierHero() {
 
         <div>
           <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
-            CRASH is a hardcorehar punk rock band hailing from Kansas City, Missouri. Formed by Knoxx, and supported by members Cash and Fish, this group has quickly become a staple of the KC DIY scene, known for their explosive sets in local intimate venues like The Farewell and Sk8bar.
+            CRASH is a hardcore punk rock band hailing from Kansas City, Missouri. Formed by Knoxx, and supported by members Cash and Fish, this group has quickly become a staple of the KC DIY scene, known for their explosive sets in local intimate venues like The Farewell and Sk8bar.
           </HanddrawnText>
           <div className="h-8" />
           <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
