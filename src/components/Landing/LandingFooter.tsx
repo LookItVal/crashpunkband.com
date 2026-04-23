@@ -1,3 +1,4 @@
+import Image from "next/image";
 import HandDrawnFrame from "./HandDrawnFrame";
 import SocialMediaLinks from "./SocialMediaLinks";
 import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
@@ -7,7 +8,7 @@ export default function LandingFooter() {
     <footer className="px-4 py-8">
       <HandDrawnFrame className="mx-auto max-w-5xl" contentClassName="px-6 py-6">
         <div className="flex flex-col items-center gap-4 text-center">
-          <img src="/Sigil_alt.png" alt="CRASH Sigil" className="h-16 w-auto" />
+          <Image src="/Sigil_alt.png" alt="CRASH Sigil" width={64} height={64} className="h-16 w-auto" />
           <SocialMediaLinks compact />
           <div className="max-w-120">
             <HandwrittenText

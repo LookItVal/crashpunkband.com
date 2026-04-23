@@ -1,6 +1,7 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import HandDrawnFrame from "./HandDrawnFrame";
 import HighlightButton from "./HighlightButton";
@@ -619,7 +620,14 @@ export default function EventCalendar({
             </HandwrittenText>
           </button>
           <div className="relative flex h-[82vh] w-full max-w-6xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
-            <img src={activeFlyer.url} alt={activeFlyer.alt} className="max-h-full max-w-full object-contain" />
+            <Image
+              src={activeFlyer.url}
+              alt={activeFlyer.alt}
+              fill
+              unoptimized
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="object-contain"
+            />
           </div>
         </div>
       ) : null}

@@ -10,9 +10,11 @@
     "start": "next start",
     "lint": "next lint",
     "preexport": "node scripts/generate-song-pages.mjs",
-    "export": "next build && next export"
+    "export": "next build && next export",
+    "postinstall": "partytown copylib public/~partytown"
   },
   "dependencies": {
+    "@builder.io/partytown": "^0.10.3",
     "@gsap/react": "^2.1.2",
     "@types/matter-js": "^0.19.8",
     "gsap": "^3.15.0",

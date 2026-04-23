@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@builder.io/partytown':
+        specifier: ^0.10.3
+        version: 0.10.3
       '@gsap/react':
         specifier: ^2.1.2
         version: 2.1.2(gsap@3.15.0)(react@19.1.0)
@@ -69,6 +72,12 @@ packages:
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+
+  '@builder.io/partytown@0.10.3':
+    resolution: {integrity: sha512-N2SWA3c5vEad3rgdAFM3zMb6uc7aXqibkgAz4ijvYzycgQXJ4dE5oH6fGFMXSQWj6ayVlLT1/CmpflYUJHfmQg==}
+    engines: {node: '>=18.0.0'}
+    deprecated: Use @qwik.dev/partytown instead
+    hasBin: true
 
   '@cloudflare/kv-asset-handler@0.4.2':
     resolution: {integrity: sha512-SIOD2DxrRRwQ+jgzlXCqoEFiKOFqaPjhnNTGKXSRLvp1HiOvapLaFG2kEr9dYQTYe8rKrd9uvDUzmAITeNyaHQ==}
@@ -2161,6 +2170,8 @@ packages:
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
+
+  '@builder.io/partytown@0.10.3': {}
 
   '@cloudflare/kv-asset-handler@0.4.2': {}
 

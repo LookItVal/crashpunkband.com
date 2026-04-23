@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Partytown } from "@builder.io/partytown/react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <Partytown forward={["dataLayer.push"]} />
         {/* Preload LCP image so the browser discovers and prioritises it from the initial HTML */}
         <link rel="preload" as="image" href="/crash_banner.png" fetchPriority="high" />
       </head>
