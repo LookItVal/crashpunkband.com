@@ -34,7 +34,7 @@ export default function BandMembersSection() {
             strokeWidth={1.8}
             mobileStrokeWidth={1.5}
           >
-            CRASH: Kansas City's Punk Rock Powerhouse
+            CRASH: Kansas City&apos;s Punk Rock Powerhouse
           </HandwrittenText>
         </div>
 

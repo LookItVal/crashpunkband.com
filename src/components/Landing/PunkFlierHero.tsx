@@ -110,7 +110,7 @@ export default function PunkFlierHero() {
           </HanddrawnText>
           <div className="h-8" />
           <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
-            Blending the speed of 80s hardcore with a modern, rowdy energy, CRASH delivers a sound that is as loud and unapologetic. If you're looking for the next great Midwest punk record or a chaotic live experience in the Crossroads, CRASH is exactly what you've been waiting for.
+            Blending the speed of 80s hardcore with a modern, rowdy energy, CRASH delivers a sound that is as loud and unapologetic. If you&apos;re looking for the next great Midwest punk record or a chaotic live experience in the Crossroads, CRASH is exactly what you&apos;ve been waiting for.
           </HanddrawnText>
         </div>
 
