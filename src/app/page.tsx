@@ -5,6 +5,7 @@ import EventCalendar from "../components/Landing/EventCalendar";
 import LandingFooter from "../components/Landing/LandingFooter";
 import MediaGallery from "../components/Landing/MediaGallery";
 import PunkFlierHero from "../components/Landing/PunkFlierHero";
+import LookItValTag from "../components/Landing/LookItValTag";
 import { socialLinks } from "../components/Landing/SocialMediaLinks";
 
 export const metadata: Metadata = {
@@ -55,7 +56,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="relative min-h-screen bg-black text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -68,6 +69,7 @@ export default function Home() {
         <EventCalendar />
         <LandingFooter />
       </div>
+      <LookItValTag />
     </main>
   );
 }
