@@ -26,7 +26,7 @@ export default function BandMembersSection() {
       <section>
         <div className="mb-6 w-full">
           <HandwrittenText
-            as="h2"
+            as="h1"
             textAlign="center"
             className="leading-tight"
             fontSize={24}
@@ -34,7 +34,7 @@ export default function BandMembersSection() {
             strokeWidth={1.8}
             mobileStrokeWidth={1.5}
           >
-            CASH, KNOXX, and FISH are CRASH
+            CRASH: Kansas City's Punk Rock Powerhouse
           </HandwrittenText>
         </div>
 

@@ -437,13 +437,13 @@ export default function EventCalendar({
   return (
     <HandDrawnFrame contentClassName="p-6 md:p-8">
       <section className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="md:w-32 w-25">
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="md:w-70 w-40">
             <HandwrittenText as="h2" fontSize={26} mobileFontSize={20} strokeWidth={1.9} mobileStrokeWidth={1.5}>
-              Event Calendar
+              {"Live Shows &\nKC Tour Dates"}
             </HandwrittenText>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <HandDrawnFrame className="inline-block" contentClassName="px-3 py-2">
               <HighlightButton
                 href={joinUrl}

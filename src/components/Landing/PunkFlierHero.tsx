@@ -22,6 +22,7 @@ export default function PunkFlierHero() {
             >
               <HanddrawnText
                 fontSize={13}
+                as="h2"
                 textAlign="center"
                 strokeWidth={1.5}
                 className="pb-3"
@@ -40,6 +41,7 @@ export default function PunkFlierHero() {
             >
               <HanddrawnText
                 fontSize={13}
+                as="h2"
                 textAlign="center"
                 strokeWidth={1.5}
                 className="pb-3"
@@ -63,7 +65,7 @@ export default function PunkFlierHero() {
           <div className="mx-auto w-full max-w-xl p-3">
             <Image
               src="/crash_banner.png"
-              alt="CRASH logo"
+              alt="CRASH Punk Band logo"
               width={1200}
               height={420}
               className="h-auto w-full object-contain"
@@ -72,8 +74,8 @@ export default function PunkFlierHero() {
           </div>
           <div className="mx-auto max-w-2xl">
             <HanddrawnText
-              fontSize={12}
-              mobileFontSize={10}
+              fontSize={18}
+              mobileFontSize={15}
               strokeColor="#e4e4e7"
               strokeWidth={1.5}
               mobileStrokeWidth={1.3}
@@ -86,20 +88,30 @@ export default function PunkFlierHero() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
-              Big Energy
+            <HanddrawnText as="h3" fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
+              Loud Energy
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
-              Loud Instruments
+            <HanddrawnText as="h3" fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
+              Raw Hardcore Sound
             </HanddrawnText>
           </HandDrawnFrame>
           <HandDrawnFrame contentClassName="px-4 py-3 text-center">
-            <HanddrawnText fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
+            <HanddrawnText as="h3" fontSize={11} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center" animation="jitter">
               Rowdy Crowds
             </HanddrawnText>
           </HandDrawnFrame>
+        </div>
+
+        <div>
+          <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
+            CRASH is a hardcorehar punk rock band hailing from Kansas City, Missouri. Formed by Knoxx, and supported by members Cash and Fish, this group has quickly become a staple of the KC DIY scene, known for their explosive sets in local intimate venues like The Farewell and Sk8bar.
+          </HanddrawnText>
+          <div className="h-8" />
+          <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
+            Blending the speed of 80s hardcore with a modern, rowdy energy, CRASH delivers a sound that is as loud and unapologetic. If you're looking for the next great Midwest punk record or a chaotic live experience in the Crossroads, CRASH is exactly what you've been waiting for.
+          </HanddrawnText>
         </div>
 
         <div className="space-y-5 pt-1">
@@ -112,7 +124,7 @@ export default function PunkFlierHero() {
             showLeft={false}
           />
           <div className="mb-3">
-            <HanddrawnText fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
+            <HanddrawnText as="h3" fontSize={12} mobileFontSize={10} strokeColor="#d4d4d8" strokeWidth={1.5} textAlign="center">
               Stay connected
             </HanddrawnText>
           </div>

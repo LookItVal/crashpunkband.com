@@ -37,7 +37,7 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
   const padded = value.toString().padStart(2, "0");
 
   return (
-    <HandDrawnFrame className="min-w-14 md:min-w-20" contentClassName="px-0 py-2 text-center md:px-3">
+    <HandDrawnFrame className="min-w-14 md:min-w-20" contentClassName="px-3 py-2 text-center md:px-3">
       <div className="pt-1 text-2xl font-black tracking-widest md:text-3xl">
         <HandwrittenText
           fontSize={24}
@@ -45,7 +45,7 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
           animation="jitter"
           strokeWidth={1.6}
           mobileBreakpoint={500}
-          mobileFontSize={14}
+          mobileFontSize={12}
           mobileStrokeWidth={1.3}
         >
           {padded}
@@ -59,7 +59,7 @@ function NumberUnit({ label, value }: { label: string; value: number }) {
           strokeColor="grey"
           strokeWidth={1.5}
           mobileBreakpoint={500}
-          mobileFontSize={7}
+          mobileFontSize={5}
           mobileStrokeWidth={1}
         >
           {label.toUpperCase()}
@@ -123,16 +123,17 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
         {!showReleased ? (
           <div ref={countdownRef} className="flex flex-col gap-5" style={{ opacity: 1, filter: "blur(0px)" }}>
             <HandwrittenText
+              as="h2"
               fontSize={30}
               strokeWidth={1.9}
               textAlign="center"
               animation="jitter"
 
             >
-              {`NEW MUSIC COMING SOON`}
+              NEW MUSIC COMING SOON
             </HandwrittenText>
             <div className="w-full overflow-x-auto pb-1">
-              <div className="mx-auto flex w-max flex-nowrap items-center justify-center gap-2 md:gap-3">
+              <div className="mx-auto flex w-max flex-nowrap items-center justify-center gap-0 sm:gap-2 md:gap-3">
                 <NumberUnit label="Days" value={time.days} />
                 <NumberUnit label="Hours" value={time.hours} />
                 <NumberUnit label="Minutes" value={time.minutes} />
@@ -142,7 +143,7 @@ export default function CountdownBanner({ targetDate }: CountdownBannerProps) {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-4 text-center">
-            <HandwrittenText fontSize={24} mobileFontSize={18} strokeWidth={2} mobileStrokeWidth={1.5} textAlign="center">
+            <HandwrittenText as="h2" fontSize={24} mobileFontSize={18} strokeWidth={2} mobileStrokeWidth={1.5} textAlign="center">
               NEW MUSIC OUT
             </HandwrittenText>
 

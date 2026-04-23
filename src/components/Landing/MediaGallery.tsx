@@ -9,82 +9,82 @@ import HandwrittenText from "../CRASHTheme/HandwrittenText/HandwrittenText";
 const galleryItems = [
   {
     src: "/photos/AnnieMaesBand1.webp",
-    alt: "CRASH live performance at Auntie Mae's in Manhattan, Kansas",
+    alt: "CRASH punk band's live performance at Auntie Mae's in Manhattan, Kansas",
     label: "Auntie Mae's - Manhattan, Kansas",
   },
   {
     src: "/photos/BoobieTrap1.webp",
-    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    alt: "CRASH punk band's live performance at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapBand3.webp",
-    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    alt: "CRASH punk band's live performance at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapCash5.webp",
-    alt: "Cash of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    alt: "Cash of CRASH punk band performing live at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapFish1.webp",
-    alt: "Fish of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    alt: "Fish of CRASH punk band performing live at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapHero1.webp",
-    alt: "CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    alt: "CRASH punk band's live performance at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapKnoxx1.webp",
-    alt: "Knoxx of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    alt: "Knoxx of CRASH punk band performing live at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapKnoxx2.webp",
-    alt: "Knoxx of CRASH performing live at The Boobie Trap in Topeka, Kansas",
+    alt: "Knoxx of CRASH punk band performing live at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/BoobieTrapMoshPit1.webp",
-    alt: "Mosh pit at CRASH live performance at The Boobie Trap in Topeka, Kansas",
+    alt: "Mosh pit at CRASH punk band's live performance at The Boobie Trap in Topeka, Kansas",
     label: "The Boobie Trap - Topeka, Kansas",
   },
   {
     src: "/photos/CRASHoutside2.webp",
-    alt: "CRASH backstage at Farewell in Kansas City, Missouri",
+    alt: "CRASH punk band backstage at Farewell in Kansas City, Missouri",
     label: "Farewell - Kansas City, Missouri",
   },
   {
     src: "/photos/CRASHoutside3.webp",
-    alt: "CRASH backstage at Farewell in Kansas City, Missouri",
+    alt: "CRASH punk band backstage at Farewell in Kansas City, Missouri",
     label: "Farewell - Kansas City, Missouri",
   },
   {
     src: "/photos/ReplayBand1.webp",
-    alt: "CRASH live performance at Replay in Lawrence, Kansas",
+    alt: "CRASH punk band's live performance at Replay in Lawrence, Kansas",
     label: "Replay - Lawrence, Kansas",
   },
   {
     src: "/photos/ReplayBand2.webp",
-    alt: "CRASH live performance at Replay in Lawrence, Kansas",
+    alt: "CRASH punk band's live performance at Replay in Lawrence, Kansas",
     label: "Replay - Lawrence, Kansas",
   },
   {
     src: "/photos/ReplayCash1.webp",
-    alt: "Cash of CRASH performing live at Replay in Lawrence, Kansas",
+    alt: "Cash of CRASH punk band performing live at Replay in Lawrence, Kansas",
     label: "Replay - Lawrence, Kansas",
   },
   {
     src: "/photos/ReplayKnoxx1.webp",
-    alt: "Knoxx of CRASH performing live at Replay in Lawrence, Kansas",
+    alt: "Knoxx of CRASH punk band performing live at Replay in Lawrence, Kansas",
     label: "Replay - Lawrence, Kansas",
   },
   {
     src: "/photos/ReplayStrings1.webp",
-    alt: "Strings of CRASH performing live at Replay in Lawrence, Kansas",
+    alt: "Strings of CRASH punk band performing live at Replay in Lawrence, Kansas",
     label: "Replay - Lawrence, Kansas",
   }
 ];
@@ -107,8 +107,8 @@ export default function MediaGallery() {
               </HandwrittenText>
             </div>
             <HandDrawnFrame className="inline-block" contentClassName="px-4 py-2">
-              <HandwrittenText className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
-                Our Shows
+              <HandwrittenText as="h3" className="min-w-30" fontSize={11} mobileFontSize={9} strokeWidth={1.5} textAlign="center">
+                From Our Shows
               </HandwrittenText>
             </HandDrawnFrame>
           </div>
@@ -135,7 +135,7 @@ export default function MediaGallery() {
                     </HandDrawnFrame>
                   </button>
                   <div className="p-2">
-                    <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5}>
+                    <HandwrittenText as="h4" fontSize={11} mobileFontSize={9} strokeColor="#d4d4d8" strokeWidth={1.5}>
                       {item.label}
                     </HandwrittenText>
                   </div>

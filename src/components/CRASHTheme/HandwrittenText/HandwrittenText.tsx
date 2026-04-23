@@ -41,9 +41,11 @@ type HandwrittenParagraphProps = {
   /** Frames per second for the jitter animation (default 10). */
   jitterFps?: number;
   /** Semantic tag for the text layer (SEO/accessibility). */
-  as?: "p" | "h1" | "h2" | "h3";
+  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span";
   /** Extra className on the outer wrapper. */
   className?: string;
+  /** Line height for both text and SVG glyph layout (default 1.5). */
+  lineHeight?: number;
 };
 
 /**
@@ -68,6 +70,7 @@ export default function HandwrittenText({
   jitterFps = 15,
   as = "p",
   className = "",
+  lineHeight = 2,
 }: HandwrittenParagraphProps) {
   const TextTag = as;
 
@@ -87,6 +90,7 @@ export default function HandwrittenText({
 
   const effectiveFontSize = isMobile && mobileFontSize !== undefined ? mobileFontSize : fontSize;
   const effectiveStrokeWidth = isMobile && mobileStrokeWidth !== undefined ? mobileStrokeWidth : strokeWidth;
+  const effectiveLineHeight = lineHeight;
   const effectiveLineOptions = useMemo<LineOptions>(() => ({
     preSegmentNoiseMagnitudes: 0.05,
     postSegmentNoiseMagnitudes: 0.015,
@@ -177,7 +181,7 @@ export default function HandwrittenText({
       observer.disconnect();
       window.removeEventListener("resize", updateLayout);
     };
-  }, [children, effectiveFontSize, textAlign]);
+  }, [children, effectiveFontSize, effectiveLineHeight, textAlign]);
 
   useGSAP(() => {
     if (!rootRef.current || !cell) return;
@@ -298,7 +302,7 @@ export default function HandwrittenText({
           zIndex: 1,
           fontFamily: "monospace",
           fontSize: `${effectiveFontSize}px`,
-          lineHeight: 1.2,
+          lineHeight: effectiveLineHeight,
           whiteSpace: "pre-wrap",
           overflowWrap: "anywhere",
           textAlign,
@@ -325,7 +329,7 @@ export default function HandwrittenText({
           pointerEvents: "none",
           fontFamily: "monospace",
           fontSize: `${effectiveFontSize}px`,
-          lineHeight: 1.2,
+          lineHeight: effectiveLineHeight,
           whiteSpace: "pre-wrap",
           overflowWrap: "anywhere",
           textAlign,
