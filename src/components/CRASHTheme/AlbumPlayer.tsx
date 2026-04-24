@@ -13,6 +13,7 @@ import { buildResponsiveSrcSet } from "@/lib/images/responsive";
 const ALBUM_COVER_SRC = "/Album_Cover.webp";
 const ALBUM_COVER_WIDTHS = [256, 384, 512, 640, 768, 1024];
 const PRELOAD_LOOKAHEAD = 3;
+const LOOP_ENTIRE_ALBUM = true;
 
 type AlbumTrack = {
   number: number;
@@ -54,7 +55,12 @@ export default function AlbumPlayer() {
   const activeAudioRef = activeBuffer === 0 ? audioRefA : audioRefB;
 
   const currentTrack = ALBUM_TRACKS[currentTrackIndex];
-  const nextTrack = currentTrackIndex + 1 < ALBUM_TRACKS.length ? ALBUM_TRACKS[currentTrackIndex + 1] : null;
+  const nextTrack =
+    currentTrackIndex + 1 < ALBUM_TRACKS.length
+      ? ALBUM_TRACKS[currentTrackIndex + 1]
+      : LOOP_ENTIRE_ALBUM
+        ? ALBUM_TRACKS[0]
+        : null;
   const displayTitle = `"${currentTrack.title}"`;
 
   useEffect(() => {
@@ -79,7 +85,18 @@ export default function AlbumPlayer() {
         continue;
       }
 
-      const track = ALBUM_TRACKS[currentTrackIndex + 2 + offset];
+      const nextRawIndex = currentTrackIndex + 2 + offset;
+      const wrappedIndex = LOOP_ENTIRE_ALBUM
+        ? nextRawIndex % ALBUM_TRACKS.length
+        : nextRawIndex;
+      const track = ALBUM_TRACKS[wrappedIndex];
+
+      if (!LOOP_ENTIRE_ALBUM && nextRawIndex >= ALBUM_TRACKS.length) {
+        preloadEl.removeAttribute("src");
+        preloadEl.load();
+        continue;
+      }
+
       if (!track) {
         preloadEl.removeAttribute("src");
         preloadEl.load();
@@ -141,8 +158,15 @@ export default function AlbumPlayer() {
   );
 
   const handleTrackEnded = useCallback(() => {
-    const nextIndex = currentTrackIndex + 1;
-    if (nextIndex >= ALBUM_TRACKS.length) {
+    const nextRawIndex = currentTrackIndex + 1;
+    const nextIndex =
+      nextRawIndex < ALBUM_TRACKS.length
+        ? nextRawIndex
+        : LOOP_ENTIRE_ALBUM
+          ? 0
+          : -1;
+
+    if (nextIndex === -1) {
       setShouldAutoPlay(false);
       return;
     }
@@ -165,19 +189,14 @@ export default function AlbumPlayer() {
 
     const el = nowPlayingRef.current;
     animateInRef.current = true;
+    setCurrentTrackIndex(nextIndex);
+
     if (el) {
       gsap.killTweensOf(el);
-      gsap.to(el, {
+      gsap.set(el, {
         opacity: 0,
         filter: "blur(6px)",
-        duration: 0.15,
-        ease: "power2.in",
-        onComplete: () => {
-          setCurrentTrackIndex(nextIndex);
-        },
       });
-    } else {
-      setCurrentTrackIndex(nextIndex);
     }
   }, [currentTrackIndex]);
 
