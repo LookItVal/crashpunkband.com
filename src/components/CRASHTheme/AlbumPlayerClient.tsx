@@ -39,33 +39,75 @@ export default function AlbumPlayerClient() {
   const [togglePlaySignal, setTogglePlaySignal] = useState(0);
   const nowPlayingRef = useRef<HTMLDivElement>(null);
   const animateInRef = useRef(false);
-
-  const audioRefA = useRef<HTMLAudioElement>(null);
-  const audioRefB = useRef<HTMLAudioElement>(null);
-  const activeBufferRef = useRef<0 | 1>(0);
-  const [activeBuffer, setActiveBuffer] = useState<0 | 1>(0);
+  const trackAudioRefs = useRef<Array<HTMLAudioElement | null>>([]);
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
   const [audioKey, setAudioKey] = useState(0);
 
-  const activeAudioRef = activeBuffer === 0 ? audioRefA : audioRefB;
-
   const currentTrack = ALBUM_TRACKS[currentTrackIndex];
-  const nextTrack = currentTrackIndex + 1 < ALBUM_TRACKS.length ? ALBUM_TRACKS[currentTrackIndex + 1] : null;
   const displayTitle = `"${currentTrack.title}"`;
 
-  useEffect(() => {
-    const el = audioRefA.current;
-    if (!el) return;
-    el.src = ALBUM_TRACKS[0].audioFile;
-    el.load();
+  activeAudioRef.current = trackAudioRefs.current[currentTrackIndex] ?? null;
+
+  const pauseNonCurrentTracks = useCallback((activeIndex: number) => {
+    trackAudioRefs.current.forEach((audioElement, index) => {
+      if (!audioElement || index === activeIndex) {
+        return;
+      }
+
+      audioElement.pause();
+      audioElement.currentTime = 0;
+    });
   }, []);
 
+  const preloadFromTrack = useCallback((startIndex: number) => {
+    trackAudioRefs.current.forEach((audioElement, index) => {
+      if (!audioElement) {
+        return;
+      }
+
+      const targetTrack = ALBUM_TRACKS[index];
+
+      if (index < startIndex) {
+        if (index !== currentTrackIndex) {
+          audioElement.pause();
+          audioElement.removeAttribute("src");
+          audioElement.load();
+        }
+        return;
+      }
+
+      if (audioElement.getAttribute("src") !== targetTrack.audioFile) {
+        audioElement.src = targetTrack.audioFile;
+      }
+
+      audioElement.preload = "auto";
+      audioElement.load();
+    });
+  }, [currentTrackIndex]);
+
   useEffect(() => {
-    const standbyIdx = activeBuffer === 0 ? 1 : 0;
-    const standbyEl = standbyIdx === 0 ? audioRefA.current : audioRefB.current;
-    if (!standbyEl || !nextTrack) return;
-    standbyEl.src = nextTrack.audioFile;
-    standbyEl.load();
-  }, [nextTrack, activeBuffer]);
+    preloadFromTrack(currentTrackIndex);
+  }, [currentTrackIndex, preloadFromTrack]);
+
+  const beginTrackPlayback = useCallback((nextIndex: number) => {
+    const nextAudioElement = trackAudioRefs.current[nextIndex];
+    const currentAudioElement = trackAudioRefs.current[currentTrackIndex];
+
+    pauseNonCurrentTracks(nextIndex);
+
+    if (nextAudioElement) {
+      nextAudioElement.currentTime = 0;
+      if (currentAudioElement) {
+        nextAudioElement.volume = currentAudioElement.volume;
+      }
+      void nextAudioElement.play().catch(() => {});
+    }
+
+    setAudioKey((prev) => prev + 1);
+    setShouldAutoPlay(true);
+    animateInRef.current = true;
+    setCurrentTrackIndex(nextIndex);
+  }, [currentTrackIndex, pauseNonCurrentTracks]);
 
   const switchTrack = useCallback(
     (nextIndex: number) => {
@@ -76,20 +118,6 @@ export default function AlbumPlayerClient() {
         return;
       }
 
-      const doSwitch = () => {
-        const curActive = activeBufferRef.current;
-        const activeEl = curActive === 0 ? audioRefA.current : audioRefB.current;
-        if (activeEl) {
-          activeEl.src = ALBUM_TRACKS[nextIndex].audioFile;
-          activeEl.load();
-          void activeEl.play().catch(() => {});
-        }
-        setAudioKey((prev) => prev + 1);
-        setShouldAutoPlay(true);
-        animateInRef.current = true;
-        setCurrentTrackIndex(nextIndex);
-      };
-
       const el = nowPlayingRef.current;
 
       if (el) {
@@ -97,7 +125,7 @@ export default function AlbumPlayerClient() {
       }
 
       if (!el) {
-        doSwitch();
+        beginTrackPlayback(nextIndex);
         return;
       }
 
@@ -107,32 +135,16 @@ export default function AlbumPlayerClient() {
         duration: 0.2,
         ease: "power2.in",
         onComplete: () => {
-          doSwitch();
+          beginTrackPlayback(nextIndex);
         },
       });
     },
-    [currentTrackIndex],
+    [beginTrackPlayback, currentTrackIndex],
   );
 
   const handleTrackEnded = useCallback(() => {
     const nextIndex = currentTrackIndex + 1;
     if (nextIndex >= ALBUM_TRACKS.length) return;
-
-    const curActive = activeBufferRef.current;
-    const standbyIdx: 0 | 1 = curActive === 0 ? 1 : 0;
-    const standbyEl = standbyIdx === 0 ? audioRefA.current : audioRefB.current;
-    const activeEl = curActive === 0 ? audioRefA.current : audioRefB.current;
-
-    if (standbyEl) {
-      standbyEl.currentTime = 0;
-      if (activeEl) standbyEl.volume = activeEl.volume;
-      void standbyEl.play().catch(() => {});
-    }
-
-    activeBufferRef.current = standbyIdx;
-    setActiveBuffer(standbyIdx);
-    setAudioKey((prev) => prev + 1);
-    setShouldAutoPlay(true);
 
     const el = nowPlayingRef.current;
     animateInRef.current = true;
@@ -144,13 +156,13 @@ export default function AlbumPlayerClient() {
         duration: 0.15,
         ease: "power2.in",
         onComplete: () => {
-          setCurrentTrackIndex(nextIndex);
+          beginTrackPlayback(nextIndex);
         },
       });
     } else {
-      setCurrentTrackIndex(nextIndex);
+      beginTrackPlayback(nextIndex);
     }
-  }, [currentTrackIndex]);
+  }, [beginTrackPlayback, currentTrackIndex]);
 
   useEffect(() => {
     if (!animateInRef.current) return;
@@ -166,8 +178,16 @@ export default function AlbumPlayerClient() {
 
   return (
     <div className="flex flex-col gap-10 w-full max-w-5xl mx-auto">
-      <audio ref={audioRefA} preload="auto" style={{ display: "none" }} />
-      <audio ref={audioRefB} preload="auto" style={{ display: "none" }} />
+      {ALBUM_TRACKS.map((track, index) => (
+        <audio
+          key={track.audioFile}
+          ref={(element) => {
+            trackAudioRefs.current[index] = element;
+          }}
+          preload={index >= currentTrackIndex ? "auto" : "none"}
+          style={{ display: "none" }}
+        />
+      ))}
 
       <div className="flex flex-col lg:flex-row lg:items-center gap-8">
         <div className="order-2 lg:order-1 lg:w-1/2">
