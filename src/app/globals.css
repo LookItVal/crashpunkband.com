@@ -65,17 +65,25 @@ body {
 }
 
 .albumBandTrack {
-  position: absolute;
-  inset: 0;
-  width: 200%;
+  --tile-width: 1px;
+  --tile-count: 4;
+  display: flex;
+  width: calc(var(--tile-width) * var(--tile-count));
   height: 100%;
   will-change: transform;
-  background-position: 0 0;
-  background-repeat: repeat-x;
-  background-size: auto 100%;
   animation-name: albumBandSlide;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+}
+
+.albumBandTile {
+  width: var(--tile-width);
+  min-width: var(--tile-width);
+  height: 100%;
+  flex: 0 0 var(--tile-width);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: 0 0;
 }
 
 @keyframes albumBandSlide {
@@ -84,7 +92,7 @@ body {
   }
 
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(calc(-1 * var(--tile-width)), 0, 0);
   }
 }
 

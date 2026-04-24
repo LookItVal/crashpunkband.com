@@ -381,6 +381,25 @@ export default function AudioPlayer({ audioSrc, onEnded, onPlaying, autoPlay, to
   }, [audioSrc, autoPlay, externalAudioRef, getAudio]);
 
   useEffect(() => {
+    if (!externalAudioRef || !autoPlay) {
+      return;
+    }
+
+    const audio = getAudio();
+    if (!audio) {
+      return;
+    }
+
+    if (!audio.paused) {
+      return;
+    }
+
+    void audio.play().catch(() => {
+      setIsPlaying(false);
+    });
+  }, [autoPlay, externalAudioRef, getAudio, audioElementKey]);
+
+  useEffect(() => {
     if (!trackProgressGroupRef.current) return;
 
     const clampedProgress = Math.max(0, Math.min(1, progress));

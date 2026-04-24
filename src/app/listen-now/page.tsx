@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ListenNowPage() {
   return (
     <main className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center p-4 md:p-8">
-      <AnimatedAlbumBands topDurationSeconds={300} bottomDurationSeconds={180} />
+      <AnimatedAlbumBands />
       <div className="relative z-10 w-full">
         <AlbumPlayer />
       </div>

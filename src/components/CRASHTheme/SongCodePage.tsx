@@ -17,7 +17,7 @@ export default function SongCodePage({ song }: SongCodePageProps) {
 
   return (
     <main className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center p-4">
-      <AnimatedAlbumBands topDurationSeconds={300} bottomDurationSeconds={180} />
+      <AnimatedAlbumBands />
 
       <div className="relative z-10 max-w-2xl w-full flex flex-col items-center gap-12">
         <div className="w-full max-w-md px-4">

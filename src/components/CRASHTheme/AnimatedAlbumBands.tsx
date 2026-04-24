@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 type AnimatedAlbumBandsProps = {
   topImageSrc?: string;
   bottomImageSrc?: string;
@@ -15,32 +19,120 @@ export default function AnimatedAlbumBands({
   topDurationSeconds = 300,
   bottomDurationSeconds = 180,
 }: AnimatedAlbumBandsProps) {
+  const bottomBandRef = useRef<HTMLDivElement>(null);
+  const topBandRef = useRef<HTMLDivElement>(null);
+  const topAspectRef = useRef(1);
+  const bottomAspectRef = useRef(1);
+  const [topTileWidth, setTopTileWidth] = useState(1);
+  const [bottomTileWidth, setBottomTileWidth] = useState(1);
+  const [topTileCount, setTopTileCount] = useState(6);
+  const [bottomTileCount, setBottomTileCount] = useState(6);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const calcCount = (bandWidth: number, tileWidth: number) => {
+      return Math.max(4, Math.ceil(bandWidth / tileWidth) + 3);
+    };
+
+    const recalc = () => {
+      if (topBandRef.current) {
+        const bandHeight = topBandRef.current.clientHeight;
+        const bandWidth = topBandRef.current.clientWidth;
+        const nextWidth = Math.max(1, bandHeight * topAspectRef.current);
+        setTopTileWidth(nextWidth);
+        setTopTileCount(calcCount(bandWidth, nextWidth));
+      }
+
+      if (bottomBandRef.current) {
+        const bandHeight = bottomBandRef.current.clientHeight;
+        const bandWidth = bottomBandRef.current.clientWidth;
+        const nextWidth = Math.max(1, bandHeight * bottomAspectRef.current);
+        setBottomTileWidth(nextWidth);
+        setBottomTileCount(calcCount(bandWidth, nextWidth));
+      }
+    };
+
+    const topImg = new window.Image();
+    topImg.onload = () => {
+      if (topImg.naturalHeight > 0) {
+        topAspectRef.current = topImg.naturalWidth / topImg.naturalHeight;
+      }
+      recalc();
+    };
+    topImg.src = topImageSrc;
+
+    const bottomImg = new window.Image();
+    bottomImg.onload = () => {
+      if (bottomImg.naturalHeight > 0) {
+        bottomAspectRef.current = bottomImg.naturalWidth / bottomImg.naturalHeight;
+      }
+      recalc();
+    };
+    bottomImg.src = bottomImageSrc;
+
+    let observer: ResizeObserver | null = null;
+    if ("ResizeObserver" in window) {
+      observer = new ResizeObserver(recalc);
+      if (topBandRef.current) observer.observe(topBandRef.current);
+      if (bottomBandRef.current) observer.observe(bottomBandRef.current);
+    }
+
+    window.addEventListener("resize", recalc);
+    recalc();
+
+    return () => {
+      window.removeEventListener("resize", recalc);
+      observer?.disconnect();
+    };
+  }, [bottomImageSrc, topImageSrc]);
+
   return (
     <>
       <div
+        ref={bottomBandRef}
         aria-hidden="true"
         className={`albumBand albumBandBottom pointer-events-none absolute inset-x-0 bottom-0 ${bottomHeightClassName}`}
       >
         <div
           className="albumBandTrack"
           style={{
-            backgroundImage: `url("${bottomImageSrc}")`,
+            ["--tile-width" as string]: `${bottomTileWidth}px`,
+            ["--tile-count" as string]: `${bottomTileCount}`,
             animationDuration: `${bottomDurationSeconds}s`,
           }}
-        />
+        >
+          {Array.from({ length: bottomTileCount }, (_, idx) => (
+            <div
+              key={`bottom-${idx}`}
+              className="albumBandTile"
+              style={{ backgroundImage: `url("${bottomImageSrc}")` }}
+            />
+          ))}
+        </div>
       </div>
 
       <div
+        ref={topBandRef}
         aria-hidden="true"
         className={`albumBand albumBandTop pointer-events-none absolute inset-x-0 top-0 ${topHeightClassName}`}
       >
         <div
           className="albumBandTrack"
           style={{
-            backgroundImage: `url("${topImageSrc}")`,
+            ["--tile-width" as string]: `${topTileWidth}px`,
+            ["--tile-count" as string]: `${topTileCount}`,
             animationDuration: `${topDurationSeconds}s`,
           }}
-        />
+        >
+          {Array.from({ length: topTileCount }, (_, idx) => (
+            <div
+              key={`top-${idx}`}
+              className="albumBandTile"
+              style={{ backgroundImage: `url("${topImageSrc}")` }}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
