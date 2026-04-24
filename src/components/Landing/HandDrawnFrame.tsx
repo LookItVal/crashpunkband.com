@@ -435,116 +435,87 @@ export default function HandDrawnFrame({
       );
     };
 
-    const mm = gsap.matchMedia();
+    hasStartedAnimationRef.current = true;
 
-    mm.add("(min-width: 768px)", () => {
-      hasStartedAnimationRef.current = true;
+    if (animateTimeoutRef.current) {
+      window.clearTimeout(animateTimeoutRef.current);
+    }
 
-      if (animateTimeoutRef.current) {
-        window.clearTimeout(animateTimeoutRef.current);
-      }
+    animateTimeoutRef.current = window.setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        if (!animateOnLoad) {
+          return;
+        }
 
-      animateTimeoutRef.current = window.setTimeout(() => {
-        window.requestAnimationFrame(() => {
-          if (!animateOnLoad) {
-            return;
-          }
+        const pathElements = collectPathElements();
 
-          const pathElements = collectPathElements();
+        if (pathElements.length === 0) {
+          return;
+        }
 
-          if (pathElements.length === 0) {
-            return;
-          }
+        const orderedPathElements = [...pathElements];
+        for (let index = orderedPathElements.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(Math.random() * (index + 1));
+          [orderedPathElements[index], orderedPathElements[swapIndex]] = [
+            orderedPathElements[swapIndex],
+            orderedPathElements[index],
+          ];
+        }
 
-          const orderedPathElements = [...pathElements];
-          for (let index = orderedPathElements.length - 1; index > 0; index -= 1) {
-            const swapIndex = Math.floor(Math.random() * (index + 1));
-            [orderedPathElements[index], orderedPathElements[swapIndex]] = [
-              orderedPathElements[swapIndex],
-              orderedPathElements[index],
-            ];
-          }
+        const lengths = orderedPathElements.map((path) => path.getTotalLength());
+        const longestLength = Math.max(...lengths, 1);
+        const startDelayRandom = drawRandomDelay > 0 ? drawRandomDelay * seededUnitRandom(0.5) : 0;
+        const durationRandomFactor = drawRandomDuration > 0 ? seededUnitRandom(1.5) * 2 - 1 : 0;
 
-          const lengths = orderedPathElements.map((path) => path.getTotalLength());
-          const longestLength = Math.max(...lengths, 1);
-          const startDelayRandom = drawRandomDelay > 0 ? drawRandomDelay * seededUnitRandom(0.5) : 0;
-          const durationRandomFactor = drawRandomDuration > 0 ? seededUnitRandom(1.5) * 2 - 1 : 0;
-
-          orderedPathElements.forEach((path, index) => {
-            const length = lengths[index];
-            gsap.set(path, {
-              strokeDasharray: `${length}`,
-              strokeDashoffset: length,
-            });
-          });
-
-          if (animationTimelineRef.current) {
-            animationTimelineRef.current.kill();
-            animationTimelineRef.current = null;
-          }
-
-          const timeline = gsap.timeline({
-            onComplete: () => {
-              orderedPathElements.forEach((path) => {
-                gsap.set(path, {
-                  strokeDasharray: "none",
-                  strokeDashoffset: 0,
-                });
-              });
-              hasFinishedAnimationRef.current = true;
-              animationTimelineRef.current = null;
-            },
-          });
-
-          animationTimelineRef.current = timeline;
-
-          orderedPathElements.forEach((path, index) => {
-            const length = lengths[index];
-            const normalizedDuration = Math.max(
-              0.06,
-              drawDuration * (length / longestLength) + drawRandomDuration * durationRandomFactor,
-            );
-
-            timeline.to(
-              path,
-              {
-                strokeDashoffset: 0,
-                duration: normalizedDuration,
-                ease: drawEase,
-              },
-              drawDelay + startDelayRandom + index * drawStagger,
-            );
+        orderedPathElements.forEach((path, index) => {
+          const length = lengths[index];
+          gsap.set(path, {
+            strokeDasharray: `${length}`,
+            strokeDashoffset: length,
           });
         });
-      }, 120);
-    });
 
-    mm.add("(max-width: 767px)", () => {
-      hasStartedAnimationRef.current = true;
-      hasFinishedAnimationRef.current = true;
+        if (animationTimelineRef.current) {
+          animationTimelineRef.current.kill();
+          animationTimelineRef.current = null;
+        }
 
-      if (animateTimeoutRef.current) {
-        window.clearTimeout(animateTimeoutRef.current);
-        animateTimeoutRef.current = null;
-      }
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            orderedPathElements.forEach((path) => {
+              gsap.set(path, {
+                strokeDasharray: "none",
+                strokeDashoffset: 0,
+              });
+            });
+            hasFinishedAnimationRef.current = true;
+            animationTimelineRef.current = null;
+          },
+        });
 
-      const pathElements = collectPathElements();
-      if (!pathElements.length) {
-        return;
-      }
+        animationTimelineRef.current = timeline;
 
-      gsap.killTweensOf(pathElements);
-      pathElements.forEach((path) => {
-        gsap.set(path, {
-          strokeDasharray: "none",
-          strokeDashoffset: 0,
+        orderedPathElements.forEach((path, index) => {
+          const length = lengths[index];
+          const normalizedDuration = Math.max(
+            0.06,
+            drawDuration * (length / longestLength) + drawRandomDuration * durationRandomFactor,
+          );
+
+          timeline.to(
+            path,
+            {
+              strokeDashoffset: 0,
+              duration: normalizedDuration,
+              ease: drawEase,
+            },
+            drawDelay + startDelayRandom + index * drawStagger,
+          );
         });
       });
-    });
+    }, 120);
 
     return () => {
-      mm.revert();
-
       if (animateTimeoutRef.current) {
         window.clearTimeout(animateTimeoutRef.current);
         animateTimeoutRef.current = null;

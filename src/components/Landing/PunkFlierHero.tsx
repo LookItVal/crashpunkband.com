@@ -112,11 +112,11 @@ export default function PunkFlierHero() {
 
         <div>
           <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
-            CRASH is a hardcore punk rock band hailing from Kansas City, Missouri. Formed by Knoxx, and supported by members Cash and Fish, this group has quickly become a staple of the KC DIY scene, known for their explosive sets in local intimate venues like The Farewell and Sk8bar.
+            CRASH is a hardcore punk rock band out of Kansas City, Missouri. Formed by front man K.C. Knoxx, and supported by guitarist Cash and Fish on drums, this group has quickly become a staple of the KC DIY scene, known for their explosive sets in local intimate venues like The Farewell and Sk8bar.
           </HanddrawnText>
           <div className="h-8" />
           <HanddrawnText fontSize={16} mobileFontSize={14} strokeWidth={1.5} textAlign="center">
-            Blending the speed of 80s hardcore with a modern, rowdy energy, CRASH delivers a sound that is as loud and unapologetic. If you&apos;re looking for the next great Midwest punk record or a chaotic live experience in the Crossroads, CRASH is exactly what you&apos;ve been waiting for.
+            Blending the speed of 80s hardcore with a modern, rowdy energy, CRASH delivers a sound that is as loud and unapologetic. If you&apos;re looking for the next great Midwest punk record or a chaotic live experience in from Westport to Leeds and all across the KC Metro, CRASH is exactly what you&apos;ve been waiting for.
           </HanddrawnText>
         </div>
 

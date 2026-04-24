@@ -1,5 +1,3 @@
-"use client";
-
 import AnimatedAlbumBands from "@/components/CRASHTheme/AnimatedAlbumBands";
 import AudioPlayer from "@/components/CRASHTheme/AudioPlayer/AudioPlayer";
 import FeatherGlowPlate from "@/components/CRASHTheme/FeatherGlowPlate";
