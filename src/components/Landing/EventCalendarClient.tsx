@@ -549,7 +549,7 @@ export default function EventCalendarClient({
                           textClassName="w-full text-center block!"
                           onClick={() => setActiveFlyer({ url: event.flyerImageUrl, alt: `${event.showName} flyer` })}
                         >
-                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center" animation={getWhenDisplayLabel(event.startDateTime) === "TONIGHT" ? "jitter" : "none"}>
+                          <HandwrittenText fontSize={11} mobileFontSize={9} strokeColor="#e4e4e7" strokeWidth={1.5} textAlign="center" animation="jitter">
                             View Flyer
                           </HandwrittenText>
                         </HighlightButton>
