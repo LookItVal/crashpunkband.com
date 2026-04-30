@@ -5,19 +5,25 @@ import { useEffect, useRef, useState } from "react";
 type AnimatedAlbumBandsProps = {
   topImageSrc?: string;
   bottomImageSrc?: string;
+  bgImageSrc?: string;
   topHeightClassName?: string;
   bottomHeightClassName?: string;
+  bgHeightClassName?: string;
   topDurationSeconds?: number;
   bottomDurationSeconds?: number;
+  bgDurationSeconds?: number;
 };
 
 export default function AnimatedAlbumBands({
   topImageSrc = "/AlbumBGTop.webp",
   bottomImageSrc = "/AlbumBGBottom.webp",
+  bgImageSrc = "/AlbumBGSmokeBottom.webp",
   topHeightClassName = "h-[50%]",
   bottomHeightClassName = "h-[80%]",
-  topDurationSeconds = 300,
-  bottomDurationSeconds = 180,
+  bgHeightClassName = "h-[80%]",
+  topDurationSeconds = 120,
+  bottomDurationSeconds = 60,
+  bgDurationSeconds = 180,
 }: AnimatedAlbumBandsProps) {
   const bottomBandRef = useRef<HTMLDivElement>(null);
   const topBandRef = useRef<HTMLDivElement>(null);
@@ -89,6 +95,27 @@ export default function AnimatedAlbumBands({
 
   return (
     <>
+      <div
+        aria-hidden="true"
+        className={`albumBand albumBandBottom pointer-events-none absolute inset-x-0 bottom-0 ${bgHeightClassName}`}
+      >
+        <div
+          className="albumBandTrack"
+          style={{
+            ["--tile-width" as string]: `${bottomTileWidth}px`,
+            ["--tile-count" as string]: `${bottomTileCount}`,
+            animationDuration: `${bgDurationSeconds}s`,
+          }}
+        >
+          {Array.from({ length: bottomTileCount }, (_, idx) => (
+            <div
+              key={`bottom-${idx}`}
+              className="albumBandTile"
+              style={{ backgroundImage: `url("${bgImageSrc}")` }}
+            />
+          ))}
+        </div>
+      </div>
       <div
         ref={bottomBandRef}
         aria-hidden="true"
