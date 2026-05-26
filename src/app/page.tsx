@@ -8,7 +8,7 @@ import DeferredHomeSections from "../components/Landing/DeferredHomeSections";
 import { socialLinks } from "../components/Landing/SocialMediaLinks";
 
 export const metadata: Metadata = {
-  title: "CRASH | Punk Rock Band from Kansas City",
+  title: "CRASH | Punk Band from Kansas City",
   description: "Official website for the punk rock band CRASH, based in Kansas City. Discover our music, tour dates, and more.",
 };
 
